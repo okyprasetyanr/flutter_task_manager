@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/feature/main_menu/presentation/ui/ui_main_menu.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,12 +10,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
+    return UiMainMenu();
   }
 }
