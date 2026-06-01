@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/app_properties/app_properties.dart';
 
 class BaseLayout extends StatelessWidget {
   final Widget uiPage;
@@ -6,6 +7,10 @@ class BaseLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(bottom: true, top: true, child: Scaffold(body: uiPage));
+    return SafeArea(
+      bottom: true,
+      top: true,
+      child: Scaffold(backgroundColor: AppPropertyColor.white, body: uiPage),
+    );
   }
 }

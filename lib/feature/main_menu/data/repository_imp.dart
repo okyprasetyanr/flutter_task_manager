@@ -1,4 +1,4 @@
-import 'package:task_manager/feature/main_menu/data/domain/models/model_project.dart';
+import 'package:task_manager/feature/main_menu/models/model_project.dart';
 
 Future<List<ModelProject>> mainMenuGetProject() async {
   return [
