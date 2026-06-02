@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/feature/main_menu/logic/bloc/main_menu_bloc.dart';
-import 'package:task_manager/feature/main_menu/logic/bloc/main_menu_event.dart';
+import 'package:task_manager/core/services/api_services.dart';
+import 'package:task_manager/feature/main_menu/data/local/get_workspace.dart';
+import 'package:task_manager/feature/main_menu/data/remote/get_workspace.dart';
+import 'package:task_manager/feature/main_menu/data/repository_imp/repository_imp.dart';
+import 'package:task_manager/feature/main_menu/domain/repository/repository.dart';
+import 'package:task_manager/feature/main_menu/presentation/bloc/main_menu_bloc.dart';
+import 'package:task_manager/feature/main_menu/presentation/bloc/main_menu_event.dart';
 import 'package:task_manager/feature/main_menu/presentation/page/ui_main_menu.dart';
 
 void main() {
-  runApp(const MaterialApp(home: MainApp()));
+  runApp(
+    RepositoryProvider(
+      create: (context) => ApiServices(),
+      child: MaterialApp(home: MainApp(), debugShowCheckedModeBanner: false),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -13,9 +23,17 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MainMenuBloc()..add(MainMenuGetData()),
-      child: UiMainMenu(),
+    return RepositoryProvider<RepositoryWorkSpace>(
+      create: (context) => RepositoryWorkSpaceImp(
+        local: LocalMainMenu(),
+        remote: RemoteMainMenu(api: context.read<ApiServices>()),
+      ),
+      child: BlocProvider(
+        create: (context) =>
+            MainMenuBloc(context.read<RepositoryWorkSpace>())
+              ..add(MainMenuGetData()),
+        child: UiMainMenu(),
+      ),
     );
   }
 }
