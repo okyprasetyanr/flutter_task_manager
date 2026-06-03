@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:task_manager/feature/main_menu/domain/models/model_project.dart';
+import 'package:task_manager/feature/main_menu/data/models/model_project.dart';
 
 class MainMenuState {}
 

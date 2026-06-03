@@ -1,5 +1,5 @@
 import 'package:task_manager/core/services/api_services.dart';
-import 'package:task_manager/feature/main_menu/domain/models/model_project.dart';
+import 'package:task_manager/feature/main_menu/data/models/model_project.dart';
 
 class RemoteMainMenu {
   final ApiServices api;
@@ -7,6 +7,7 @@ class RemoteMainMenu {
   RemoteMainMenu({required this.api});
 
   Future<List<ModelProject>> getProject() async {
-    return await api.getProject("", "");
+    final data = await api.getProject("", "");
+    return data.map((e) => ModelProject.fromJson(e)).toList();
   }
 }
