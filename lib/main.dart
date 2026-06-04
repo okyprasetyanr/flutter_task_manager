@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/services/api_services.dart';
-import 'package:task_manager/feature/main_menu/data/data_resource/local/get_workspace.dart';
-import 'package:task_manager/feature/main_menu/data/data_resource/remote/get_workspace.dart';
-import 'package:task_manager/feature/main_menu/data/repository_imp/repository_imp.dart';
-import 'package:task_manager/feature/main_menu/domain/repository/repository.dart';
-import 'package:task_manager/feature/main_menu/presentation/bloc/main_menu_bloc.dart';
-import 'package:task_manager/feature/main_menu/presentation/bloc/main_menu_event.dart';
-import 'package:task_manager/feature/main_menu/presentation/page/ui_main_menu.dart';
+import 'package:task_manager/core/services/connection_service.dart';
+import 'package:task_manager/core/services/implementation/connection_imp.dart';
+import 'package:task_manager/feature/login/data/remote/login_remote.dart';
+import 'package:task_manager/feature/login/data/repository_imp/login_repository_imp.dart';
+import 'package:task_manager/feature/login/domain/repository/login_repository.dart';
+import 'package:task_manager/feature/login/presentation/bloc/login_bloc.dart';
+import 'package:task_manager/feature/login/presentation/page/login_page.dart';
 
 void main() {
   runApp(
-    RepositoryProvider(
-      create: (context) => ApiServices(),
+    MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(create: (context) => ApiServices()),
+        RepositoryProvider<ConnectionService>(
+          create: (context) => ConnectionServiceImpl(),
+        ),
+      ],
       child: MaterialApp(home: MainApp(), debugShowCheckedModeBanner: false),
     ),
   );
@@ -23,16 +28,14 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider<RepositoryWorkSpace>(
-      create: (context) => RepositoryWorkSpaceImp(
-        local: LocalMainMenu(),
-        remote: RemoteMainMenu(api: context.read<ApiServices>()),
+    return RepositoryProvider<LoginRepository>(
+      create: (context) => LoginRepositoryImp(
+        connection: context.read<ConnectionService>(),
+        remote: LoginRemote(apiService: context.read<ApiServices>()),
       ),
       child: BlocProvider(
-        create: (context) =>
-            MainMenuBloc(context.read<RepositoryWorkSpace>())
-              ..add(MainMenuGetData()),
-        child: UiMainMenu(),
+        create: (context) => LoginBloc(context.read<LoginRepository>()),
+        child: LoginPage(),
       ),
     );
   }

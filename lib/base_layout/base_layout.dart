@@ -10,7 +10,13 @@ class BaseLayout extends StatelessWidget {
     return SafeArea(
       bottom: true,
       top: true,
-      child: Scaffold(backgroundColor: AppPropertyColor.white, body: uiPage),
+      child: Scaffold(
+        backgroundColor: AppPropertyColor.white,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: uiPage,
+        ),
+      ),
     );
   }
 }

@@ -20,6 +20,8 @@ dependencies:
   equatable: ^2.0.5
   isar_flutter_libs:
     path: packages/isar_flutter_libs
+  internet_connection_checker_plus: any
+  top_snackbar_flutter: any
 
 dev_dependencies:
   flutter_test:
