@@ -6,7 +6,7 @@ class WorkspaceRemote {
 
   WorkspaceRemote({required this.apiServices});
 
-  Future<Map<String, dynamic>> getWorkspace({required String idCompany}) async {
-    return await apiServices.getWorkSpace(idCompany);
+  Future<Map<String, dynamic>> getWorkspace({required String companyId}) async {
+    return await apiServices.getWorkSpace(companyId);
   }
 }

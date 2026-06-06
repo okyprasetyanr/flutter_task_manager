@@ -1,14 +1,10 @@
-// ignore_for_file: non_constant_identifier_names
 class ModelSprint {
   final String sprintId;
   final String projectId;
-
   final String sprintName;
   final String sprintGoal;
-
   final DateTime startDate;
   final DateTime endDate;
-
   final bool isActive;
 
   const ModelSprint({

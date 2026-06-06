@@ -2,8 +2,8 @@ import 'package:task_manager/core/dummy/dummy_data.dart';
 
 class ApiServices {
   Future<Map<String, dynamic>> getProject(
-    String idCompany,
-    String uidOwner,
+    String workspaceId,
+    String companyId,
   ) async {
     return DummyData.project;
   }
@@ -64,11 +64,14 @@ class ApiServices {
     return DummyData.activity;
   }
 
-  Future<Map<String, dynamic>> getWorkSpace(String idCompany) async {
+  Future<Map<String, dynamic>> getWorkSpace(String companyId) async {
     return DummyData.workspace;
   }
 
-  Future<Map<String, dynamic>> getWorkspaceMember(String idWorkspace) async {
+  Future<Map<String, dynamic>> getWorkspaceMember(
+    String workspaceId,
+    String companyId,
+  ) async {
     return DummyData.workspaceMember;
   }
 

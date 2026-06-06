@@ -1,16 +1,10 @@
-// ignore_for_file: non_constant_identifier_names
 class ModelAttachment {
   final String id;
-
   final String taskId;
-
   final String fileName;
   final String fileUrl;
-
   final int fileSize;
-
   final String uploadedBy;
-
   final DateTime uploadedAt;
 
   const ModelAttachment({

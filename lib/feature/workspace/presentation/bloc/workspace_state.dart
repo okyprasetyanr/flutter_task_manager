@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
-import 'package:task_manager/feature/workspace/domain/enum/workspace_enum_status_bloc.dart';
+import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_workspace.dart';
 
 class WorkspaceState {}
@@ -9,7 +9,7 @@ class WorkspaceState {}
 class WorkspaceStateInitial extends WorkspaceState {}
 
 class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
-  final WorkspaceEnumStatusBloc status;
+  final EnumStatusState status;
   final String? companyName;
   final String? failed;
   final String? error;
@@ -17,7 +17,7 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
   final List<ModelWorkspace> dataWorkspace;
 
   WorkspaceStateLoaded({
-    this.status = WorkspaceEnumStatusBloc.none,
+    this.status = EnumStatusState.none,
     this.companyName,
     this.failed,
     this.error,
@@ -26,7 +26,7 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
   });
 
   WorkspaceStateLoaded copyWith({
-    WorkspaceEnumStatusBloc? status,
+    EnumStatusState? status,
     List<ModelWorkspace>? dataWorkspace,
     String? companyName,
     String? failed,
@@ -34,10 +34,10 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
     String? noconnection,
   }) {
     return WorkspaceStateLoaded(
-      noconnection: noconnection ?? this.noconnection,
+      noconnection: noconnection,
       companyName: companyName ?? this.companyName,
-      error: error ?? this.error,
-      failed: failed ?? this.failed,
+      error: error,
+      failed: failed,
       status: status ?? this.status,
       dataWorkspace: dataWorkspace ?? this.dataWorkspace,
     );

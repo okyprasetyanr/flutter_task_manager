@@ -5,6 +5,7 @@ import 'package:task_manager/feature/workspace/data/remote/workspace_remote.dart
 import 'package:task_manager/feature/workspace/domain/repository/workspace_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/model/model_message_collector.dart';
 
 class WorkspaceRepositoryImp implements WorkspaceRepository {
@@ -12,27 +13,25 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   final WorkspaceLocal local;
   final UserSession userSession;
   final HelperCollectData helper;
+  final ModelMessageCollector messageCollector;
 
   WorkspaceRepositoryImp({
     required this.remote,
     required this.local,
     required this.userSession,
     required this.helper,
+    required this.messageCollector,
   });
   @override
   Future<(Map<EnumFetchApiStatus, dynamic>, ModelMessageCollector)>
   getWorkspace() async {
     final data = await helper.helperCollectData(
       remoteFunc: () async =>
-          await remote.getWorkspace(idCompany: userSession.getCompanyId()),
+          await remote.getWorkspace(companyId: userSession.getCompanyId()),
       localFunc: () async => {},
     );
-    final messageCollector = ModelMessageCollector(
-      error: data[EnumFetchApiStatus.error],
-      failed: data[EnumFetchApiStatus.failed],
-      noconnection: data[EnumFetchApiStatus.noconnection],
-    );
-    return (data, messageCollector);
+    devLog("Log WorkspaceRepositoryImp: data: $data");
+    return (data, messageCollector.getMessage(data));
   }
 
   @override

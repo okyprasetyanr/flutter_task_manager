@@ -1,14 +1,9 @@
-// ignore_for_file: non_constant_identifier_names
 class ModelNotification {
   final String id;
-
   final String userId;
-
   final String title;
   final String body;
-
   final bool isRead;
-
   final DateTime createdAt;
 
   const ModelNotification({

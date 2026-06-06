@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/routes/routes.dart';
 
-class NavigatorRoutes {
+class RoutesNavigator {
   final BuildContext context;
   final RoutesEnum routeName;
   final bool replace;
   final Object? arguments;
 
-  NavigatorRoutes({
+  RoutesNavigator({
     required this.context,
     required this.routeName,
     required this.replace,
@@ -17,7 +17,7 @@ class NavigatorRoutes {
 
   final Map<String, WidgetBuilder> appRoutes = routes;
 
-  Future<void> naigator() {
+  Future<void> navigate() {
     final routeBuilder = appRoutes['/$routeName'];
 
     if (routeBuilder == null) {

@@ -41,12 +41,12 @@ class _LoginPageState extends State<LoginPage> {
       listener: (context, state) {
         if (state is LoginStateSuccess) {
           customSnackBar(context, "Login Berhasil");
-          NavigatorRoutes(
+          RoutesNavigator(
             context: context,
             routeName: RoutesEnum.workspace,
             replace: true,
             arguments: null,
-          ).naigator();
+          ).navigate();
         } else if (state is LoginStateFailed) {
           customSnackBar(context, state.value);
         } else if (state is LoginStateConnection) {

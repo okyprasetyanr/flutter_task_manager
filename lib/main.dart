@@ -9,6 +9,7 @@ import 'package:task_manager/core/services/connection_service/connection_service
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
+import 'package:task_manager/shared/model/model_message_collector.dart';
 
 void main() {
   runApp(
@@ -17,6 +18,7 @@ void main() {
         RepositoryProvider(create: (context) => UserSession()),
         RepositoryProvider(create: (context) => LocalService()),
         RepositoryProvider(create: (context) => ApiServices()),
+        RepositoryProvider(create: (context) => ModelMessageCollector()),
         RepositoryProvider<ConnectionService>(
           lazy: false,
           create: (context) => ConnectionServiceImpl(),
@@ -43,12 +45,12 @@ class _MainAppState extends State<MainApp> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      NavigatorRoutes(
+      RoutesNavigator(
         context: context,
         routeName: RoutesEnum.login,
         replace: true,
         arguments: null,
-      ).naigator();
+      ).navigate();
     });
     super.initState();
   }

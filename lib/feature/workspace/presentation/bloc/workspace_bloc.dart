@@ -5,6 +5,7 @@ import 'package:task_manager/feature/workspace/domain/repository/workspace_repos
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_event.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
+import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_workspace.dart';
 
 class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
@@ -21,13 +22,14 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     final currentState = state is WorkspaceStateLoaded
         ? state as WorkspaceStateLoaded
         : WorkspaceStateLoaded();
+    add(WorkspaceEventChangeStatus(status: EnumStatusState.loading));
     final data = await repo.getWorkspace();
     final company = repo.getCompanyName();
 
     emit(
       currentState.copyWith(
         companyName: company,
-        status: event.status,
+        status: EnumStatusState.none,
         dataWorkspace: data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success] as List)
                   .map((e) => ModelWorkspace.fromJson(e))
@@ -44,6 +46,11 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     WorkspaceEventChangeStatus event,
     Emitter<WorkspaceState> emit,
   ) {
-    emit((state as WorkspaceStateLoaded).copyWith(status: event.status));
+    emit(
+      (state is WorkspaceStateLoaded
+              ? state as WorkspaceStateLoaded
+              : WorkspaceStateLoaded())
+          .copyWith(status: event.status),
+    );
   }
 }

@@ -1,14 +1,14 @@
+import 'package:equatable/equatable.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 
-// ignore_for_file: non_constant_identifier_names
-class ModelWorkspace {
+class ModelWorkspace extends Equatable {
   final String workspaceId;
   final String workspaceName;
   final String workspaceDescription;
   final String workspaceOwnerId;
   final DateTime createdAt;
-  final String id_company;
+  final String companyId;
 
   const ModelWorkspace({
     required this.workspaceId,
@@ -16,29 +16,39 @@ class ModelWorkspace {
     required this.workspaceDescription,
     required this.workspaceOwnerId,
     required this.createdAt,
-    required this.id_company,
+    required this.companyId,
   });
 
   factory ModelWorkspace.fromJson(Map<String, dynamic> data) {
     return ModelWorkspace(
-      workspaceId: data[EnumWorkspace.workspaceId.name],
-      workspaceName: data[EnumWorkspace.workspaceName.name],
-      workspaceDescription: data[EnumWorkspace.workspaceDescription.name],
-      workspaceOwnerId: data[EnumWorkspace.workspaceOwnerId.name],
+      workspaceId: data[EnumWorkspace.workspaceId.value],
+      workspaceName: data[EnumWorkspace.workspaceName.value],
+      workspaceDescription: data[EnumWorkspace.workspaceDescription.value],
+      workspaceOwnerId: data[EnumWorkspace.workspaceOwnerId.value],
       createdAt: HelperDateConvert.toDateTime(
-        data[EnumWorkspace.createdAt.name],
+        data[EnumWorkspace.createdAt.value],
       ),
-      id_company: data[EnumWorkspace.id_company.name],
+      companyId: data[EnumWorkspace.companyId.value],
     );
   }
   Map<String, dynamic> toJson() {
     return {
-      EnumWorkspace.workspaceId.name: workspaceId,
-      EnumWorkspace.workspaceName.name: workspaceName,
-      EnumWorkspace.workspaceDescription.name: workspaceDescription,
-      EnumWorkspace.workspaceOwnerId.name: workspaceOwnerId,
-      EnumWorkspace.createdAt.name: createdAt,
-      EnumWorkspace.id_company.name: id_company,
+      EnumWorkspace.workspaceId.value: workspaceId,
+      EnumWorkspace.workspaceName.value: workspaceName,
+      EnumWorkspace.workspaceDescription.value: workspaceDescription,
+      EnumWorkspace.workspaceOwnerId.value: workspaceOwnerId,
+      EnumWorkspace.createdAt.value: createdAt,
+      EnumWorkspace.companyId.value: companyId,
     };
   }
+
+  @override
+  List<Object?> get props => [
+    workspaceId,
+    workspaceName,
+    workspaceDescription,
+    workspaceOwnerId,
+    createdAt,
+    companyId,
+  ];
 }

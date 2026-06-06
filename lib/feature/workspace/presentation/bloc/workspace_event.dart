@@ -1,14 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:task_manager/feature/workspace/domain/enum/workspace_enum_status_bloc.dart';
+import 'package:task_manager/shared/enum/enum_status_state.dart';
 
 class WorkspaceEvent {}
 
-class WorkspaceEventGetData extends WorkspaceEvent {
-  WorkspaceEnumStatusBloc status;
-  WorkspaceEventGetData({required this.status});
-}
+class WorkspaceEventGetData extends WorkspaceEvent {}
 
 class WorkspaceEventChangeStatus extends WorkspaceEvent {
-  WorkspaceEnumStatusBloc status;
+  EnumStatusState status;
   WorkspaceEventChangeStatus({required this.status});
 }

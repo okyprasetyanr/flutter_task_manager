@@ -1,11 +1,10 @@
-// ignore_for_file: non_constant_identifier_names
 class ModelUser {
   final String id;
   final String name;
   final String email;
   final String photoUrl;
   final DateTime createdAt;
-  final String id_company;
+  final String companyId;
 
   const ModelUser({
     required this.id,
@@ -13,6 +12,6 @@ class ModelUser {
     required this.email,
     required this.photoUrl,
     required this.createdAt,
-    required this.id_company,
+    required this.companyId,
   });
 }
