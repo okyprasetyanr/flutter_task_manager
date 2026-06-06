@@ -23,7 +23,8 @@ class LoginForm extends StatelessWidget {
       builder: (context, state) {
         if (state is LoginStateLoading) {
           return Center(child: LinearProgressIndicator());
-        } else {
+        } else if ((state is! LoginStateLoading) &&
+            (state is! LoginStateSuccess)) {
           return Form(
             key: keyform,
             child: Column(
@@ -54,6 +55,7 @@ class LoginForm extends StatelessWidget {
             ),
           );
         }
+        return SizedBox();
       },
     );
   }

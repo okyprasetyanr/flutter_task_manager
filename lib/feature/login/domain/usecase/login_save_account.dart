@@ -1,7 +1,7 @@
-import 'package:task_manager/feature/login/domain/enum/enum.dart';
+// ignore_for_file: collection_methods_unrelated_type
 
 class LoginSaveAccount {
-  final Map<EnumLoginStatus, dynamic> data;
+  final Map<String, dynamic> data;
 
   LoginSaveAccount({required this.data});
 

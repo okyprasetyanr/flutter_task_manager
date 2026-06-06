@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/core/services/api_services.dart';
-import 'package:task_manager/core/services/connection_service.dart';
-import 'package:task_manager/core/services/implementation/connection_imp.dart';
-import 'package:task_manager/feature/login/data/remote/login_remote.dart';
-import 'package:task_manager/feature/login/data/repository_imp/login_repository_imp.dart';
-import 'package:task_manager/feature/login/domain/repository/login_repository.dart';
-import 'package:task_manager/feature/login/presentation/bloc/login_bloc.dart';
-import 'package:task_manager/feature/login/presentation/page/login_page.dart';
+import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/routes/routes_enum.dart';
+import 'package:task_manager/core/routes/routes_navigator.dart';
+import 'package:task_manager/core/services/api_service/api_services.dart';
+import 'package:task_manager/core/services/connection_service/connection_service.dart';
+import 'package:task_manager/core/services/connection_service/connection_service_imp.dart';
+import 'package:task_manager/core/services/local_service/local_service.dart';
+import 'package:task_manager/core/user_session/user_session.dart';
+import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
 
 void main() {
   runApp(
     MultiRepositoryProvider(
       providers: [
+        RepositoryProvider(create: (context) => UserSession()),
+        RepositoryProvider(create: (context) => LocalService()),
         RepositoryProvider(create: (context) => ApiServices()),
         RepositoryProvider<ConnectionService>(
+          lazy: false,
           create: (context) => ConnectionServiceImpl(),
+        ),
+        RepositoryProvider(
+          lazy: false,
+          create: (context) =>
+              HelperCollectData(connection: context.read<ConnectionService>()),
         ),
       ],
       child: MaterialApp(home: MainApp(), debugShowCheckedModeBanner: false),
@@ -23,20 +32,29 @@ void main() {
   );
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
   @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      NavigatorRoutes(
+        context: context,
+        routeName: RoutesEnum.login,
+        replace: true,
+        arguments: null,
+      ).naigator();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return RepositoryProvider<LoginRepository>(
-      create: (context) => LoginRepositoryImp(
-        connection: context.read<ConnectionService>(),
-        remote: LoginRemote(apiService: context.read<ApiServices>()),
-      ),
-      child: BlocProvider(
-        create: (context) => LoginBloc(context.read<LoginRepository>()),
-        child: LoginPage(),
-      ),
-    );
+    return Scaffold(backgroundColor: AppPropertyColor.white);
   }
 }

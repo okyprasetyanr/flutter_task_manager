@@ -1,15 +1,17 @@
+// ignore_for_file: constant_identifier_names
+
 enum EnumWorkspace {
   workspaceId,
   workspaceName,
   workspaceDescription,
   workspaceOwnerId,
   createdAt,
-  uidOwner,
+  id_company,
 }
 
 enum EnumWorkspaceMember { workspaceId, userId, role }
 
-enum EnumUser { id, name, email, photoUrl, createdAt, uidOwner }
+enum EnumUser { id, name, email, photoUrl, createdAt, id_company }
 
 enum EnumProject {
   projectId,
@@ -104,6 +106,8 @@ extension EnumTaskStatusExt on EnumTaskStatus {
 }
 
 enum EnumTaskPriority { lowest, low, medium, high, highest }
+
+enum EnumCompany { company_name, company_id, company_join }
 
 enum EnumProjectStatus { todo, onProgress, review, completed, cancelled }
 

@@ -1,34 +1,49 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:task_manager/core/services/connection_service.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first, collection_methods_unrelated_type
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:task_manager/core/user_session/user_session.dart';
+import 'package:task_manager/feature/login/data/local/login_local.dart';
 import 'package:task_manager/feature/login/data/remote/login_remote.dart';
-import 'package:task_manager/feature/login/domain/enum/enum.dart';
 import 'package:task_manager/feature/login/domain/repository/login_repository.dart';
-import 'package:task_manager/shared/enum/enum_status_fetch.dart';
+import 'package:task_manager/shared/enum.dart';
+import 'package:task_manager/shared/enum/enum_fetch_api.dart';
+import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
 
 class LoginRepositoryImp implements LoginRepository {
-  final ConnectionService connection;
+  final HelperCollectData helper;
   final LoginRemote remote;
+  final LoginLocal local;
+  final UserSession userSession;
 
-  LoginRepositoryImp({required this.connection, required this.remote});
+  LoginRepositoryImp({
+    required this.helper,
+    required this.remote,
+    required this.local,
+    required this.userSession,
+  });
 
   @override
-  Future<Map<EnumLoginStatus, dynamic>> login({
+  Future<Map<EnumFetchApiStatus, dynamic>> login({
     required String email,
     required String password,
   }) async {
-    try {
-      if (await connection.isConnected) {
-        final data = await remote.login(email: email, password: password);
-        if (data.containsKey(EnumStatusFetch.success.name)) {
-          return {EnumLoginStatus.success: data[EnumStatusFetch.success.name]};
-        } else {
-          return {EnumLoginStatus.failed: data[EnumStatusFetch.failed.name]};
-        }
-      } else {
-        return {EnumLoginStatus.noconnection: "Koneksi tidak tersedia!"};
-      }
-    } catch (e) {
-      return {EnumLoginStatus.failed: "Terjadi kesalahan: ${e.toString()}"};
+    final data = await helper.helperCollectData(
+      remoteFunc: () async =>
+          await remote.login(email: email, password: password),
+      localFunc: () async => {},
+    );
+    if (data.containsKey(EnumFetchApiStatus.success)) {
+      final pref = await SharedPreferences.getInstance();
+      await pref.setString(
+        'companyId',
+        data[EnumFetchApiStatus.success][EnumCompany.company_id.name],
+      );
+      await pref.setString(
+        'companyName',
+        data[EnumFetchApiStatus.success][EnumCompany.company_name.name],
+      );
+      userSession.init();
     }
+    return data;
   }
 }

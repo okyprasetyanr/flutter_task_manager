@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
 class LoginState {}
 
 class LoginStateSuccess extends LoginState {}
@@ -13,6 +14,11 @@ class LoginStateFailed extends LoginState {
 class LoginStateConnection extends LoginState {
   String value;
   LoginStateConnection({required this.value});
+}
+
+class LoginStateError extends LoginState {
+  String value;
+  LoginStateError({required this.value});
 }
 
 class LoginStateLoading extends LoginState {}

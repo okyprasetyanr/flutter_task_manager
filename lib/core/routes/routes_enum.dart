@@ -1,0 +1,1 @@
+enum RoutesEnum { login, workspace }

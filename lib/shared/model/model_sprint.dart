@@ -1,3 +1,4 @@
+// ignore_for_file: non_constant_identifier_names
 class ModelSprint {
   final String sprintId;
   final String projectId;

@@ -68,39 +68,6 @@ String generateInvoice({
   return "$operator-$branch-$queue-$uuid";
 }
 
-String formatDate({required DateTime date, bool? minute}) {
-  final useMinute = minute ?? true;
-  final pattern = useMinute ? 'yyyy-MM-dd HH:mm:ss' : 'yyyy-MM-dd';
-  return DateFormat(pattern).format(date);
-}
-
-DateTime parseDate({dynamic date, bool minute = true}) {
-  if (date is DateTime) return date;
-
-  final pattern = minute ? 'yyyy-MM-dd HH:mm:ss' : 'yyyy-MM-dd';
-  return DateFormat(pattern).parse(date);
-}
-
-DateTime dateYMDEndBLOC(DateTime? dateTime) {
-  return dateTime != null
-      ? DateTime(dateTime.year, dateTime.month, dateTime.day, 23, 59, 59, 999)
-      : dateNowYMDBLOC(statusEnd: true);
-}
-
-DateTime dateYMDStartBLOC(DateTime? dateTime) {
-  return dateTime != null
-      ? DateTime(dateTime.year, dateTime.month, dateTime.day, 00, 00, 00, 000)
-      : dateNowYMDBLOC();
-}
-
-DateTime dateNowYMDBLOC({bool? statusEnd}) {
-  final end = statusEnd ?? false;
-  final now = DateTime.now();
-  return end
-      ? DateTime(now.year, now.month, now.day, 23, 59, 59, 999)
-      : DateTime(now.year, now.month, now.day, 00, 00, 00, 000);
-}
-
 void devLog(String message) {
   assert(() {
     debugPrint(message);

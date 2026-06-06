@@ -22,6 +22,7 @@ dependencies:
     path: packages/isar_flutter_libs
   internet_connection_checker_plus: any
   top_snackbar_flutter: any
+  shared_preferences: any
 
 dev_dependencies:
   flutter_test:

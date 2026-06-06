@@ -1,8 +1,8 @@
+// ignore_for_file: non_constant_identifier_names
 class ModelTaskHistory {
   final String id;
   final String taskId;
 
-  /// status, priority, assigneeId, dueDate, title, dll
   final String field;
 
   final String oldValue;

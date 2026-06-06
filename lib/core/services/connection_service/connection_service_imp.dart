@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:task_manager/core/services/connection_service.dart';
+import 'package:task_manager/core/services/connection_service/connection_service.dart';
 
 class ConnectionServiceImpl implements ConnectionService {
   @override

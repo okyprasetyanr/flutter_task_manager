@@ -1,7 +1,7 @@
-import 'package:task_manager/feature/login/domain/enum/enum.dart';
+import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 
 abstract class LoginRepository {
-  Future<Map<EnumLoginStatus, dynamic>> login({
+  Future<Map<EnumFetchApiStatus, dynamic>> login({
     required String email,
     required String password,
   });

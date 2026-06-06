@@ -1,1 +1,0 @@
-enum EnumStatusFetch { success, failed }
