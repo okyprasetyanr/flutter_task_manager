@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/feature/detail_workspace/presentation/bloc/workspace_detail_bloc.dart';
-import 'package:task_manager/feature/detail_workspace/presentation/bloc/workspace_detail_state.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/widget/header/custom_row_header.dart';

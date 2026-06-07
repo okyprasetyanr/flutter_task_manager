@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/feature/detail_workspace/domain/repository/workspace_detail_repository.dart';
-import 'package:task_manager/feature/detail_workspace/presentation/bloc/workspace_detail_event.dart';
-import 'package:task_manager/feature/detail_workspace/presentation/bloc/workspace_detail_state.dart';
+import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_event.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_project.dart';

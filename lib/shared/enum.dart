@@ -81,7 +81,8 @@ enum EnumTask {
   assigneeId('assignee_id'),
   startDate('start_date'),
   dueDate('due_date'),
-  createdAt('created_at');
+  createdAt('created_at'),
+  updatedAt('updated_at');
 
   final String value;
   const EnumTask(this.value);

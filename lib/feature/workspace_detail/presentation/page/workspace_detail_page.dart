@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/base_layout/base_layout.dart';
-import 'package:task_manager/feature/detail_workspace/presentation/widget/workspace_detail_header.dart';
-import 'package:task_manager/feature/detail_workspace/presentation/widget/workspace_detail_list_project.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_header.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_list_project.dart';
 
 class WorkspaceDetailPage extends StatefulWidget {
   const WorkspaceDetailPage({super.key});

@@ -8,41 +8,37 @@ class ApiServices {
     return DummyData.project;
   }
 
-  Future<Map<String, dynamic>> getUser(String uidOwner) async {
+  Future<Map<String, dynamic>> getUser(String companyId) async {
     return DummyData.user;
   }
 
   Future<Map<String, dynamic>> getProjectMember(
-    String idProject,
-    String uidOwner,
+    String projectId,
+    String companyId,
   ) async {
     return DummyData.projectMember;
   }
 
   Future<Map<String, dynamic>> getTasks(
-    String uidOwner,
-    String idProject,
+    String companyId,
+    String projectId,
   ) async {
     return DummyData.task;
   }
 
   Future<Map<String, dynamic>> getSubTasks(
-    String uidOwner,
+    String companyId,
     String idTasks,
   ) async {
     return DummyData.subTask;
   }
 
-  Future<Map<String, dynamic>> getLabel(String uidOwner) async {
+  Future<Map<String, dynamic>> getLabel(String companyId) async {
     return DummyData.label;
   }
 
-  Future<Map<String, dynamic>> getTasksLabel(String uidOwner) async {
-    return DummyData.taskLabel;
-  }
-
   Future<Map<String, dynamic>> getComments(
-    String uidOwner,
+    String companyId,
     String idTask,
     String idUser,
   ) async {
@@ -50,14 +46,14 @@ class ApiServices {
   }
 
   Future<Map<String, dynamic>> getAttachment(
-    String uidOwner,
+    String companyId,
     String idTask,
   ) async {
     return DummyData.attachment;
   }
 
   Future<Map<String, dynamic>> getActivities(
-    String uidOwner,
+    String companyId,
     String idTask,
     String idUser,
   ) async {
@@ -75,7 +71,7 @@ class ApiServices {
     return DummyData.workspaceMember;
   }
 
-  Future<Map<String, dynamic>> getSprint(String idProject) async {
+  Future<Map<String, dynamic>> getSprint(String projectId) async {
     return DummyData.sprint;
   }
 

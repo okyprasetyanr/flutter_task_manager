@@ -553,23 +553,6 @@ class DummyData {
     ],
   };
 
-  static final taskLabel = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
-      {"task_id": "TASK001", "label_id": "LBL005"},
-      {"task_id": "TASK002", "label_id": "LBL002"},
-      {"task_id": "TASK003", "label_id": "LBL003"},
-      {"task_id": "TASK004", "label_id": "LBL001"},
-      {"task_id": "TASK005", "label_id": "LBL002"},
-      {"task_id": "TASK006", "label_id": "LBL005"},
-      {"task_id": "TASK007", "label_id": "LBL005"},
-      {"task_id": "TASK008", "label_id": "LBL001"},
-      {"task_id": "TASK009", "label_id": "LBL006"},
-      {"task_id": "TASK010", "label_id": "LBL007"},
-    ],
-  };
-
   static final comment = const {
     'status': 'success',
     'message': "Sukses",
