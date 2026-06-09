@@ -1,1 +1,1 @@
-class LocalService {}
+class LocalServices {}

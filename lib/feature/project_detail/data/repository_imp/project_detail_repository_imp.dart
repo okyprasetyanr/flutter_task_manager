@@ -4,6 +4,7 @@ import 'package:task_manager/feature/project_detail/data/remote/project_detail_r
 import 'package:task_manager/feature/project_detail/domain/repository/project_detail_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/model/model_message_collector.dart';
 
 class ProjectDetailRepositoryImp implements ProjectDetailRepository {
@@ -22,7 +23,7 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
   });
   @override
   Future<(Map<EnumFetchApiStatus, dynamic>, ModelMessageCollector)>
-  getProjectDetail({required projectId}) async {
+  getProjectDetail({required String projectId}) async {
     final data = await helper.helperCollectData(
       remoteFunc: () async => await remote.getProjectDetail(
         projectId: projectId,
@@ -30,6 +31,7 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
       ),
       localFunc: () async => {},
     );
+    devLog("Log ProjectDetailRepositoryImp: data: $data");
     return (data, messageCollector.getMessage(data));
   }
 }

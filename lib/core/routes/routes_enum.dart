@@ -1,1 +1,1 @@
-enum RoutesEnum { login, workspace, workspacedetail }
+enum RoutesEnum { login, workspace, workspaceDetail, projectDetail }

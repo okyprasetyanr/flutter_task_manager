@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/routes/routes_enum.dart';
+import 'package:task_manager/core/routes/routes_navigator.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
 import 'package:task_manager/shared/enum.dart';
@@ -31,7 +33,7 @@ class WorkspaceDetailListProject extends StatelessWidget {
           Text(data.projectType, style: lv05TextStyle),
           const SizedBox(height: 4),
           Text(
-            EnumProjectStatusX.fromEnum(data.projectStatus),
+            data.projectStatus.text,
             style: lv05TextStyle.copyWith(color: Colors.grey),
           ),
           Text(data.projectCreatedBy, style: lv05TextStyle),
@@ -49,7 +51,14 @@ class WorkspaceDetailListProject extends StatelessWidget {
           Text(data.projectTotalContribut.toString(), style: lv05TextStyle),
           const SizedBox(height: 4),
         ],
-        onPressed: (data) => {},
+        onPressed: (data) => {
+          RoutesNavigator(
+            context: context,
+            routeName: RoutesEnum.projectDetail,
+            replace: false,
+            arguments: {'dataProject': data},
+          ).navigate(),
+        },
       ),
     );
   }

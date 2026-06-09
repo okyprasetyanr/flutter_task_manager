@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_label.dart';
 import 'package:task_manager/shared/model/model_project.dart';
-import 'package:task_manager/shared/model/model_project_member.dart';
 import 'package:task_manager/shared/model/model_task.dart';
+import 'package:task_manager/shared/model/model_user.dart';
 
 class ProjectDetailState {}
 
@@ -11,7 +11,7 @@ class ProjectDetailStateInitial extends ProjectDetailState {}
 
 class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
   final ModelProject? dataProject;
-  final List<ModelProjectMember> dataProjectMember;
+  final List<ModelUser> dataProjectMember;
   final List<ModelTask> dataTask;
   final List<ModelLabel> dataLabelTask;
   final EnumStatusState status;
@@ -32,7 +32,7 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
 
   ProjectDetailStateLoaded copyWith({
     ModelProject? dataProject,
-    List<ModelProjectMember>? dataProjectMember,
+    List<ModelUser>? dataProjectMember,
     List<ModelTask>? dataTask,
     List<ModelLabel>? dataLabelTask,
     EnumStatusState? status,

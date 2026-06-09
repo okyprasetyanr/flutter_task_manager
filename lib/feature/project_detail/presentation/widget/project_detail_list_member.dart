@@ -1,0 +1,42 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
+import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
+import 'package:task_manager/shared/enum/enum_status_state.dart';
+import 'package:task_manager/shared/model/model_user.dart';
+import 'package:task_manager/shared/style/text_size.dart';
+import 'package:task_manager/shared/widget/listview/custom_list_view_builder.dart';
+
+class ProjectDetailListMember extends StatelessWidget {
+  const ProjectDetailListMember({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      color: AppPropertyColor.white,
+      child:
+          BlocSelector<
+            ProjectDetailBloc,
+            ProjectDetailState,
+            (List<ModelUser>, EnumStatusState)
+          >(
+            selector: (state) => state is ProjectDetailStateLoaded
+                ? (state.dataProjectMember, state.status)
+                : ([], EnumStatusState.loading),
+            builder: (context, state) {
+              return CustomListViewBuilder<ModelUser>(
+                status: state.$2,
+                data: state.$1,
+                content: (data) => [
+                  Text(data.name, style: lv05TextStyle),
+                  Text(data.email, style: lv05TextStyle),
+                ],
+                onPressed: (data) => {},
+              );
+            },
+          ),
+    );
+  }
+}

@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 
-class ModelProject {
+class ModelProject extends Equatable {
   final String projectId;
   final String projectName;
   final String projectType;
@@ -43,4 +44,17 @@ class ModelProject {
       ),
     );
   }
+
+  @override
+  List<Object?> get props => [
+    projectId,
+    projectName,
+    projectType,
+    projectStatus,
+    projectCreatedBy,
+    projectCreatedId,
+    projectTotalContribut,
+    projectStart,
+    projectEnd,
+  ];
 }

@@ -4,6 +4,13 @@ import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/services/api_service/api_services.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
+import 'package:task_manager/feature/project_detail/data/local/project_detail_local.dart';
+import 'package:task_manager/feature/project_detail/data/remote/project_detail_remote.dart';
+import 'package:task_manager/feature/project_detail/data/repository_imp/project_detail_repository_imp.dart';
+import 'package:task_manager/feature/project_detail/domain/repository/project_detail_repository.dart';
+import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
+import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_event.dart';
+import 'package:task_manager/feature/project_detail/presentation/page/project_detail_page.dart';
 import 'package:task_manager/feature/workspace_detail/data/local/workspace_detail_local.dart';
 import 'package:task_manager/feature/workspace_detail/data/remote/workspace_detail_remote.dart';
 import 'package:task_manager/feature/workspace_detail/data/repository_imp/workspace_detail_repository_imp.dart';
@@ -27,6 +34,7 @@ import 'package:task_manager/feature/workspace/presentation/page/workspace_page.
 import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/model/model_message_collector.dart';
+import 'package:task_manager/shared/model/model_project.dart';
 import 'package:task_manager/shared/model/model_workspace.dart';
 
 final routes = {
@@ -35,7 +43,7 @@ final routes = {
       userSession: context.read<UserSession>(),
       helper: context.read<HelperCollectData>(),
       remote: LoginRemote(apiService: context.read<ApiServices>()),
-      local: LoginLocal(localService: context.read<LocalService>()),
+      local: LoginLocal(localService: context.read<LocalServices>()),
     ),
     child: BlocProvider(
       create: (context) => LoginBloc(context.read<LoginRepository>()),
@@ -47,7 +55,7 @@ final routes = {
         create: (context) => WorkspaceRepositoryImp(
           messageCollector: context.read<ModelMessageCollector>(),
           remote: WorkspaceRemote(apiServices: context.read<ApiServices>()),
-          local: WorkspaceLocal(localService: context.read<LocalService>()),
+          local: WorkspaceLocal(localService: context.read<LocalServices>()),
           userSession: context.read<UserSession>(),
           helper: context.read<HelperCollectData>(),
         ),
@@ -58,7 +66,7 @@ final routes = {
           child: WorkspacePage(),
         ),
       ),
-  '/${RoutesEnum.workspacedetail}': (context) {
+  '/${RoutesEnum.workspaceDetail}': (context) {
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
     final dataWorkspace = args!['dataWorkspace'] as ModelWorkspace;
     devLog("Log Routes: ArgumentData: WorkspaceDetail: $dataWorkspace");
@@ -75,6 +83,27 @@ final routes = {
             WorkspaceDetailBloc(context.read<WorkspaceDetailRepository>())
               ..add(WorkspaceDetailEventGetData(data: dataWorkspace)),
         child: WorkspaceDetailPage(),
+      ),
+    );
+  },
+  '/${RoutesEnum.projectDetail}': (context) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map?;
+    final dataProject = args!['dataProject'] as ModelProject;
+
+    devLog("Log Routes: ArgumentData: ProjectDetail: $dataProject");
+    return RepositoryProvider<ProjectDetailRepository>(
+      create: (context) => ProjectDetailRepositoryImp(
+        remote: ProjectDetailRemote(apiServices: context.read<ApiServices>()),
+        local: ProjectDetailLocal(localService: context.read<LocalServices>()),
+        userSession: context.read<UserSession>(),
+        helper: context.read<HelperCollectData>(),
+        messageCollector: context.read<ModelMessageCollector>(),
+      ),
+      child: BlocProvider(
+        create: (context) =>
+            ProjectDetailBloc(context.read<ProjectDetailRepository>())
+              ..add(ProjectDetailEventGetData(data: dataProject)),
+        child: ProjectDetailPage(),
       ),
     );
   },

@@ -10,39 +10,39 @@ class HelperCollectData {
     required Future<dynamic> Function() remoteFunc,
     required Future<dynamic> Function() localFunc,
   }) async {
-    try {
-      if (await connection.isConnected) {
-        final remote = await remoteFunc() as Map<String, dynamic>;
-        if (remote[EnumFetchApiValue.status.name] ==
-            EnumFetchApiStatus.success.name) {
+    // try {
+    if (await connection.isConnected) {
+      final remote = await remoteFunc() as Map<String, dynamic>;
+      if (remote[EnumFetchApiValue.status.name] ==
+          EnumFetchApiStatus.success.name) {
+        return {
+          EnumFetchApiStatus.success: remote[EnumFetchApiValue.results.name],
+        };
+      } else if (remote[EnumFetchApiValue.status.name] ==
+          EnumFetchApiStatus.failed.name) {
+        return {
+          EnumFetchApiStatus.failed: remote[EnumFetchApiValue.message.name],
+        };
+      } else if (remote[EnumFetchApiValue.status.name] ==
+          EnumFetchApiStatus.error.name) {
+        {
           return {
-            EnumFetchApiStatus.success: remote[EnumFetchApiValue.results.name],
-          };
-        } else if (remote[EnumFetchApiValue.status.name] ==
-            EnumFetchApiStatus.failed.name) {
-          return {
-            EnumFetchApiStatus.failed: remote[EnumFetchApiValue.message.name],
-          };
-        } else if (remote[EnumFetchApiValue.status.name] ==
-            EnumFetchApiStatus.error.name) {
-          {
-            return {
-              EnumFetchApiStatus.error: remote[EnumFetchApiValue.message.name],
-            };
-          }
-        } else {
-          return {
-            EnumFetchApiStatus.error:
-                "Kesalahan tidak diketahui, mohon ulangi kembali!",
+            EnumFetchApiStatus.error: remote[EnumFetchApiValue.message.name],
           };
         }
       } else {
         return {
-          EnumFetchApiStatus.noconnection: "Koneksi tidak tersedia/stabil!",
+          EnumFetchApiStatus.error:
+              "Kesalahan tidak diketahui, mohon ulangi kembali!",
         };
       }
-    } catch (e) {
-      return {EnumFetchApiStatus.error: "Terjadi kesalahan: ${e.toString()}"};
+    } else {
+      return {
+        EnumFetchApiStatus.noconnection: "Koneksi tidak tersedia/stabil!",
+      };
     }
+    // } catch (e) {
+    //   return {EnumFetchApiStatus.error: "Terjadi kesalahan: ${e.toString()}"};
+    // }
   }
 }

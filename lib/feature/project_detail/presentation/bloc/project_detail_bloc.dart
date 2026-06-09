@@ -7,14 +7,15 @@ import 'package:task_manager/feature/project_detail/presentation/bloc/project_de
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_label.dart';
-import 'package:task_manager/shared/model/model_project_member.dart';
 import 'package:task_manager/shared/model/model_sub_task.dart';
 import 'package:task_manager/shared/model/model_task.dart';
+import 'package:task_manager/shared/model/model_user.dart';
 
 class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
   final ProjectDetailRepository repo;
   ProjectDetailBloc(this.repo) : super(ProjectDetailStateInitial()) {
     on<ProjectDetailEventGetData>(_onGetData);
+    on<ProjectDetailEventChangeStatus>(_onChangeStatus);
   }
 
   Future<void> _onGetData(
@@ -25,7 +26,8 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
         ? state as ProjectDetailStateLoaded
         : ProjectDetailStateLoaded();
     add(ProjectDetailEventChangeStatus(status: EnumStatusState.loading));
-    final projectId = event.data ?? currentState.dataProject!.projectId;
+    final projectId =
+        event.data?.projectId ?? currentState.dataProject!.projectId;
     final data = await repo.getProjectDetail(projectId: projectId);
     emit(
       currentState.copyWith(
@@ -34,10 +36,10 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
                   .map((e) => ModelLabel.fromJson(e))
                   .toList()
             : [],
-        dataProject: event.data,
+        dataProject: event.data ?? currentState.dataProject,
         dataProjectMember: data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success]['project_member'] as List)
-                  .map((e) => ModelProjectMember.fromJson(e))
+                  .map((e) => ModelUser.fromJson(e))
                   .toList()
             : [],
         dataTask: data.$1.containsKey(EnumFetchApiStatus.success)
@@ -47,8 +49,17 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
                         .where((sub) => sub['task_id'] == e['id'])
                         .map((e) => ModelSubTask.fromJson(e))
                         .toList();
+                final label =
+                    (data.$1[EnumFetchApiStatus.success]['label'] as List)
+                        .where((label) => label['task_id'] == e['id'])
+                        .map((e) => ModelLabel.fromJson(e))
+                        .toList();
 
-                return ModelTask.fromJson(e, subTask);
+                return ModelTask.fromJson(
+                  data: e,
+                  subTask: subTask,
+                  label: label,
+                );
               }).toList()
             : [],
 
@@ -57,6 +68,18 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
         noconnection: data.$2.noconnection,
         status: EnumStatusState.none,
       ),
+    );
+  }
+
+  FutureOr<void> _onChangeStatus(
+    ProjectDetailEventChangeStatus event,
+    Emitter<ProjectDetailState> emit,
+  ) {
+    emit(
+      (state is ProjectDetailStateLoaded
+              ? state as ProjectDetailStateLoaded
+              : ProjectDetailStateLoaded())
+          .copyWith(status: event.status),
     );
   }
 }

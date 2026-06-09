@@ -4,7 +4,7 @@ enum EnumWorkspace {
   workspaceDescription('workspace_description'),
   workspaceOwnerId('workspace_owner_id'),
   createdAt('created_at'),
-  companyId('id_company');
+  companyId('company_id');
 
   final String value;
   const EnumWorkspace(this.value);
@@ -71,6 +71,7 @@ enum EnumSprint {
 enum EnumTask {
   id('id'),
   projectId('project_id'),
+  labelIds('label_ids'),
   sprintId('sprint_id'),
   title('title'),
   description('description'),
@@ -188,6 +189,29 @@ enum EnumTaskStatus {
   const EnumTaskStatus(this.value);
 }
 
+extension EnumTaskStatusX on EnumTaskStatus {
+  static EnumTaskStatus fromServer(String value) => EnumTaskStatus.values
+      .firstWhere((e) => e.value == value, orElse: () => EnumTaskStatus.todo);
+
+  String get text {
+    switch (this) {
+      case EnumTaskStatus.todo:
+        return "Todo";
+      case EnumTaskStatus.inProgress:
+        return "In Progress";
+      case EnumTaskStatus.review:
+        return "Review";
+      case EnumTaskStatus.done:
+        return "Done";
+      case EnumTaskStatus.cancelled:
+        return "Cancelled";
+    }
+  }
+
+  static EnumTaskStatus fromText(String value) => EnumTaskStatus.values
+      .firstWhere((e) => e.text == value, orElse: () => EnumTaskStatus.todo);
+}
+
 enum EnumTaskPriority {
   lowest('lowest'),
   low('low'),
@@ -197,6 +221,35 @@ enum EnumTaskPriority {
 
   final String value;
   const EnumTaskPriority(this.value);
+}
+
+extension EnumTaskPriorityX on EnumTaskPriority {
+  static EnumTaskPriority fromServer(String value) =>
+      EnumTaskPriority.values.firstWhere(
+        (e) => e.value == value,
+        orElse: () => EnumTaskPriority.medium,
+      );
+
+  String get text {
+    switch (this) {
+      case EnumTaskPriority.lowest:
+        return "Lowest";
+      case EnumTaskPriority.low:
+        return "Low";
+      case EnumTaskPriority.medium:
+        return "Medium";
+      case EnumTaskPriority.high:
+        return "High";
+      case EnumTaskPriority.highest:
+        return "Highest";
+    }
+  }
+
+  static EnumTaskPriority fromText(String value) =>
+      EnumTaskPriority.values.firstWhere(
+        (e) => e.text == value,
+        orElse: () => EnumTaskPriority.medium,
+      );
 }
 
 enum EnumCompany {
@@ -222,10 +275,13 @@ enum EnumProjectStatus {
 
 extension EnumProjectStatusX on EnumProjectStatus {
   static EnumProjectStatus fromServer(String value) =>
-      EnumProjectStatus.values.firstWhere((element) => element.value == value);
+      EnumProjectStatus.values.firstWhere(
+        (e) => e.value == value,
+        orElse: () => EnumProjectStatus.unknown,
+      );
 
-  static String fromEnum(EnumProjectStatus value) {
-    switch (value) {
+  String get text {
+    switch (this) {
       case EnumProjectStatus.todo:
         return "Todo";
       case EnumProjectStatus.onProgress:
@@ -237,26 +293,15 @@ extension EnumProjectStatusX on EnumProjectStatus {
       case EnumProjectStatus.cancelled:
         return "Cancelled";
       case EnumProjectStatus.unknown:
-        return "Tidak Diketahui!";
+        return "Unknown!";
     }
   }
 
-  static EnumProjectStatus fromText(String value) {
-    switch (value) {
-      case "Todo":
-        return EnumProjectStatus.todo;
-      case "On Progress":
-        return EnumProjectStatus.onProgress;
-      case "Review":
-        return EnumProjectStatus.review;
-      case "Completed":
-        return EnumProjectStatus.completed;
-      case "Cancelled":
-        return EnumProjectStatus.cancelled;
-      default:
-        return EnumProjectStatus.unknown;
-    }
-  }
+  static EnumProjectStatus fromText(String value) =>
+      EnumProjectStatus.values.firstWhere(
+        (e) => e.text == value,
+        orElse: () => EnumProjectStatus.unknown,
+      );
 }
 
 enum EnumWorkspaceRole {
@@ -271,12 +316,15 @@ enum EnumWorkspaceRole {
 
 extension EnumWorkspaceRoleX on EnumWorkspaceRole {
   static EnumWorkspaceRole fromServer(String value) =>
-      EnumWorkspaceRole.values.firstWhere((element) => element.value == value);
+      EnumWorkspaceRole.values.firstWhere(
+        (e) => e.value == value,
+        orElse: () => EnumWorkspaceRole.guest,
+      );
 
-  static String fromEnum(EnumWorkspaceRole value) {
-    switch (value) {
+  String get text {
+    switch (this) {
       case EnumWorkspaceRole.owner:
-        return "Pemilik";
+        return "Owner";
       case EnumWorkspaceRole.admin:
         return "Admin";
       case EnumWorkspaceRole.member:
@@ -286,20 +334,11 @@ extension EnumWorkspaceRoleX on EnumWorkspaceRole {
     }
   }
 
-  static EnumWorkspaceRole fromText(String value) {
-    switch (value) {
-      case "Pemilik":
-        return EnumWorkspaceRole.owner;
-      case "Admin":
-        return EnumWorkspaceRole.admin;
-      case "Member":
-        return EnumWorkspaceRole.member;
-      case "Guest":
-        return EnumWorkspaceRole.guest;
-      default:
-        return EnumWorkspaceRole.guest;
-    }
-  }
+  static EnumWorkspaceRole fromText(String value) =>
+      EnumWorkspaceRole.values.firstWhere(
+        (e) => e.text == value,
+        orElse: () => EnumWorkspaceRole.guest,
+      );
 }
 
 enum EnumProjectRole {
@@ -315,6 +354,43 @@ enum EnumProjectRole {
 
   final String value;
   const EnumProjectRole(this.value);
+}
+
+extension EnumProjectRoleX on EnumProjectRole {
+  static EnumProjectRole fromServer(String value) =>
+      EnumProjectRole.values.firstWhere(
+        (e) => e.value == value,
+        orElse: () => EnumProjectRole.mobileDeveloper,
+      );
+
+  String get text {
+    switch (this) {
+      case EnumProjectRole.projectManager:
+        return "Project Manager";
+      case EnumProjectRole.backendDeveloper:
+        return "Backend Developer";
+      case EnumProjectRole.frontendDeveloper:
+        return "Frontend Developer";
+      case EnumProjectRole.flutterDeveloper:
+        return "Flutter Developer";
+      case EnumProjectRole.mobileDeveloper:
+        return "Mobile Developer";
+      case EnumProjectRole.uiUxDesigner:
+        return "UI/UX Designer";
+      case EnumProjectRole.qaEngineer:
+        return "QA Engineer";
+      case EnumProjectRole.devOps:
+        return "DevOps Engineer";
+      case EnumProjectRole.productOwner:
+        return "Product Owner";
+    }
+  }
+
+  static EnumProjectRole fromText(String value) =>
+      EnumProjectRole.values.firstWhere(
+        (e) => e.text == value,
+        orElse: () => EnumProjectRole.mobileDeveloper,
+      );
 }
 
 enum EnumActivityAction {

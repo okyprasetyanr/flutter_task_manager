@@ -22,7 +22,7 @@ class HelperDateConvert {
     }
   }
 
-  static String toDisplayUI({DateTime? date, bool withMinute = true}) {
+  static String toDisplayUI({DateTime? date, bool withMinute = false}) {
     final safeDate = date ?? DateTime.now();
     final pattern = withMinute ? _uiPatternWithMinute : _uiPatternDateOnly;
     return DateFormat(pattern).format(safeDate);

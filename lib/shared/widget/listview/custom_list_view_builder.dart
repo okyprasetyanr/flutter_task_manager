@@ -27,6 +27,7 @@ class CustomListViewBuilder<T> extends StatelessWidget {
       return CustomTextEmpty();
     } else {
       return ListView.builder(
+        shrinkWrap: true,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         itemCount: data.length,
         itemBuilder: (context, index) {

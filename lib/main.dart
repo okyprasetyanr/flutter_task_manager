@@ -16,7 +16,7 @@ void main() {
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider(create: (context) => UserSession()),
-        RepositoryProvider(create: (context) => LocalService()),
+        RepositoryProvider(create: (context) => LocalServices()),
         RepositoryProvider(create: (context) => ApiServices()),
         RepositoryProvider(create: (context) => ModelMessageCollector()),
         RepositoryProvider<ConnectionService>(

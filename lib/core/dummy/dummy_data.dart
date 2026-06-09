@@ -166,7 +166,7 @@ class DummyData {
         "email": "oky@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR002",
@@ -174,7 +174,7 @@ class DummyData {
         "email": "ahmad@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR003",
@@ -182,7 +182,7 @@ class DummyData {
         "email": "budi@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR004",
@@ -190,7 +190,7 @@ class DummyData {
         "email": "citra@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR005",
@@ -198,7 +198,7 @@ class DummyData {
         "email": "rizky@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR006",
@@ -206,7 +206,7 @@ class DummyData {
         "email": "dewi@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR007",
@@ -214,7 +214,7 @@ class DummyData {
         "email": "yoga@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR008",
@@ -222,7 +222,7 @@ class DummyData {
         "email": "nadia@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR009",
@@ -230,7 +230,7 @@ class DummyData {
         "email": "fajar@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR010",
@@ -238,7 +238,7 @@ class DummyData {
         "email": "lukman@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR011",
@@ -246,7 +246,7 @@ class DummyData {
         "email": "anisa@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR012",
@@ -254,7 +254,7 @@ class DummyData {
         "email": "kevin@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR013",
@@ -262,7 +262,7 @@ class DummyData {
         "email": "putra@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR014",
@@ -270,7 +270,7 @@ class DummyData {
         "email": "sarah@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "id": "USR015",
@@ -278,7 +278,7 @@ class DummyData {
         "email": "farhan@ringkas.dev",
         "photo_url": "",
         "created_at": "2026-06-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
     ],
   };
@@ -341,6 +341,7 @@ class DummyData {
         "story_point": 5,
         "reporter_id": "USR001",
         "assignee_id": "USR002",
+        "label_ids": ["LBL002", "LBL006"],
         "start_date": "2026-06-01",
         "due_date": "2026-06-03",
         "created_at": "2026-06-01T08:00:00Z",
@@ -356,6 +357,7 @@ class DummyData {
         "story_point": 3,
         "reporter_id": "USR001",
         "assignee_id": "USR003",
+        "label_ids": ["LBL002", "LBL005"],
         "start_date": "2026-06-01",
         "due_date": "2026-06-02",
         "created_at": "2026-06-01T09:00:00Z",
@@ -371,6 +373,7 @@ class DummyData {
         "story_point": 3,
         "reporter_id": "USR001",
         "assignee_id": "USR004",
+        "label_ids": ["LBL001", "LBL003"],
         "start_date": "2026-06-02",
         "due_date": "2026-06-04",
         "created_at": "2026-06-02T08:00:00Z",
@@ -386,6 +389,7 @@ class DummyData {
         "story_point": 8,
         "reporter_id": "USR001",
         "assignee_id": "USR002",
+        "label_ids": ["LBL002", "LBL005"],
         "start_date": "2026-06-03",
         "due_date": "2026-06-08",
         "created_at": "2026-06-03T08:00:00Z",
@@ -401,6 +405,7 @@ class DummyData {
         "story_point": 13,
         "reporter_id": "USR001",
         "assignee_id": "USR003",
+        "label_ids": ["LBL005"],
         "start_date": "2026-06-05",
         "due_date": "2026-06-15",
         "created_at": "2026-06-05T09:00:00Z",
@@ -416,6 +421,7 @@ class DummyData {
         "story_point": 13,
         "reporter_id": "USR001",
         "assignee_id": "USR002",
+        "label_ids": ["LBL005"],
         "start_date": "2026-06-05",
         "due_date": "2026-06-15",
         "created_at": "2026-06-05T09:10:00Z",
@@ -431,6 +437,7 @@ class DummyData {
         "story_point": 21,
         "reporter_id": "USR001",
         "assignee_id": "USR003",
+        "label_ids": ["LBL005"],
         "start_date": "2026-06-10",
         "due_date": "2026-06-25",
         "created_at": "2026-06-06T08:00:00Z",
@@ -446,6 +453,7 @@ class DummyData {
         "story_point": 13,
         "reporter_id": "USR001",
         "assignee_id": "USR002",
+        "label_ids": ["LBL001", "LBL005"],
         "start_date": "2026-06-12",
         "due_date": "2026-06-25",
         "created_at": "2026-06-06T09:00:00Z",
@@ -461,6 +469,7 @@ class DummyData {
         "story_point": 8,
         "reporter_id": "USR001",
         "assignee_id": "USR011",
+        "label_ids": ["LBL002", "LBL005", "LBL007"],
         "start_date": "2026-06-15",
         "due_date": "2026-06-30",
         "created_at": "2026-06-06T10:00:00Z",
@@ -468,7 +477,7 @@ class DummyData {
       },
       {
         "id": "TASK010",
-        "project_id": "PRJ002",
+        "project_id": "PRJ001",
         "title": "Release v1.0",
         "description": "Production deployment",
         "status": "todo",
@@ -476,6 +485,7 @@ class DummyData {
         "story_point": 5,
         "reporter_id": "USR001",
         "assignee_id": "USR001",
+        "label_ids": ["LBL007"],
         "start_date": "2026-08-25",
         "due_date": "2026-09-01",
         "created_at": "2026-06-06T11:00:00Z",
@@ -483,7 +493,6 @@ class DummyData {
       },
     ],
   };
-
   static final subTask = const {
     'status': 'success',
     'message': "Sukses",
@@ -1156,7 +1165,7 @@ class DummyData {
         "workspace_description": "Internal product development",
         "workspace_owner_id": "USR001",
         "created_at": "2026-01-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "workspace_id": "WS002",
@@ -1164,7 +1173,7 @@ class DummyData {
         "workspace_description": "Client workspace",
         "workspace_owner_id": "USR004",
         "created_at": "2026-02-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
       {
         "workspace_id": "WS003",
@@ -1172,7 +1181,7 @@ class DummyData {
         "workspace_description": "Freelance client management",
         "workspace_owner_id": "USR001",
         "created_at": "2026-03-01T08:00:00Z",
-        "id_company": "demo1",
+        "company_id": "demo1",
       },
     ],
   };

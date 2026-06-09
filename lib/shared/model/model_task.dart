@@ -2,16 +2,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
+import 'package:task_manager/shared/model/model_label.dart';
 import 'package:task_manager/shared/model/model_sub_task.dart';
 
 class ModelTask extends Equatable {
   final String id;
   final String projectId;
+  final List<String> labelIds;
   final String? sprintId;
   final String title;
   final String description;
-  final String status;
-  final String priority;
+  final EnumTaskStatus status;
+  final EnumTaskPriority priority;
   final int storyPoint;
   final String reporterId;
   final String assigneeId;
@@ -20,10 +22,12 @@ class ModelTask extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
   final List<ModelSubTask> subTask;
+  final List<ModelLabel> label;
 
   const ModelTask({
     required this.id,
     required this.projectId,
+    required this.labelIds,
     this.sprintId,
     required this.title,
     required this.description,
@@ -37,19 +41,22 @@ class ModelTask extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     required this.subTask,
+    required this.label,
   });
 
-  factory ModelTask.fromJson(
-    Map<String, dynamic> data,
-    List<ModelSubTask> subTask,
-  ) {
+  factory ModelTask.fromJson({
+    required Map<String, dynamic> data,
+    required List<ModelSubTask> subTask,
+    required List<ModelLabel> label,
+  }) {
     return ModelTask(
       id: data[EnumTask.id.value],
       projectId: data[EnumTask.projectId.value],
+      labelIds: data[EnumTask.labelIds.value],
       title: data[EnumTask.title.value],
       description: data[EnumTask.description.value],
-      status: data[EnumTask.status.value],
-      priority: data[EnumTask.priority.value],
+      status: EnumTaskStatusX.fromServer(data[EnumTask.status.value]),
+      priority: EnumTaskPriorityX.fromServer(data[EnumTask.priority.value]),
       storyPoint: data[EnumTask.storyPoint.value],
       reporterId: data[EnumTask.reporterId.value],
       assigneeId: data[EnumTask.assigneeId.value],
@@ -58,17 +65,19 @@ class ModelTask extends Equatable {
       createdAt: HelperDateConvert.toDateTime(data[EnumTask.createdAt.value]),
       updatedAt: HelperDateConvert.toDateTime(data[EnumTask.updatedAt.value]),
       subTask: subTask,
+      label: label,
     );
   }
 
   ModelTask copyWith({
     String? id,
     String? projectId,
+    List<String>? labelIds,
     String? sprintId,
     String? title,
     String? description,
-    String? status,
-    String? priority,
+    EnumTaskStatus? status,
+    EnumTaskPriority? priority,
     int? storyPoint,
     String? reporterId,
     String? assigneeId,
@@ -77,10 +86,12 @@ class ModelTask extends Equatable {
     DateTime? createdAt,
     DateTime? updatedAt,
     List<ModelSubTask>? subTask,
+    List<ModelLabel>? label,
   }) {
     return ModelTask(
       id: id ?? this.id,
       projectId: projectId ?? this.projectId,
+      labelIds: labelIds ?? this.labelIds,
       title: title ?? this.title,
       description: description ?? this.description,
       status: status ?? this.status,
@@ -93,6 +104,7 @@ class ModelTask extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       subTask: subTask ?? this.subTask,
+      label: label ?? this.label,
     );
   }
 
@@ -100,6 +112,7 @@ class ModelTask extends Equatable {
   List<Object?> get props => [
     id,
     projectId,
+    labelIds,
     sprintId,
     title,
     description,
@@ -113,5 +126,6 @@ class ModelTask extends Equatable {
     createdAt,
     updatedAt,
     subTask,
+    label,
   ];
 }
