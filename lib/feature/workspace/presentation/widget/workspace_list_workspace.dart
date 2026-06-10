@@ -38,7 +38,7 @@ class WorkspaceListWorkspace extends StatelessWidget {
             context: context,
             routeName: RoutesEnum.workspaceDetail,
             replace: false,
-            arguments: {'dataWorkspace': data},
+            arguments: {'dataTransfered': data},
           ).navigate(),
         );
       },

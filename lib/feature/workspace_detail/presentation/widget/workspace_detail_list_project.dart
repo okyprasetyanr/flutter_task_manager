@@ -56,7 +56,7 @@ class WorkspaceDetailListProject extends StatelessWidget {
             context: context,
             routeName: RoutesEnum.projectDetail,
             replace: false,
-            arguments: {'dataProject': data},
+            arguments: {'dataTransfered': data},
           ).navigate(),
         },
       ),

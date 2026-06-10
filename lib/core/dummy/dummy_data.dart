@@ -493,6 +493,7 @@ class DummyData {
       },
     ],
   };
+
   static final subTask = const {
     'status': 'success',
     'message': "Sukses",

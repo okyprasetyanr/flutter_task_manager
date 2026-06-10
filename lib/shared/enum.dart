@@ -1,3 +1,8 @@
+import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
+import 'package:task_manager/shared/model/model_display_history.dart';
+import 'package:task_manager/shared/model/model_task_history.dart';
+import 'package:task_manager/shared/model/model_user.dart';
+
 enum EnumWorkspace {
   workspaceId('workspace_id'),
   workspaceName('workspace_name'),
@@ -165,7 +170,7 @@ enum EnumNotification {
   const EnumNotification(this.value);
 }
 
-enum EnumTaskHistory {
+enum EnumHistoryTask {
   id('id'),
   taskId('task_id'),
   field('field'),
@@ -175,7 +180,7 @@ enum EnumTaskHistory {
   changedAt('changed_at');
 
   final String value;
-  const EnumTaskHistory(this.value);
+  const EnumHistoryTask(this.value);
 }
 
 enum EnumTaskStatus {
@@ -412,4 +417,72 @@ enum EnumActivityAction {
 
   final String value;
   const EnumActivityAction(this.value);
+}
+
+enum EnumHistoryField {
+  status,
+  priority,
+  assigneeId,
+  storyPoint,
+  dueDate;
+
+  String get label {
+    switch (this) {
+      case EnumHistoryField.status:
+        return 'Status';
+
+      case EnumHistoryField.priority:
+        return 'Priority';
+
+      case EnumHistoryField.assigneeId:
+        return 'Assignee';
+
+      case EnumHistoryField.storyPoint:
+        return 'Story Point';
+
+      case EnumHistoryField.dueDate:
+        return 'Due Date';
+    }
+  }
+
+  static EnumHistoryField fromString(String value) {
+    return EnumHistoryField.values.firstWhere((e) => e.name == value);
+  }
+}
+
+extension ModelHistoryTaskX on ModelHistoryTask {
+  HistoryDisplayValue display({required List<ModelUser> users}) {
+    switch (field) {
+      case EnumHistoryField.assigneeId:
+        return HistoryDisplayValue(
+          oldValue:
+              users.where((e) => e.id == oldValue).firstOrNull?.name ?? '-',
+          newValue:
+              users.where((e) => e.id == newValue).firstOrNull?.name ?? '-',
+        );
+
+      case EnumHistoryField.dueDate:
+        return HistoryDisplayValue(
+          oldValue: HelperDateConvert.toDisplayUI(
+            date: HelperDateConvert.toDateTime(oldValue),
+          ),
+          newValue: HelperDateConvert.toDisplayUI(
+            date: HelperDateConvert.toDateTime(newValue),
+          ),
+        );
+      case EnumHistoryField.status:
+        return HistoryDisplayValue(
+          oldValue: EnumTaskStatusX.fromServer(oldValue).text,
+          newValue: EnumTaskStatusX.fromServer(newValue).text,
+        );
+
+      case EnumHistoryField.priority:
+        return HistoryDisplayValue(
+          oldValue: EnumTaskPriorityX.fromServer(oldValue).text,
+          newValue: EnumTaskPriorityX.fromServer(newValue).text,
+        );
+      default:
+        return HistoryDisplayValue(oldValue: oldValue, newValue: newValue);
+    }
+  }
 }

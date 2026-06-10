@@ -26,13 +26,15 @@ class WorkspaceDetailBloc
         ? state as WorkspaceDetailStateLoaded
         : WorkspaceDetailStateLoaded();
     add(WorkspaceDetailEventChangeStatus(status: EnumStatusState.loading));
+    final dataWorkspace = event.data ?? currentState.dataWorkspace!;
     final data = await repo.getWorkspaceDetai(
-      workspaceId: event.data.workspaceId,
-      companyId: event.data.companyId,
+      workspaceId: dataWorkspace.workspaceId,
+      companyId: dataWorkspace.companyId,
     );
     emit(
       currentState.copyWith(
-        dataWorkspace: event.data,
+        dataWorkspace: dataWorkspace,
+        dataUser: repo.getUser(),
         dataProject: data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success]['workspace_project'] as List)
                   .map((e) => ModelProject.fromJson(e))

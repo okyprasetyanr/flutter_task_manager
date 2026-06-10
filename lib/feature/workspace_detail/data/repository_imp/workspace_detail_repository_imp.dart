@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:task_manager/core/cache/user_cache.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/workspace_detail/data/local/workspace_detail_local.dart';
 import 'package:task_manager/feature/workspace_detail/data/remote/workspace_detail_remote.dart';
@@ -6,6 +7,7 @@ import 'package:task_manager/feature/workspace_detail/domain/repository/workspac
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
 import 'package:task_manager/shared/model/model_message_collector.dart';
+import 'package:task_manager/shared/model/model_user.dart';
 
 class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   final WorkspaceDetailRemote remote;
@@ -13,6 +15,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   final UserSession userSession;
   final HelperCollectData helper;
   final ModelMessageCollector messageCollector;
+  final UserCache userCache;
 
   WorkspaceDetailRepositoryImp({
     required this.remote,
@@ -20,6 +23,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     required this.userSession,
     required this.helper,
     required this.messageCollector,
+    required this.userCache,
   });
 
   @override
@@ -28,6 +32,8 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     required String workspaceId,
     required String companyId,
   }) async {
+    await fetchUser();
+
     final data = await helper.helperCollectData(
       remoteFunc: () async => await remote.getWorkspaceDetail(
         workspaceId: workspaceId,
@@ -37,5 +43,26 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     );
 
     return (data, messageCollector.getMessage(data));
+  }
+
+  Future<void> fetchUser() async {
+    final data = await helper.helperCollectData(
+      remoteFunc: () async =>
+          await remote.getUser(companyId: userSession.getCompanyId()),
+      localFunc: () async => {},
+    );
+
+    if (data.containsKey(EnumFetchApiStatus.success)) {
+      userCache.setUser(
+        (data[EnumFetchApiStatus.success] as List)
+            .map((e) => ModelUser.fromJson(e))
+            .toList(),
+      );
+    }
+  }
+
+  @override
+  List<ModelUser> getUser() {
+    return userCache.getUser();
   }
 }

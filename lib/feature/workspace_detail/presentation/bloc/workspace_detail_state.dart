@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_project.dart';
+import 'package:task_manager/shared/model/model_user.dart';
 import 'package:task_manager/shared/model/model_workspace.dart';
 import 'package:task_manager/shared/model/model_workspace_member.dart';
 
@@ -12,6 +13,7 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
     with EquatableMixin {
   final ModelWorkspace? dataWorkspace;
   final List<ModelWorkspaceMember> dataWorkspaceMember;
+  final List<ModelUser> dataUser;
   final List<ModelProject> dataProject;
   final EnumStatusState status;
   final String? failed;
@@ -26,15 +28,16 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
     this.dataWorkspace,
     this.dataWorkspaceMember = const [],
     this.dataProject = const [],
+    this.dataUser = const [],
   });
 
   WorkspaceDetailStateLoaded copyWith({
     String? workspaceName,
-    String? companyName,
     String? failed,
     String? error,
     String? noconnection,
     ModelWorkspace? dataWorkspace,
+    List<ModelUser>? dataUser,
     List<ModelWorkspaceMember>? dataWorkspaceMember,
     List<ModelProject>? dataProject,
     EnumStatusState? status,
@@ -47,6 +50,7 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
       dataWorkspaceMember: dataWorkspaceMember ?? this.dataWorkspaceMember,
       dataProject: dataProject ?? this.dataProject,
       status: status ?? this.status,
+      dataUser: dataUser ?? this.dataUser,
     );
   }
 
@@ -55,6 +59,7 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
     dataWorkspace,
     dataWorkspaceMember,
     dataProject,
+    dataUser,
     status,
     error,
     failed,

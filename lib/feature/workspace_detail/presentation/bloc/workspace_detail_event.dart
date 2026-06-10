@@ -4,7 +4,7 @@ import 'package:task_manager/shared/model/model_workspace.dart';
 class WorkspaceDetailEvent {}
 
 class WorkspaceDetailEventGetData extends WorkspaceDetailEvent {
-  final ModelWorkspace data;
+  final ModelWorkspace? data;
 
   WorkspaceDetailEventGetData({required this.data});
 }

@@ -26,4 +26,8 @@ class WorkspaceDetailRemote {
       'message': '',
     };
   }
+
+  Future<Map<String, dynamic>> getUser({required String companyId}) {
+    return apiServices.getUser(companyId);
+  }
 }

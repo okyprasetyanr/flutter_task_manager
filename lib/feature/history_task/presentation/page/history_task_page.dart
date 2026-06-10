@@ -3,25 +3,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/app_properties/app_properties.dart';
 import 'package:task_manager/base_layout/base_layout.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
-import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
-import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
-import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_header.dart';
-import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_list_project.dart';
-import 'package:task_manager/shared/model/model_user.dart';
+import 'package:task_manager/feature/history_task/presentation/bloc/history_task_bloc.dart';
+import 'package:task_manager/feature/history_task/presentation/bloc/history_task_state.dart';
+import 'package:task_manager/feature/history_task/presentation/widget/history_task_header.dart';
+import 'package:task_manager/feature/history_task/presentation/widget/history_task_list_history.dart';
 import 'package:task_manager/shared/model/model_workspace.dart';
 import 'package:task_manager/shared/style/icon_size.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/widget/button/custom_button_icon.dart';
 import 'package:task_manager/shared/widget/navigation_gesture/widget_navigation_gesture.dart';
 
-class WorkspaceDetailPage extends StatefulWidget {
-  const WorkspaceDetailPage({super.key});
+class HistoryTaskPage extends StatefulWidget {
+  const HistoryTaskPage({super.key});
 
   @override
-  State<WorkspaceDetailPage> createState() => _WorkspaceDetailPageState();
+  State<HistoryTaskPage> createState() => _HistoryTaskPageState();
 }
 
-class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
+class _HistoryTaskPageState extends State<HistoryTaskPage> {
   final isOpen = ValueNotifier<bool>(false);
   final currentPage = ValueNotifier<bool>(true);
   @override
@@ -51,8 +50,8 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
             isOpen.value = !isOpen.value;
           },
         ),
-        WorkspaceDetailHeader(),
-        Expanded(child: WorkspaceDetailListProject()),
+        HistoryTaskHeader(),
+        Expanded(child: HistoryTaskListHistory()),
       ],
     );
   }
@@ -70,20 +69,14 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
         "onTap": () {},
       },
     ];
-    return BlocSelector<
-      WorkspaceDetailBloc,
-      WorkspaceDetailState,
-      (ModelWorkspace?, List<ModelUser>)
-    >(
+    return BlocSelector<HistoryTaskBloc, HistoryTaskState, ModelWorkspace?>(
       selector: (state) {
-        return state is WorkspaceDetailStateLoaded
-            ? (state.dataWorkspace, state.dataUser)
-            : (null, []);
+        return state is HistoryTaskStateLoaded ? state.dataWorkspace : null;
       },
-      builder: (context, state) {
+      builder: (context, workspace) {
         return NavigationGesture(
-          arguments: {'dataTransfered': state},
-          currentPage: RoutesEnum.workspaceDetail,
+          arguments: {'dataTransfered': workspace},
+          currentPage: RoutesEnum.historyTask,
           attContent: contentNavGesture,
           isOpen: isOpen,
           close: () {

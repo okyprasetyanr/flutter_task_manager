@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/cache/user_cache.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/services/api_service/api_services.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
+import 'package:task_manager/feature/history_task/data/local/history_task_local.dart';
+import 'package:task_manager/feature/history_task/data/remote/history_task_remote.dart';
+import 'package:task_manager/feature/history_task/data/repository_imp/history_task_repository_imp.dart';
+import 'package:task_manager/feature/history_task/domain/repository/history_task_repository.dart';
+import 'package:task_manager/feature/history_task/presentation/bloc/history_task_bloc.dart';
+import 'package:task_manager/feature/history_task/presentation/bloc/history_task_event.dart';
+import 'package:task_manager/feature/history_task/presentation/page/history_task_page.dart';
 import 'package:task_manager/feature/project_detail/data/local/project_detail_local.dart';
 import 'package:task_manager/feature/project_detail/data/remote/project_detail_remote.dart';
 import 'package:task_manager/feature/project_detail/data/repository_imp/project_detail_repository_imp.dart';
@@ -35,6 +43,7 @@ import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_da
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/model/model_message_collector.dart';
 import 'package:task_manager/shared/model/model_project.dart';
+import 'package:task_manager/shared/model/model_user.dart';
 import 'package:task_manager/shared/model/model_workspace.dart';
 
 final routes = {
@@ -59,6 +68,7 @@ final routes = {
           userSession: context.read<UserSession>(),
           helper: context.read<HelperCollectData>(),
         ),
+
         child: BlocProvider(
           create: (context) =>
               WorkspaceBloc(context.read<WorkspaceRepository>())
@@ -68,10 +78,10 @@ final routes = {
       ),
   '/${RoutesEnum.workspaceDetail}': (context) {
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
-    final dataWorkspace = args!['dataWorkspace'] as ModelWorkspace;
-    devLog("Log Routes: ArgumentData: WorkspaceDetail: $dataWorkspace");
+    final data = args!['dataTransfered'] as ModelWorkspace;
     return RepositoryProvider<WorkspaceDetailRepository>(
       create: (context) => WorkspaceDetailRepositoryImp(
+        userCache: context.read<UserCache>(),
         remote: WorkspaceDetailRemote(apiServices: context.read<ApiServices>()),
         local: WorkspaceDetailLocal(),
         userSession: context.read<UserSession>(),
@@ -81,16 +91,15 @@ final routes = {
       child: BlocProvider(
         create: (context) =>
             WorkspaceDetailBloc(context.read<WorkspaceDetailRepository>())
-              ..add(WorkspaceDetailEventGetData(data: dataWorkspace)),
+              ..add(WorkspaceDetailEventGetData(data: data)),
         child: WorkspaceDetailPage(),
       ),
     );
   },
   '/${RoutesEnum.projectDetail}': (context) {
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
-    final dataProject = args!['dataProject'] as ModelProject;
-
-    devLog("Log Routes: ArgumentData: ProjectDetail: $dataProject");
+    final data = args!['dataTransfered'] as ModelProject;
+    devLog("Log Routes: ArgumentData: ProjectDetail: $data");
     return RepositoryProvider<ProjectDetailRepository>(
       create: (context) => ProjectDetailRepositoryImp(
         remote: ProjectDetailRemote(apiServices: context.read<ApiServices>()),
@@ -102,8 +111,28 @@ final routes = {
       child: BlocProvider(
         create: (context) =>
             ProjectDetailBloc(context.read<ProjectDetailRepository>())
-              ..add(ProjectDetailEventGetData(data: dataProject)),
+              ..add(ProjectDetailEventGetData(data: data)),
         child: ProjectDetailPage(),
+      ),
+    );
+  },
+  '/${RoutesEnum.historyTask}': (context) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map?;
+    final data = args!['dataTransfered'] as (ModelWorkspace, List<ModelUser>);
+    return RepositoryProvider<HistoryTaskRepository>(
+      create: (context) => HistoryTaskRepositoryImp(
+        userCache: context.read<UserCache>(),
+        remote: HistoryTaskRemote(apiServices: context.read<ApiServices>()),
+        local: HistoryTaskLocal(),
+        userSession: context.read<UserSession>(),
+        helper: context.read<HelperCollectData>(),
+        messageCollector: context.read<ModelMessageCollector>(),
+      ),
+      child: BlocProvider(
+        create: (context) =>
+            HistoryTaskBloc(context.read<HistoryTaskRepository>())
+              ..add(HistoryTaskEventGetData(data: data.$1, user: data.$2)),
+        child: HistoryTaskPage(),
       ),
     );
   },

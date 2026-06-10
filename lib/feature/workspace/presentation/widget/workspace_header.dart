@@ -12,13 +12,13 @@ class WorkspaceHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomRowHeader(
-      widgetLeft: Text('Ruang Kerja', style: titleTextStyle),
+      widgetLeft: Text('Workspace', style: titleTextStyle),
       widgetRight: BlocSelector<WorkspaceBloc, WorkspaceState, String?>(
         selector: (state) =>
             state is WorkspaceStateLoaded ? state.companyName : null,
         builder: (context, state) => state != null
             ? Text(
-                "Perusahaan $state",
+                "$state Company",
                 style: lv1TextStyle,
                 textAlign: TextAlign.end,
               )

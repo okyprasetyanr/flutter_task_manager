@@ -1,1 +1,7 @@
-enum RoutesEnum { login, workspace, workspaceDetail, projectDetail }
+enum RoutesEnum {
+  login,
+  workspace,
+  workspaceDetail,
+  projectDetail,
+  historyTask,
+}

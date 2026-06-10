@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/cache/user_cache.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/routes/routes_navigator.dart';
 import 'package:task_manager/core/services/api_service/api_services.dart';
@@ -15,6 +16,7 @@ void main() {
   runApp(
     MultiRepositoryProvider(
       providers: [
+        RepositoryProvider(create: (context) => UserCache(user: [])),
         RepositoryProvider(create: (context) => UserSession()),
         RepositoryProvider(create: (context) => LocalServices()),
         RepositoryProvider(create: (context) => ApiServices()),
