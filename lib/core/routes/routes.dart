@@ -19,6 +19,13 @@ import 'package:task_manager/feature/project_detail/domain/repository/project_de
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_event.dart';
 import 'package:task_manager/feature/project_detail/presentation/page/project_detail_page.dart';
+import 'package:task_manager/feature/task_detail/data/local/task_detail_local.dart';
+import 'package:task_manager/feature/task_detail/data/remote/task_detail_remote.dart';
+import 'package:task_manager/feature/task_detail/data/repository_imp/task_detail_repository_imp.dart';
+import 'package:task_manager/feature/task_detail/domain/repository/task_detail_repository.dart';
+import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_bloc.dart';
+import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_event.dart';
+import 'package:task_manager/feature/task_detail/presentation/page/task_detail_page.dart';
 import 'package:task_manager/feature/workspace_detail/data/local/workspace_detail_local.dart';
 import 'package:task_manager/feature/workspace_detail/data/remote/workspace_detail_remote.dart';
 import 'package:task_manager/feature/workspace_detail/data/repository_imp/workspace_detail_repository_imp.dart';
@@ -43,6 +50,7 @@ import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_da
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/model/model_message_collector.dart';
 import 'package:task_manager/shared/model/model_project.dart';
+import 'package:task_manager/shared/model/model_task.dart';
 import 'package:task_manager/shared/model/model_user.dart';
 import 'package:task_manager/shared/model/model_workspace.dart';
 
@@ -133,6 +141,27 @@ final routes = {
             HistoryTaskBloc(context.read<HistoryTaskRepository>())
               ..add(HistoryTaskEventGetData(data: data.$1, user: data.$2)),
         child: HistoryTaskPage(),
+      ),
+    );
+  },
+  '/${RoutesEnum.taskDetail}': (context) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map?;
+    final data = args!['dataTransfered'] as ModelTask;
+
+    return RepositoryProvider<TaskDetailRepository>(
+      create: (context) => TaskDetailRepositoryImp(
+        remote: TaskDetailRemote(apiServices: context.read<ApiServices>()),
+        local: TaskDetailLocal(),
+        userSession: context.read<UserSession>(),
+        helper: context.read<HelperCollectData>(),
+        messageCollector: context.read<ModelMessageCollector>(),
+        userCache: context.read<UserCache>(),
+      ),
+      child: BlocProvider(
+        create: (context) =>
+            TaskDetailBloc(context.read<TaskDetailRepository>())
+              ..add(TaskDetailEventGetData(dataTask: data)),
+        child: TaskDetailPage(),
       ),
     );
   },

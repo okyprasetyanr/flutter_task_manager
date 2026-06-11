@@ -1,11 +1,27 @@
 import 'package:task_manager/core/dummy/dummy_data.dart';
+import 'package:task_manager/shared/enum.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class ApiServices {
   Future<Map<String, dynamic>> getProject(
     String workspaceId,
     String companyId,
   ) async {
-    return DummyData.project;
+    final data = DummyData.project;
+    final filteredData = {
+      ...data,
+      'results': (data['results'] as List)
+          .where(
+            (element) =>
+                element[EnumProject.projectWorkspaceId.value] == workspaceId,
+          )
+          .toList(),
+    };
+
+    devLog(
+      "Log ApiServices getProject: $filteredData, workspace_id: $workspaceId",
+    );
+    return filteredData;
   }
 
   Future<Map<String, dynamic>> getUser(String companyId) async {
@@ -40,9 +56,15 @@ class ApiServices {
   Future<Map<String, dynamic>> getComments(
     String companyId,
     String idTask,
-    String idUser,
   ) async {
-    return DummyData.comment;
+    final data = DummyData.comment;
+    final filteredData = {
+      ...data,
+      'results': (data['results'] as List)
+          .where((e) => e[EnumComment.taskId.value] == idTask)
+          .toList(),
+    };
+    return filteredData;
   }
 
   Future<Map<String, dynamic>> getAttachment(
@@ -68,7 +90,17 @@ class ApiServices {
     String workspaceId,
     String companyId,
   ) async {
-    return DummyData.workspaceMember;
+    final data = DummyData.workspaceMember;
+    final filteredData = {
+      ...data,
+      'results': (data['results'] as List)
+          .where(
+            (element) =>
+                element[EnumWorkspaceMember.workspaceId.value] == workspaceId,
+          )
+          .toList(),
+    };
+    return filteredData;
   }
 
   Future<Map<String, dynamic>> getSprint(String projectId) async {
@@ -79,8 +111,25 @@ class ApiServices {
     return DummyData.notification;
   }
 
-  Future<Map<String, dynamic>> getTaskHistory() async {
-    return DummyData.taskHistory;
+  Future<Map<String, dynamic>> getTaskHistory({
+    required String workspaceId,
+  }) async {
+    final data = DummyData.taskHistory;
+    final filteredData = {
+      ...data,
+      'results': (data['results'] as List)
+          .where(
+            (element) =>
+                element[EnumHistoryTask.workspaceId.value] == workspaceId,
+          )
+          .toList(),
+    };
+
+    devLog(
+      "Log ApiServices: getTaskHistory: data:$filteredData, workspaceId: $workspaceId",
+    );
+
+    return filteredData;
   }
 
   Future<Map<String, dynamic>> getLogin() async {

@@ -6,7 +6,7 @@ import 'package:task_manager/feature/project_detail/presentation/bloc/project_de
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_user.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/listview/custom_list_view_builder.dart';
+import 'package:task_manager/shared/widget/listview/custom_list_view_builder_v.dart';
 
 class ProjectDetailListMember extends StatelessWidget {
   const ProjectDetailListMember({super.key});
@@ -26,10 +26,10 @@ class ProjectDetailListMember extends StatelessWidget {
                 ? (state.dataProjectMember, state.status)
                 : ([], EnumStatusState.loading),
             builder: (context, state) {
-              return CustomListViewBuilder<ModelUser>(
+              return CustomListViewBuilderV<ModelUser>(
                 status: state.$2,
                 data: state.$1,
-                content: (data) => [
+                content: (data, _) => [
                   Text(data.name, style: lv05TextStyle),
                   Text(data.email, style: lv05TextStyle),
                 ],

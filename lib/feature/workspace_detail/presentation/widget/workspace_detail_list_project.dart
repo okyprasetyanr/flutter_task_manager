@@ -9,7 +9,7 @@ import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/shared/model/model_project.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/listview/custom_list_view_builder.dart';
+import 'package:task_manager/shared/widget/listview/custom_list_view_builder_v.dart';
 
 class WorkspaceDetailListProject extends StatelessWidget {
   const WorkspaceDetailListProject({super.key});
@@ -24,10 +24,10 @@ class WorkspaceDetailListProject extends StatelessWidget {
       selector: (state) => state is WorkspaceDetailStateLoaded
           ? (state.dataProject, state.status)
           : ([], EnumStatusState.loading),
-      builder: (context, state) => CustomListViewBuilder<ModelProject>(
+      builder: (context, state) => CustomListViewBuilderV<ModelProject>(
         status: state.$2,
         data: state.$1,
-        content: (data) => [
+        content: (data, _) => [
           Text(data.projectName, style: lv05TextStyle),
           const SizedBox(height: 4),
           Text(data.projectType, style: lv05TextStyle),

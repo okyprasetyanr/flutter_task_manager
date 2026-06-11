@@ -1,0 +1,14 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:task_manager/core/services/api_service/api_services.dart';
+
+class TaskDetailRemote {
+  final ApiServices apiServices;
+  TaskDetailRemote({required this.apiServices});
+
+  Future<Map<String, dynamic>> getComment({
+    required String companyId,
+    required String taskId,
+  }) async {
+    return await apiServices.getComments(companyId, taskId);
+  }
+}

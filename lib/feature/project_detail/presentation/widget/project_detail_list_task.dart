@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/routes/routes_enum.dart';
+import 'package:task_manager/core/routes/routes_navigator.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_list_sub_task.dart';
@@ -10,7 +12,7 @@ import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/shared/model/model_task.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/listview/custom_list_view_builder.dart';
+import 'package:task_manager/shared/widget/listview/custom_list_view_builder_v.dart';
 
 class ProjectDetailListTask extends StatefulWidget {
   const ProjectDetailListTask({super.key});
@@ -35,10 +37,10 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
                 ? (state.dataTask, state.status)
                 : ([], EnumStatusState.loading),
             builder: (context, state) {
-              return CustomListViewBuilder(
+              return CustomListViewBuilderV(
                 status: state.$2,
                 data: state.$1,
-                content: (data) => [
+                content: (data, status) => [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -75,9 +77,16 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
                       Text(data.status.text, style: lv05TextStyle),
                     ],
                   ),
-                  ProjectDetailListSubTask(data: data.subTask),
+                  ProjectDetailListSubTask(data: data.subTask, status: status),
                 ],
-                onPressed: (data) => {},
+                onPressed: (data) => {
+                  RoutesNavigator(
+                    context: context,
+                    routeName: RoutesEnum.taskDetail,
+                    replace: false,
+                    arguments: {'dataTransfered': (data)},
+                  ).navigate(),
+                },
               );
             },
           ),

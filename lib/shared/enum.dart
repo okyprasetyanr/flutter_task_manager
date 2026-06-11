@@ -45,7 +45,8 @@ enum EnumProject {
   projectCreatedId('project_created_id'),
   projectTotalContribut('project_total_contribut'),
   projectStart('project_start'),
-  projectEnd('project_end');
+  projectEnd('project_end'),
+  projectWorkspaceId('workspace_id');
 
   final String value;
   const EnumProject(this.value);
@@ -126,7 +127,8 @@ enum EnumComment {
   taskId('task_id'),
   userId('user_id'),
   content('content'),
-  createdAt('created_at');
+  createdAt('created_at'),
+  updatedAt('updated_at');
 
   final String value;
   const EnumComment(this.value);
@@ -177,7 +179,8 @@ enum EnumHistoryTask {
   oldValue('old_value'),
   newValue('new_value'),
   changedBy('changed_by'),
-  changedAt('changed_at');
+  changedAt('changed_at'),
+  workspaceId('workspace_id');
 
   final String value;
   const EnumHistoryTask(this.value);

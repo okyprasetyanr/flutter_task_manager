@@ -7,7 +7,7 @@ import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_workspace.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/listview/custom_list_view_builder.dart';
+import 'package:task_manager/shared/widget/listview/custom_list_view_builder_v.dart';
 
 class WorkspaceListWorkspace extends StatelessWidget {
   const WorkspaceListWorkspace({super.key});
@@ -23,8 +23,8 @@ class WorkspaceListWorkspace extends StatelessWidget {
           ? (state.dataWorkspace, state.status)
           : ([], EnumStatusState.loading),
       builder: (context, state) {
-        return CustomListViewBuilder<ModelWorkspace>(
-          content: (data) => [
+        return CustomListViewBuilderV<ModelWorkspace>(
+          content: (data, _) => [
             Text(data.workspaceName, style: lv05TextStyle),
             const SizedBox(height: 4),
             Text(

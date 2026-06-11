@@ -24,6 +24,7 @@ class DummyData {
       {
         "project_name": "Ringkas POS Mobile",
         "project_id": "PRJ001",
+        "workspace_id": "WS001",
         "project_type": "Mobile App",
         "project_status": "On Progress",
         "project_created_by": "Oky",
@@ -35,6 +36,7 @@ class DummyData {
       {
         "project_name": "Ringkas Task",
         "project_id": "PRJ002",
+        "workspace_id": "WS001",
         "project_type": "Flutter App",
         "project_status": "On Progress",
         "project_created_by": "Oky",
@@ -46,6 +48,7 @@ class DummyData {
       {
         "project_name": "Inventory Management System",
         "project_id": "PRJ003",
+        "workspace_id": "WS002",
         "project_type": "Web App",
         "project_status": "Completed",
         "project_created_by": "Budi",
@@ -57,6 +60,7 @@ class DummyData {
       {
         "project_name": "CRM Dashboard",
         "project_id": "PRJ004",
+        "workspace_id": "WS002",
         "project_type": "Admin Panel",
         "project_status": "On Progress",
         "project_created_by": "Ahmad",
@@ -68,6 +72,7 @@ class DummyData {
       {
         "project_name": "Customer Loyalty App",
         "project_id": "PRJ005",
+        "workspace_id": "WS002",
         "project_type": "Mobile App",
         "project_status": "Pending",
         "project_created_by": "Sinta",
@@ -79,6 +84,7 @@ class DummyData {
       {
         "project_name": "Warehouse Monitoring",
         "project_id": "PRJ006",
+        "workspace_id": "WS002",
         "project_type": "Desktop App",
         "project_status": "On Progress",
         "project_created_by": "Rizky",
@@ -90,6 +96,7 @@ class DummyData {
       {
         "project_name": "Finance Tracker",
         "project_id": "PRJ007",
+        "workspace_id": "WS003",
         "project_type": "Desktop App",
         "project_status": "Cancelled",
         "project_created_by": "Dewi",
@@ -101,6 +108,7 @@ class DummyData {
       {
         "project_name": "Delivery Management",
         "project_id": "PRJ008",
+        "workspace_id": "WS002",
         "project_type": "Web App",
         "project_status": "On Progress",
         "project_created_by": "Yoga",
@@ -112,6 +120,7 @@ class DummyData {
       {
         "project_name": "HR Information System",
         "project_id": "PRJ009",
+        "workspace_id": "WS002",
         "project_type": "Web App",
         "project_status": "Review",
         "project_created_by": "Nadia",
@@ -123,6 +132,7 @@ class DummyData {
       {
         "project_name": "E-Commerce Dashboard",
         "project_id": "PRJ010",
+        "workspace_id": "WS002",
         "project_type": "Admin Panel",
         "project_status": "On Progress",
         "project_created_by": "Citra",
@@ -134,6 +144,7 @@ class DummyData {
       {
         "project_name": "Booking Reservation System",
         "project_id": "PRJ011",
+        "workspace_id": "WS003",
         "project_type": "Web App",
         "project_status": "Todo",
         "project_created_by": "Fajar",
@@ -145,6 +156,7 @@ class DummyData {
       {
         "project_name": "Analytics Reporting",
         "project_id": "PRJ012",
+        "workspace_id": "WS003",
         "project_type": "Backend Service",
         "project_status": "On Progress",
         "project_created_by": "Lukman",
@@ -878,6 +890,7 @@ class DummyData {
     'results': [
       {
         "id": "ACT001",
+        "workspace_id": "WS001",
         "task_id": "TASK004",
         "user_id": "USR001",
         "action": "CREATE_TASK",
@@ -887,6 +900,7 @@ class DummyData {
       },
       {
         "id": "ACT002",
+        "workspace_id": "WS001",
         "task_id": "TASK004",
         "user_id": "USR001",
         "action": "ASSIGN_TASK",
@@ -896,15 +910,17 @@ class DummyData {
       },
       {
         "id": "ACT003",
+        "workspace_id": "WS001",
         "task_id": "TASK004",
         "user_id": "USR002",
         "action": "CHANGE_STATUS",
         "old_value": "todo",
-        "newValue": "in_progress",
+        "new_value": "in_progress",
         "created_at": "2026-06-04T09:00:00Z",
       },
       {
         "id": "ACT004",
+        "workspace_id": "WS001",
         "task_id": "TASK004",
         "user_id": "USR002",
         "action": "CHANGE_PRIORITY",
@@ -914,6 +930,7 @@ class DummyData {
       },
       {
         "id": "ACT005",
+        "workspace_id": "WS001",
         "task_id": "TASK004",
         "user_id": "USR004",
         "action": "ADD_ATTACHMENT",
@@ -923,6 +940,7 @@ class DummyData {
       },
       {
         "id": "ACT006",
+        "workspace_id": "WS001",
         "task_id": "TASK004",
         "user_id": "USR002",
         "action": "CHANGE_STATUS",
@@ -933,6 +951,7 @@ class DummyData {
 
       {
         "id": "ACT007",
+        "workspace_id": "WS001",
         "task_id": "TASK005",
         "user_id": "USR001",
         "action": "CREATE_TASK",
@@ -942,6 +961,7 @@ class DummyData {
       },
       {
         "id": "ACT008",
+        "workspace_id": "WS001",
         "task_id": "TASK005",
         "user_id": "USR001",
         "action": "ASSIGN_TASK",
@@ -951,6 +971,7 @@ class DummyData {
       },
       {
         "id": "ACT009",
+        "workspace_id": "WS001",
         "task_id": "TASK005",
         "user_id": "USR003",
         "action": "CHANGE_STATUS",
@@ -960,6 +981,7 @@ class DummyData {
       },
       {
         "id": "ACT010",
+        "workspace_id": "WS001",
         "task_id": "TASK005",
         "user_id": "USR003",
         "action": "ADD_ATTACHMENT",
@@ -969,6 +991,7 @@ class DummyData {
       },
       {
         "id": "ACT011",
+        "workspace_id": "WS001",
         "task_id": "TASK005",
         "user_id": "USR003",
         "action": "ADD_COMMENT",
@@ -978,6 +1001,7 @@ class DummyData {
       },
       {
         "id": "ACT012",
+        "workspace_id": "WS001",
         "task_id": "TASK005",
         "user_id": "USR003",
         "action": "COMPLETE_SUBTASK",
@@ -988,6 +1012,7 @@ class DummyData {
 
       {
         "id": "ACT013",
+        "workspace_id": "WS001",
         "task_id": "TASK006",
         "user_id": "USR001",
         "action": "CREATE_TASK",
@@ -997,6 +1022,7 @@ class DummyData {
       },
       {
         "id": "ACT014",
+        "workspace_id": "WS001",
         "task_id": "TASK006",
         "user_id": "USR002",
         "action": "MOVE_TO_SPRINT",
@@ -1006,6 +1032,7 @@ class DummyData {
       },
       {
         "id": "ACT015",
+        "workspace_id": "WS001",
         "task_id": "TASK006",
         "user_id": "USR003",
         "action": "ADD_LABEL",
@@ -1016,6 +1043,7 @@ class DummyData {
 
       {
         "id": "ACT016",
+        "workspace_id": "WS002",
         "task_id": "TASK007",
         "user_id": "USR001",
         "action": "CREATE_TASK",
@@ -1025,6 +1053,7 @@ class DummyData {
       },
       {
         "id": "ACT017",
+        "workspace_id": "WS002",
         "task_id": "TASK007",
         "user_id": "USR003",
         "action": "ESTIMATE_STORY_POINT",
@@ -1034,6 +1063,7 @@ class DummyData {
       },
       {
         "id": "ACT018",
+        "workspace_id": "WS002",
         "task_id": "TASK007",
         "user_id": "USR011",
         "action": "ADD_COMMENT",
@@ -1044,6 +1074,7 @@ class DummyData {
 
       {
         "id": "ACT019",
+        "workspace_id": "WS002",
         "task_id": "TASK008",
         "user_id": "USR002",
         "action": "CREATE_BOARD",
@@ -1053,6 +1084,7 @@ class DummyData {
       },
       {
         "id": "ACT020",
+        "workspace_id": "WS002",
         "task_id": "TASK008",
         "user_id": "USR002",
         "action": "ADD_ATTACHMENT",
@@ -1063,6 +1095,7 @@ class DummyData {
 
       {
         "id": "ACT021",
+        "workspace_id": "WS003",
         "task_id": "TASK009",
         "user_id": "USR011",
         "action": "CREATE_TASK",
@@ -1072,6 +1105,7 @@ class DummyData {
       },
       {
         "id": "ACT022",
+        "workspace_id": "WS003",
         "task_id": "TASK009",
         "user_id": "USR011",
         "action": "ADD_ATTACHMENT",
@@ -1081,6 +1115,7 @@ class DummyData {
       },
       {
         "id": "ACT023",
+        "workspace_id": "WS003",
         "task_id": "TASK009",
         "user_id": "USR011",
         "action": "CHANGE_STATUS",
@@ -1091,15 +1126,17 @@ class DummyData {
 
       {
         "id": "ACT024",
+        "workspace_id": "WS003",
         "task_id": "TASK010",
         "user_id": "USR001",
         "action": "CREATE_RELEASE",
         "old_value": "",
         "new_value": "v1.0.0",
-        "createdAt": "2026-06-08T10:00:00Z",
+        "created_at": "2026-06-08T10:00:00Z",
       },
       {
         "id": "ACT025",
+        "workspace_id": "WS003",
         "task_id": "TASK010",
         "user_id": "USR001",
         "action": "SET_DUE_DATE",
@@ -1110,6 +1147,7 @@ class DummyData {
 
       {
         "id": "ACT026",
+        "workspace_id": "WS001",
         "task_id": "TASK004",
         "user_id": "USR002",
         "action": "LOG_WORK",
@@ -1119,6 +1157,7 @@ class DummyData {
       },
       {
         "id": "ACT027",
+        "workspace_id": "WS001",
         "task_id": "TASK005",
         "user_id": "USR003",
         "action": "LOG_WORK",
@@ -1128,6 +1167,7 @@ class DummyData {
       },
       {
         "id": "ACT028",
+        "workspace_id": "WS001",
         "task_id": "TASK006",
         "user_id": "USR002",
         "action": "LOG_WORK",
@@ -1137,6 +1177,7 @@ class DummyData {
       },
       {
         "id": "ACT029",
+        "workspace_id": "WS002",
         "task_id": "TASK007",
         "user_id": "USR003",
         "action": "LOG_WORK",
@@ -1146,6 +1187,7 @@ class DummyData {
       },
       {
         "id": "ACT030",
+        "workspace_id": "WS002",
         "task_id": "TASK008",
         "user_id": "USR002",
         "action": "LOG_WORK",
@@ -1324,6 +1366,7 @@ class DummyData {
     'results': [
       {
         "id": "HIS001",
+        "workspace_id": "WS001",
         "task_id": "TASK004",
         "field": "status",
         "old_value": "todo",
@@ -1333,6 +1376,7 @@ class DummyData {
       },
       {
         "id": "HIS002",
+        "workspace_id": "WS001",
         "task_id": "TASK004",
         "field": "priority",
         "old_value": "medium",
@@ -1342,6 +1386,7 @@ class DummyData {
       },
       {
         "id": "HIS003",
+        "workspace_id": "WS001",
         "task_id": "TASK004",
         "field": "status",
         "old_value": "in_progress",
@@ -1351,6 +1396,7 @@ class DummyData {
       },
       {
         "id": "HIS004",
+        "workspace_id": "WS001",
         "task_id": "TASK005",
         "field": "assigneeId",
         "old_value": "",
@@ -1360,6 +1406,7 @@ class DummyData {
       },
       {
         "id": "HIS005",
+        "workspace_id": "WS001",
         "task_id": "TASK005",
         "field": "status",
         "old_value": "todo",
@@ -1369,6 +1416,7 @@ class DummyData {
       },
       {
         "id": "HIS006",
+        "workspace_id": "WS001",
         "task_id": "TASK005",
         "field": "storyPoint",
         "old_value": "8",
@@ -1378,6 +1426,7 @@ class DummyData {
       },
       {
         "id": "HIS007",
+        "workspace_id": "WS001",
         "task_id": "TASK006",
         "field": "dueDate",
         "old_value": "2026-06-12",
@@ -1387,6 +1436,7 @@ class DummyData {
       },
       {
         "id": "HIS008",
+        "workspace_id": "WS001",
         "task_id": "TASK006",
         "field": "assigneeId",
         "old_value": "USR003",
@@ -1396,6 +1446,7 @@ class DummyData {
       },
       {
         "id": "HIS009",
+        "workspace_id": "WS002",
         "task_id": "TASK007",
         "field": "status",
         "old_value": "todo",
@@ -1405,6 +1456,7 @@ class DummyData {
       },
       {
         "id": "HIS010",
+        "workspace_id": "WS002",
         "task_id": "TASK007",
         "field": "status",
         "old_value": "in_progress",
@@ -1414,6 +1466,7 @@ class DummyData {
       },
       {
         "id": "HIS011",
+        "workspace_id": "WS002",
         "task_id": "TASK007",
         "field": "status",
         "old_value": "review",
@@ -1423,6 +1476,7 @@ class DummyData {
       },
       {
         "id": "HIS012",
+        "workspace_id": "WS002",
         "task_id": "TASK008",
         "field": "priority",
         "old_value": "medium",
@@ -1432,6 +1486,7 @@ class DummyData {
       },
       {
         "id": "HIS013",
+        "workspace_id": "WS002",
         "task_id": "TASK008",
         "field": "dueDate",
         "old_value": "2026-06-20",
@@ -1441,6 +1496,7 @@ class DummyData {
       },
       {
         "id": "HIS014",
+        "workspace_id": "WS003",
         "task_id": "TASK009",
         "field": "assigneeId",
         "old_value": "",
@@ -1450,6 +1506,7 @@ class DummyData {
       },
       {
         "id": "HIS015",
+        "workspace_id": "WS003",
         "task_id": "TASK009",
         "field": "status",
         "old_value": "todo",

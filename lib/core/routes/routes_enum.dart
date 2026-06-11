@@ -4,4 +4,5 @@ enum RoutesEnum {
   workspaceDetail,
   projectDetail,
   historyTask,
+  taskDetail,
 }

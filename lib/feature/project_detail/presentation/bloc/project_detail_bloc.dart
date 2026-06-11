@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/feature/project_detail/domain/repository/project_detail_repository.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_event.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
+import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_label.dart';
@@ -46,14 +47,24 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
             ? (data.$1[EnumFetchApiStatus.success]['task'] as List).map((e) {
                 final subTask =
                     (data.$1[EnumFetchApiStatus.success]['sub_task'] as List)
-                        .where((sub) => sub['task_id'] == e['id'])
+                        .where(
+                          (sub) =>
+                              sub[EnumSubTask.taskId.value] ==
+                              e[EnumTask.id.value],
+                        )
                         .map((e) => ModelSubTask.fromJson(e))
                         .toList();
-                final label =
-                    (data.$1[EnumFetchApiStatus.success]['label'] as List)
-                        .where((label) => label['task_id'] == e['id'])
-                        .map((e) => ModelLabel.fromJson(e))
-                        .toList();
+                List<ModelLabel> label = [];
+
+                for (final idLabelTask in e[EnumTask.labelIds.value] as List) {
+                  for (final labelData
+                      in (data.$1[EnumFetchApiStatus.success]['label']
+                          as List)) {
+                    if (idLabelTask == labelData[EnumLabel.id.value]) {
+                      label.add(ModelLabel.fromJson(labelData));
+                    }
+                  }
+                }
 
                 return ModelTask.fromJson(
                   data: e,

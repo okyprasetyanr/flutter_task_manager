@@ -23,8 +23,10 @@ class HistoryTaskBloc extends Bloc<HistoryTaskEvent, HistoryTaskState> {
         ? state as HistoryTaskStateLoaded
         : HistoryTaskStateLoaded();
     add(HistoryTaskEventChangeStatus(status: EnumStatusState.loading));
-    final data = await repo.getHistoryTask();
     final dataWorkspace = event.data ?? currentState.dataWorkspace!;
+    final data = await repo.getHistoryTask(
+      workspaceId: dataWorkspace.workspaceId,
+    );
     final dataUser = event.user ?? currentState.dataUser;
     emit(
       currentState.copyWith(

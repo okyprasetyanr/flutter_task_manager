@@ -8,7 +8,7 @@ import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/shared/model/model_task_history.dart';
 import 'package:task_manager/shared/model/model_user.dart';
-import 'package:task_manager/shared/widget/listview/custom_list_view_builder.dart';
+import 'package:task_manager/shared/widget/listview/custom_list_view_builder_v.dart';
 
 class HistoryTaskListHistory extends StatelessWidget {
   const HistoryTaskListHistory({super.key});
@@ -28,10 +28,10 @@ class HistoryTaskListHistory extends StatelessWidget {
                 ? (state.dataHistoryTask, state.status)
                 : ([], EnumStatusState.loading),
             builder: (context, state) {
-              return CustomListViewBuilder<ModelHistoryTask>(
+              return CustomListViewBuilderV<ModelHistoryTask>(
                 status: state.$2,
                 data: state.$1,
-                content: (data) {
+                content: (data, _) {
                   final bloc = context.read<HistoryTaskBloc>().state;
 
                   final users = bloc is HistoryTaskStateLoaded

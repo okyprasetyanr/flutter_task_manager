@@ -7,7 +7,8 @@ class HistoryTaskRemote {
 
   Future<Map<String, dynamic>> getHistoryTask({
     required String companyId,
+    required String workspaceId,
   }) async {
-    return apiServices.getTaskHistory();
+    return apiServices.getTaskHistory(workspaceId: workspaceId);
   }
 }
