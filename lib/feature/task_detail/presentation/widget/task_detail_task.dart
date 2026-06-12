@@ -23,7 +23,7 @@ class TaskDetailTask extends StatelessWidget {
     >(
       selector: (state) => state is TaskDetailStateLoaded
           ? (state.dataTask, state.dataLabel, state.status)
-          : (null, [], EnumStatusState.loading),
+          : (null, const [], EnumStatusState.loading),
       builder: (context, state) {
         if (state.$1 == null && state.$3 == EnumStatusState.loading) {
           return CustomLoading();

@@ -8,6 +8,7 @@ import 'package:task_manager/feature/history_task/presentation/bloc/history_task
 import 'package:task_manager/feature/history_task/presentation/widget/history_task_header.dart';
 import 'package:task_manager/feature/history_task/presentation/widget/history_task_list_history.dart';
 import 'package:task_manager/shared/model/model_workspace.dart';
+import 'package:task_manager/shared/navigator_content/navigator_content.dart';
 import 'package:task_manager/shared/style/icon_size.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/widget/button/custom_button_icon.dart';
@@ -57,18 +58,6 @@ class _HistoryTaskPageState extends State<HistoryTaskPage> {
   }
 
   Widget navigationGesture() {
-    final contentNavGesture = [
-      {
-        "toContext": RoutesEnum.workspaceDetail,
-        "text_menu": "Workspace Detail",
-        "onTap": () {},
-      },
-      {
-        "toContext": RoutesEnum.historyTask,
-        "text_menu": "History Task",
-        "onTap": () {},
-      },
-    ];
     return BlocSelector<HistoryTaskBloc, HistoryTaskState, ModelWorkspace?>(
       selector: (state) {
         return state is HistoryTaskStateLoaded ? state.dataWorkspace : null;
@@ -77,7 +66,7 @@ class _HistoryTaskPageState extends State<HistoryTaskPage> {
         return NavigationGesture(
           arguments: {'dataTransfered': workspace},
           currentPage: RoutesEnum.historyTask,
-          attContent: contentNavGesture,
+          attContent: NavigatorContent.activityHistoryTaskProjectDetail,
           isOpen: isOpen,
           close: () {
             isOpen.value = false;

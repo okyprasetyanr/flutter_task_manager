@@ -9,6 +9,7 @@ import 'package:task_manager/feature/workspace_detail/presentation/widget/worksp
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_list_project.dart';
 import 'package:task_manager/shared/model/model_user.dart';
 import 'package:task_manager/shared/model/model_workspace.dart';
+import 'package:task_manager/shared/navigator_content/navigator_content.dart';
 import 'package:task_manager/shared/style/icon_size.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/widget/button/custom_button_icon.dart';
@@ -58,18 +59,6 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
   }
 
   Widget navigationGesture() {
-    final contentNavGesture = [
-      {
-        "toContext": RoutesEnum.workspaceDetail,
-        "text_menu": "Workspace Detail",
-        "onTap": () {},
-      },
-      {
-        "toContext": RoutesEnum.historyTask,
-        "text_menu": "History Task",
-        "onTap": () {},
-      },
-    ];
     return BlocSelector<
       WorkspaceDetailBloc,
       WorkspaceDetailState,
@@ -78,13 +67,13 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
       selector: (state) {
         return state is WorkspaceDetailStateLoaded
             ? (state.dataWorkspace, state.dataUser)
-            : (null, []);
+            : (null, const []);
       },
       builder: (context, state) {
         return NavigationGesture(
-          arguments: {'dataTransfered': state},
+          arguments: {'dataTransfered': state.$1},
           currentPage: RoutesEnum.workspaceDetail,
-          attContent: contentNavGesture,
+          attContent: NavigatorContent.activityHistoryTaskProjectDetail,
           isOpen: isOpen,
           close: () {
             isOpen.value = false;

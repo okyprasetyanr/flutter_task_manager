@@ -35,7 +35,7 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
           >(
             selector: (state) => state is ProjectDetailStateLoaded
                 ? (state.dataTask, state.status)
-                : ([], EnumStatusState.loading),
+                : (const [], EnumStatusState.loading),
             builder: (context, state) {
               return CustomListViewBuilderV(
                 status: state.$2,

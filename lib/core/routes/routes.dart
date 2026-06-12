@@ -5,6 +5,13 @@ import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/services/api_service/api_services.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
+import 'package:task_manager/feature/activity/data/local/activity_local.dart';
+import 'package:task_manager/feature/activity/data/remote/activity_remote.dart';
+import 'package:task_manager/feature/activity/data/repository_imp/activity_repository_imp.dart';
+import 'package:task_manager/feature/activity/domain/repository/activity_repository.dart';
+import 'package:task_manager/feature/activity/presentation/bloc/activity_bloc.dart';
+import 'package:task_manager/feature/activity/presentation/bloc/activity_event.dart';
+import 'package:task_manager/feature/activity/presentation/page/activity_page.dart';
 import 'package:task_manager/feature/history_task/data/local/history_task_local.dart';
 import 'package:task_manager/feature/history_task/data/remote/history_task_remote.dart';
 import 'package:task_manager/feature/history_task/data/repository_imp/history_task_repository_imp.dart';
@@ -51,7 +58,6 @@ import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/model/model_message_collector.dart';
 import 'package:task_manager/shared/model/model_project.dart';
 import 'package:task_manager/shared/model/model_task.dart';
-import 'package:task_manager/shared/model/model_user.dart';
 import 'package:task_manager/shared/model/model_workspace.dart';
 
 final routes = {
@@ -62,8 +68,10 @@ final routes = {
       remote: LoginRemote(apiService: context.read<ApiServices>()),
       local: LoginLocal(localService: context.read<LocalServices>()),
     ),
+
     child: BlocProvider(
       create: (context) => LoginBloc(context.read<LoginRepository>()),
+
       child: LoginPage(),
     ),
   ),
@@ -77,10 +85,14 @@ final routes = {
           helper: context.read<HelperCollectData>(),
         ),
 
-        child: BlocProvider(
-          create: (context) =>
-              WorkspaceBloc(context.read<WorkspaceRepository>())
-                ..add(WorkspaceEventGetData()),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) =>
+                  WorkspaceBloc(context.read<WorkspaceRepository>())
+                    ..add(WorkspaceEventGetData()),
+            ),
+          ],
           child: WorkspacePage(),
         ),
       ),
@@ -126,7 +138,7 @@ final routes = {
   },
   '/${RoutesEnum.historyTask}': (context) {
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
-    final data = args!['dataTransfered'] as (ModelWorkspace, List<ModelUser>);
+    final data = args!['dataTransfered'] as ModelWorkspace;
     return RepositoryProvider<HistoryTaskRepository>(
       create: (context) => HistoryTaskRepositoryImp(
         userCache: context.read<UserCache>(),
@@ -139,7 +151,7 @@ final routes = {
       child: BlocProvider(
         create: (context) =>
             HistoryTaskBloc(context.read<HistoryTaskRepository>())
-              ..add(HistoryTaskEventGetData(data: data.$1, user: data.$2)),
+              ..add(HistoryTaskEventGetData(data: data)),
         child: HistoryTaskPage(),
       ),
     );
@@ -162,6 +174,26 @@ final routes = {
             TaskDetailBloc(context.read<TaskDetailRepository>())
               ..add(TaskDetailEventGetData(dataTask: data)),
         child: TaskDetailPage(),
+      ),
+    );
+  },
+  '/${RoutesEnum.activity}': (context) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map?;
+    final data = args!['dataTransfered'] as ModelWorkspace;
+    return RepositoryProvider<ActivityRepository>(
+      create: (context) => ActivityRepositoryImp(
+        userCache: context.read<UserCache>(),
+        remote: ActivityRemote(apiServices: context.read<ApiServices>()),
+        local: ActivityLocal(),
+        userSession: context.read<UserSession>(),
+        helper: context.read<HelperCollectData>(),
+        messageCollector: context.read<ModelMessageCollector>(),
+      ),
+      child: BlocProvider(
+        create: (context) =>
+            ActivityBloc(context.read<ActivityRepository>())
+              ..add(ActivityEventGetData(data: data)),
+        child: ActivityPage(),
       ),
     );
   },

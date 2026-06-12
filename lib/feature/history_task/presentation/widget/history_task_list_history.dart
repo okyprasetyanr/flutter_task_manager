@@ -26,7 +26,7 @@ class HistoryTaskListHistory extends StatelessWidget {
           >(
             selector: (state) => state is HistoryTaskStateLoaded
                 ? (state.dataHistoryTask, state.status)
-                : ([], EnumStatusState.loading),
+                : (const [], EnumStatusState.loading),
             builder: (context, state) {
               return CustomListViewBuilderV<ModelHistoryTask>(
                 status: state.$2,
@@ -36,7 +36,7 @@ class HistoryTaskListHistory extends StatelessWidget {
 
                   final users = bloc is HistoryTaskStateLoaded
                       ? bloc.dataUser
-                      : <ModelUser>[];
+                      : const <ModelUser>[];
 
                   final display = data.display(users: users!);
 
@@ -46,6 +46,7 @@ class HistoryTaskListHistory extends StatelessWidget {
                           .firstOrNull
                           ?.name ??
                       data.changedBy;
+
                   return [
                     Padding(
                       padding: const EdgeInsets.all(12),

@@ -23,7 +23,7 @@ class WorkspaceDetailListProject extends StatelessWidget {
     >(
       selector: (state) => state is WorkspaceDetailStateLoaded
           ? (state.dataProject, state.status)
-          : ([], EnumStatusState.loading),
+          : (const [], EnumStatusState.loading),
       builder: (context, state) => CustomListViewBuilderV<ModelProject>(
         status: state.$2,
         data: state.$1,

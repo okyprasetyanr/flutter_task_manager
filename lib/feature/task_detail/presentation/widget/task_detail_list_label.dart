@@ -18,7 +18,7 @@ class TaskDetailListLabel extends StatelessWidget {
     >(
       selector: (state) => state is TaskDetailStateLoaded
           ? (state.dataLabel, state.status)
-          : ([], EnumStatusState.loading),
+          : (const [], EnumStatusState.loading),
       builder: (context, state) => CustomListViewBuilderH<ModelLabel>(
         data: state.$1,
         status: state.$2,

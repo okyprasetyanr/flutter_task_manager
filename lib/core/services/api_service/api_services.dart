@@ -74,11 +74,10 @@ class ApiServices {
     return DummyData.attachment;
   }
 
-  Future<Map<String, dynamic>> getActivities(
-    String companyId,
-    String idTask,
-    String idUser,
-  ) async {
+  Future<Map<String, dynamic>> getActivities({
+    required String companyId,
+    required String workspaceId,
+  }) async {
     return DummyData.activity;
   }
 
@@ -107,8 +106,18 @@ class ApiServices {
     return DummyData.sprint;
   }
 
-  Future<Map<String, dynamic>> getNotification(String idUser) async {
-    return DummyData.notification;
+  Future<Map<String, dynamic>> getNotification(String userId) async {
+    final data = DummyData.notification;
+    final filteredData = {
+      ...data,
+      'results': (data['results'] as List)
+          .where((element) => element[EnumNotification.userId.value] == userId)
+          .toList(),
+    };
+    devLog(
+      "Log ApiServices getNotification: data: $filteredData, userId:$userId",
+    );
+    return filteredData;
   }
 
   Future<Map<String, dynamic>> getTaskHistory({

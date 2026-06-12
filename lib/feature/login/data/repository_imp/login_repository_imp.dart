@@ -35,12 +35,16 @@ class LoginRepositoryImp implements LoginRepository {
     if (data.containsKey(EnumFetchApiStatus.success)) {
       final pref = await SharedPreferences.getInstance();
       await pref.setString(
-        'companyId',
+        EnumCompany.companyId.value,
         data[EnumFetchApiStatus.success][EnumCompany.companyId.value],
       );
       await pref.setString(
-        'companyName',
+        EnumCompany.companyName.value,
         data[EnumFetchApiStatus.success][EnumCompany.companyName.value],
+      );
+      await pref.setString(
+        EnumCompany.userId.value,
+        data[EnumFetchApiStatus.success][EnumCompany.userId.value],
       );
       userSession.init();
     }

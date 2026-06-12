@@ -27,7 +27,7 @@ class HistoryTaskBloc extends Bloc<HistoryTaskEvent, HistoryTaskState> {
     final data = await repo.getHistoryTask(
       workspaceId: dataWorkspace.workspaceId,
     );
-    final dataUser = event.user ?? currentState.dataUser;
+    final dataUser = repo.getUser();
     emit(
       currentState.copyWith(
         dataUser: dataUser,
@@ -35,7 +35,7 @@ class HistoryTaskBloc extends Bloc<HistoryTaskEvent, HistoryTaskState> {
             ? (data.$1[EnumFetchApiStatus.success] as List)
                   .map((e) => ModelHistoryTask.fromJson(e))
                   .toList()
-            : [],
+            : const [],
         dataWorkspace: dataWorkspace,
         error: data.$2.error,
         failed: data.$2.failed,

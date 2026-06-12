@@ -9,6 +9,11 @@ import 'package:task_manager/core/services/connection_service/connection_service
 import 'package:task_manager/core/services/connection_service/connection_service_imp.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
+import 'package:task_manager/feature/shared_component/notification/data/local/notification_local.dart';
+import 'package:task_manager/feature/shared_component/notification/data/remote/notification_remote.dart';
+import 'package:task_manager/feature/shared_component/notification/data/repository_imp/notification_repository_imp.dart';
+import 'package:task_manager/feature/shared_component/notification/domain/repository/notification_repository.dart';
+import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_bloc.dart';
 import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
 import 'package:task_manager/shared/model/model_message_collector.dart';
 
@@ -16,10 +21,10 @@ void main() {
   runApp(
     MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(create: (context) => UserCache(user: [])),
-        RepositoryProvider(create: (context) => UserSession()),
-        RepositoryProvider(create: (context) => LocalServices()),
-        RepositoryProvider(create: (context) => ApiServices()),
+        RepositoryProvider(create: (context) => UserCache(user: const [])),
+        RepositoryProvider(lazy: false, create: (context) => UserSession()),
+        RepositoryProvider(lazy: false, create: (context) => LocalServices()),
+        RepositoryProvider(lazy: false, create: (context) => ApiServices()),
         RepositoryProvider(create: (context) => ModelMessageCollector()),
         RepositoryProvider<ConnectionService>(
           lazy: false,
@@ -30,8 +35,23 @@ void main() {
           create: (context) =>
               HelperCollectData(connection: context.read<ConnectionService>()),
         ),
+        RepositoryProvider<NotificationRepository>(
+          create: (context) => NotificationRepositoryImp(
+            remote: NotificationRemote(
+              apiServices: context.read<ApiServices>(),
+            ),
+            local: NotificationLocal(),
+            userSession: context.read<UserSession>(),
+            helper: context.read<HelperCollectData>(),
+            messageCollector: context.read<ModelMessageCollector>(),
+          ),
+        ),
       ],
-      child: MaterialApp(home: MainApp(), debugShowCheckedModeBanner: false),
+      child: BlocProvider(
+        create: (context) =>
+            NotificationBloc(context.read<NotificationRepository>()),
+        child: MaterialApp(home: MainApp(), debugShowCheckedModeBanner: false),
+      ),
     ),
   );
 }

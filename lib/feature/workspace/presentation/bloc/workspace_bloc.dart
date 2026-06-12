@@ -34,7 +34,7 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
             ? (data.$1[EnumFetchApiStatus.success] as List)
                   .map((e) => ModelWorkspace.fromJson(e))
                   .toList()
-            : [],
+            : const [],
         failed: data.$2.failed,
         error: data.$2.error,
         noconnection: data.$2.noconnection,

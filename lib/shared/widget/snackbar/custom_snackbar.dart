@@ -4,6 +4,7 @@ import 'package:task_manager/shared/style/text_size.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 void customSnackBar(BuildContext context, String text, {bool top = false}) {
+  ScaffoldMessenger.of(context).clearSnackBars();
   top
       ? showTopSnackBar(
           Overlay.of(context),

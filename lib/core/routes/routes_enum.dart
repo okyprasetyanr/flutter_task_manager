@@ -5,4 +5,5 @@ enum RoutesEnum {
   projectDetail,
   historyTask,
   taskDetail,
+  activity,
 }

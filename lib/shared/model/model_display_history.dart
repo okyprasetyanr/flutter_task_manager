@@ -1,6 +1,6 @@
-class HistoryDisplayValue {
+class OldNewDisplayValue {
   final String oldValue;
   final String newValue;
 
-  const HistoryDisplayValue({required this.oldValue, required this.newValue});
+  const OldNewDisplayValue({required this.oldValue, required this.newValue});
 }

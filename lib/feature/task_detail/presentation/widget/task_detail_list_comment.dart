@@ -22,7 +22,7 @@ class TaskDetailListComment extends StatelessWidget {
     >(
       selector: (state) => state is TaskDetailStateLoaded
           ? (state.dataComment, state.status, state.dataUser)
-          : ([], EnumStatusState.loading, []),
+          : (const [], EnumStatusState.loading, const []),
       builder: (context, state) => CustomListViewBuilderV<ModelComment>(
         controller: controller,
         status: state.$2,

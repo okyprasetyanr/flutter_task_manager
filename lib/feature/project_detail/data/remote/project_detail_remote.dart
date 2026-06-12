@@ -16,7 +16,7 @@ class ProjectDetailRemote {
     );
     final dataUser = await apiServices.getUser(companyId);
 
-    final dataMember = [];
+    final dataMember = const [];
     for (final member in dataProjectMember['results'] as List) {
       for (final user in dataUser['results'] as List) {
         if (member['user_id'] == user['id'] &&
@@ -27,7 +27,7 @@ class ProjectDetailRemote {
     }
 
     final dataTask = await apiServices.getTasks(companyId, projectId);
-    final finalTask = [];
+    final finalTask = const [];
     for (final task in dataTask['results'] as List) {
       if (task['project_id'] == projectId) {
         finalTask.add(task);
@@ -35,7 +35,7 @@ class ProjectDetailRemote {
     }
 
     final dataSubTask = await apiServices.getSubTasks(companyId, '');
-    final finalSubTask = [];
+    final finalSubTask = const [];
     for (final task in finalTask) {
       for (final subTask in dataSubTask['results'] as List) {
         if (subTask['task_id'] == task['id']) {
@@ -45,9 +45,9 @@ class ProjectDetailRemote {
     }
 
     final dataLabel = await apiServices.getLabel(companyId);
-    final finalLabel = [];
+    final finalLabel = const [];
     for (final task in finalTask) {
-      final labelIds = List<String>.from(task['label_ids'] ?? []);
+      final labelIds = List<String>.from(task['label_ids'] ?? const []);
 
       finalLabel.addAll(
         (dataLabel['results'] as List).where((e) => labelIds.contains(e['id'])),

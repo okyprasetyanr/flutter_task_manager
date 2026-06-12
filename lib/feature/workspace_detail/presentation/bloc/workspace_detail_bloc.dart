@@ -39,12 +39,12 @@ class WorkspaceDetailBloc
             ? (data.$1[EnumFetchApiStatus.success]['workspace_project'] as List)
                   .map((e) => ModelProject.fromJson(e))
                   .toList()
-            : [],
+            : const [],
         dataWorkspaceMember: data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success]['workspace_member'] as List)
                   .map((e) => ModelWorkspaceMember.fromJson(e))
                   .toList()
-            : [],
+            : const [],
         error: data.$2.error,
         failed: data.$2.failed,
         noconnection: data.$2.noconnection,

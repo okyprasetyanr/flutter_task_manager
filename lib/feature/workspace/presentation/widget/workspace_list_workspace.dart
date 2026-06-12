@@ -21,7 +21,7 @@ class WorkspaceListWorkspace extends StatelessWidget {
     >(
       selector: (state) => state is WorkspaceStateLoaded
           ? (state.dataWorkspace, state.status)
-          : ([], EnumStatusState.loading),
+          : (const [], EnumStatusState.loading),
       builder: (context, state) {
         return CustomListViewBuilderV<ModelWorkspace>(
           content: (data, _) => [
