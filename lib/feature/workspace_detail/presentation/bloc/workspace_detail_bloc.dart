@@ -28,7 +28,7 @@ class WorkspaceDetailBloc
     add(WorkspaceDetailEventChangeStatus(status: EnumStatusState.loading));
     final dataWorkspace = event.data ?? currentState.dataWorkspace!;
     final data = await repo.getWorkspaceDetai(
-      workspaceId: dataWorkspace.workspaceId,
+      workspaceId: dataWorkspace.id,
       companyId: dataWorkspace.companyId,
     );
     emit(

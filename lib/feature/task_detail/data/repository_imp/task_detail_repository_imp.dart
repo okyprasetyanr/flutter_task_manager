@@ -5,16 +5,16 @@ import 'package:task_manager/feature/task_detail/data/local/task_detail_local.da
 import 'package:task_manager/feature/task_detail/data/remote/task_detail_remote.dart';
 import 'package:task_manager/feature/task_detail/domain/repository/task_detail_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
-import 'package:task_manager/shared/model/model_message_collector.dart';
+import 'package:task_manager/core/services/collector/collector_data.dart';
+import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/shared/model/model_user.dart';
 
 class TaskDetailRepositoryImp implements TaskDetailRepository {
   final TaskDetailRemote remote;
   final TaskDetailLocal local;
   final UserSession userSession;
-  final HelperCollectData helper;
-  final ModelMessageCollector messageCollector;
+  final CollectData helper;
+  final CollectorMessage messageCollector;
   final UserCache userCache;
   TaskDetailRepositoryImp({
     required this.remote,
@@ -25,7 +25,7 @@ class TaskDetailRepositoryImp implements TaskDetailRepository {
     required this.userCache,
   });
   @override
-  Future<(Map<EnumFetchApiStatus, dynamic>, ModelMessageCollector)> getComment({
+  Future<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> getComment({
     required String taskId,
   }) async {
     final data = await helper.helperCollectData(

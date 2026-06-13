@@ -23,6 +23,7 @@ dependencies:
   internet_connection_checker_plus: any
   top_snackbar_flutter: any
   shared_preferences: any
+  supabase_flutter: ^2.14.2
 
 dev_dependencies:
   flutter_test:

@@ -1,10 +1,10 @@
 import 'package:task_manager/core/services/connection_service/connection_service.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 
-class HelperCollectData {
+class CollectData {
   final ConnectionService connection;
 
-  HelperCollectData({required this.connection});
+  CollectData({required this.connection});
 
   Future<Map<EnumFetchApiStatus, dynamic>> helperCollectData({
     required Future<dynamic> Function() remoteFunc,

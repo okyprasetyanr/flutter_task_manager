@@ -3,58 +3,48 @@ import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 
 class ModelProject extends Equatable {
-  final String projectId;
-  final String projectName;
-  final String projectType;
-  final EnumProjectStatus projectStatus;
-  final String projectCreatedBy;
-  final String projectCreatedId;
-  final int projectTotalContribut;
-  final DateTime projectStart;
-  final DateTime projectEnd;
+  final String id;
+  final String name;
+  final String type;
+  final EnumProjectStatus status;
+  final String createdId;
+  final int totalContribut;
+  final DateTime start;
+  final DateTime end;
 
   const ModelProject({
-    required this.projectId,
-    required this.projectName,
-    required this.projectType,
-    required this.projectStatus,
-    required this.projectCreatedBy,
-    required this.projectCreatedId,
-    required this.projectTotalContribut,
-    required this.projectStart,
-    required this.projectEnd,
+    required this.id,
+    required this.name,
+    required this.type,
+    required this.status,
+    required this.createdId,
+    required this.totalContribut,
+    required this.start,
+    required this.end,
   });
 
   factory ModelProject.fromJson(Map<String, dynamic> data) {
     return ModelProject(
-      projectId: data[EnumProject.projectId.value],
-      projectName: data[EnumProject.projectName.value],
-      projectType: data[EnumProject.projectType.value],
-      projectStatus: EnumProjectStatusX.fromText(
-        data[EnumProject.projectStatus.value],
-      ),
-      projectCreatedBy: data[EnumProject.projectCreatedBy.value],
-      projectCreatedId: data[EnumProject.projectCreatedId.value],
-      projectTotalContribut: data[EnumProject.projectTotalContribut.value],
-      projectStart: HelperDateConvert.toDateTime(
-        data[EnumProject.projectStart.value],
-      ),
-      projectEnd: HelperDateConvert.toDateTime(
-        data[EnumProject.projectEnd.value],
-      ),
+      id: data[EnumProject.id.value],
+      name: data[EnumProject.name.value],
+      type: data[EnumProject.type.value],
+      status: EnumProjectStatusX.fromText(data[EnumProject.status.value]),
+      createdId: data[EnumProject.createdId.value],
+      totalContribut: data[EnumProject.totalContribut.value],
+      start: HelperDateConvert.toDateTime(data[EnumProject.start.value]),
+      end: HelperDateConvert.toDateTime(data[EnumProject.end.value]),
     );
   }
 
   @override
   List<Object?> get props => [
-    projectId,
-    projectName,
-    projectType,
-    projectStatus,
-    projectCreatedBy,
-    projectCreatedId,
-    projectTotalContribut,
-    projectStart,
-    projectEnd,
+    id,
+    name,
+    type,
+    status,
+    createdId,
+    totalContribut,
+    start,
+    end,
   ];
 }

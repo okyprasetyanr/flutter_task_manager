@@ -17,7 +17,7 @@ class ActivityHeader extends StatelessWidget {
       widgetRight:
           BlocSelector<ActivityBloc, ActivityState, (String?, EnumStatusState)>(
             selector: (state) => state is ActivityStateLoaded
-                ? (state.dataWorkspace?.workspaceName ?? "...", state.status)
+                ? (state.dataWorkspace?.name ?? "...", state.status)
                 : (null, EnumStatusState.loading),
             builder: (context, state) => state.$2 == EnumStatusState.loading
                 ? CustomLoading()

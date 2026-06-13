@@ -53,9 +53,9 @@ import 'package:task_manager/feature/workspace/domain/repository/workspace_repos
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_bloc.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_event.dart';
 import 'package:task_manager/feature/workspace/presentation/page/workspace_page.dart';
-import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
+import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
-import 'package:task_manager/shared/model/model_message_collector.dart';
+import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/shared/model/model_project.dart';
 import 'package:task_manager/shared/model/model_task.dart';
 import 'package:task_manager/shared/model/model_workspace.dart';
@@ -64,7 +64,7 @@ final routes = {
   '/${RoutesEnum.login}': (context) => RepositoryProvider<LoginRepository>(
     create: (context) => LoginRepositoryImp(
       userSession: context.read<UserSession>(),
-      helper: context.read<HelperCollectData>(),
+      helper: context.read<CollectData>(),
       remote: LoginRemote(apiService: context.read<ApiServices>()),
       local: LoginLocal(localService: context.read<LocalServices>()),
     ),
@@ -78,11 +78,11 @@ final routes = {
   '/${RoutesEnum.workspace}': (context) =>
       RepositoryProvider<WorkspaceRepository>(
         create: (context) => WorkspaceRepositoryImp(
-          messageCollector: context.read<ModelMessageCollector>(),
+          messageCollector: context.read<CollectorMessage>(),
           remote: WorkspaceRemote(apiServices: context.read<ApiServices>()),
           local: WorkspaceLocal(localService: context.read<LocalServices>()),
           userSession: context.read<UserSession>(),
-          helper: context.read<HelperCollectData>(),
+          helper: context.read<CollectData>(),
         ),
 
         child: MultiBlocProvider(
@@ -105,8 +105,8 @@ final routes = {
         remote: WorkspaceDetailRemote(apiServices: context.read<ApiServices>()),
         local: WorkspaceDetailLocal(),
         userSession: context.read<UserSession>(),
-        helper: context.read<HelperCollectData>(),
-        messageCollector: context.read<ModelMessageCollector>(),
+        helper: context.read<CollectData>(),
+        messageCollector: context.read<CollectorMessage>(),
       ),
       child: BlocProvider(
         create: (context) =>
@@ -125,8 +125,8 @@ final routes = {
         remote: ProjectDetailRemote(apiServices: context.read<ApiServices>()),
         local: ProjectDetailLocal(localService: context.read<LocalServices>()),
         userSession: context.read<UserSession>(),
-        helper: context.read<HelperCollectData>(),
-        messageCollector: context.read<ModelMessageCollector>(),
+        helper: context.read<CollectData>(),
+        messageCollector: context.read<CollectorMessage>(),
       ),
       child: BlocProvider(
         create: (context) =>
@@ -145,8 +145,8 @@ final routes = {
         remote: HistoryTaskRemote(apiServices: context.read<ApiServices>()),
         local: HistoryTaskLocal(),
         userSession: context.read<UserSession>(),
-        helper: context.read<HelperCollectData>(),
-        messageCollector: context.read<ModelMessageCollector>(),
+        helper: context.read<CollectData>(),
+        messageCollector: context.read<CollectorMessage>(),
       ),
       child: BlocProvider(
         create: (context) =>
@@ -165,8 +165,8 @@ final routes = {
         remote: TaskDetailRemote(apiServices: context.read<ApiServices>()),
         local: TaskDetailLocal(),
         userSession: context.read<UserSession>(),
-        helper: context.read<HelperCollectData>(),
-        messageCollector: context.read<ModelMessageCollector>(),
+        helper: context.read<CollectData>(),
+        messageCollector: context.read<CollectorMessage>(),
         userCache: context.read<UserCache>(),
       ),
       child: BlocProvider(
@@ -186,8 +186,8 @@ final routes = {
         remote: ActivityRemote(apiServices: context.read<ApiServices>()),
         local: ActivityLocal(),
         userSession: context.read<UserSession>(),
-        helper: context.read<HelperCollectData>(),
-        messageCollector: context.read<ModelMessageCollector>(),
+        helper: context.read<CollectData>(),
+        messageCollector: context.read<CollectorMessage>(),
       ),
       child: BlocProvider(
         create: (context) =>

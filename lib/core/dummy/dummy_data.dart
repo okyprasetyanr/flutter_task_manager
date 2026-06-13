@@ -1,8 +1,6 @@
 class DummyData {
   static final loginSuccess = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': {
+    {
       'company_name': "Demo",
       'company_id': "demo1",
       'company_join': "2026-08-30",
@@ -20,160 +18,144 @@ class DummyData {
   };
 
   static final project = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {
-        "project_name": "Ringkas POS Mobile",
-        "project_id": "PRJ001",
+        "name": "Ringkas POS Mobile",
+        "id": "PRJ001",
         "workspace_id": "WS001",
-        "project_type": "Mobile App",
-        "project_status": "On Progress",
-        "project_created_by": "Oky",
-        "project_created_id": "USR001",
-        "project_total_contribut": 5,
-        "project_start": "2026-05-01",
-        "project_end": "2026-06-15",
+        "type": "Mobile App",
+        "status": "On Progress",
+        "created_id": "USR001",
+        "total_contribut": 5,
+        "start_date": "2026-05-01",
+        "end_date": "2026-06-15",
       },
       {
-        "project_name": "Ringkas Task",
-        "project_id": "PRJ002",
+        "name": "Ringkas Task",
+        "id": "PRJ002",
         "workspace_id": "WS001",
-        "project_type": "Flutter App",
-        "project_status": "On Progress",
-        "project_created_by": "Oky",
-        "project_created_id": "USR001",
-        "project_total_contribut": 8,
-        "project_start": "2026-06-01",
-        "project_end": "2026-09-01",
+        "type": "Flutter App",
+        "status": "On Progress",
+        "created_id": "USR001",
+        "total_contribut": 8,
+        "start_date": "2026-06-01",
+        "end_date": "2026-09-01",
       },
       {
-        "project_name": "Inventory Management System",
-        "project_id": "PRJ003",
+        "name": "Inventory Management System",
+        "id": "PRJ003",
         "workspace_id": "WS002",
-        "project_type": "Web App",
-        "project_status": "Completed",
-        "project_created_by": "Budi",
-        "project_created_id": "USR002",
-        "project_total_contribut": 6,
-        "project_start": "2026-01-10",
-        "project_end": "2026-03-25",
+        "type": "Web App",
+        "status": "Completed",
+        "created_id": "USR002",
+        "total_contribut": 6,
+        "start_date": "2026-01-10",
+        "end_date": "2026-03-25",
       },
       {
-        "project_name": "CRM Dashboard",
-        "project_id": "PRJ004",
+        "name": "CRM Dashboard",
+        "id": "PRJ004",
         "workspace_id": "WS002",
-        "project_type": "Admin Panel",
-        "project_status": "On Progress",
-        "project_created_by": "Ahmad",
-        "project_created_id": "USR003",
-        "project_total_contribut": 4,
-        "project_start": "2026-04-01",
-        "project_end": "2026-07-20",
+        "type": "Admin Panel",
+        "status": "On Progress",
+        "created_id": "USR003",
+        "total_contribut": 4,
+        "start_date": "2026-04-01",
+        "end_date": "2026-07-20",
       },
       {
-        "project_name": "Customer Loyalty App",
-        "project_id": "PRJ005",
+        "name": "Customer Loyalty App",
+        "id": "PRJ005",
         "workspace_id": "WS002",
-        "project_type": "Mobile App",
-        "project_status": "Pending",
-        "project_created_by": "Sinta",
-        "project_created_id": "USR004",
-        "project_total_contribut": 3,
-        "project_start": "2026-07-01",
-        "project_end": "2026-10-01",
+        "type": "Mobile App",
+        "status": "Pending",
+        "created_id": "USR004",
+        "total_contribut": 3,
+        "start_date": "2026-07-01",
+        "end_date": "2026-10-01",
       },
       {
-        "project_name": "Warehouse Monitoring",
-        "project_id": "PRJ006",
+        "name": "Warehouse Monitoring",
+        "id": "PRJ006",
         "workspace_id": "WS002",
-        "project_type": "Desktop App",
-        "project_status": "On Progress",
-        "project_created_by": "Rizky",
-        "project_created_id": "USR005",
-        "project_total_contribut": 7,
-        "project_start": "2026-03-10",
-        "project_end": "2026-08-30",
+        "type": "Desktop App",
+        "status": "On Progress",
+        "created_id": "USR005",
+        "total_contribut": 7,
+        "start_date": "2026-03-10",
+        "end_date": "2026-08-30",
       },
       {
-        "project_name": "Finance Tracker",
-        "project_id": "PRJ007",
+        "name": "Finance Tracker",
+        "id": "PRJ007",
         "workspace_id": "WS003",
-        "project_type": "Desktop App",
-        "project_status": "Cancelled",
-        "project_created_by": "Dewi",
-        "project_created_id": "USR006",
-        "project_total_contribut": 2,
-        "project_start": "2026-02-05",
-        "project_end": "2026-05-30",
+        "type": "Desktop App",
+        "status": "Cancelled",
+        "created_id": "USR006",
+        "total_contribut": 2,
+        "start_date": "2026-02-05",
+        "end_date": "2026-05-30",
       },
       {
-        "project_name": "Delivery Management",
-        "project_id": "PRJ008",
+        "name": "Delivery Management",
+        "id": "PRJ008",
         "workspace_id": "WS002",
-        "project_type": "Web App",
-        "project_status": "On Progress",
-        "project_created_by": "Yoga",
-        "project_created_id": "USR007",
-        "project_total_contribut": 10,
-        "project_start": "2026-04-20",
-        "project_end": "2026-09-10",
+        "type": "Web App",
+        "status": "On Progress",
+        "created_id": "USR007",
+        "total_contribut": 10,
+        "start_date": "2026-04-20",
+        "end_date": "2026-09-10",
       },
       {
-        "project_name": "HR Information System",
-        "project_id": "PRJ009",
+        "name": "HR Information System",
+        "id": "PRJ009",
         "workspace_id": "WS002",
-        "project_type": "Web App",
-        "project_status": "Review",
-        "project_created_by": "Nadia",
-        "project_created_id": "USR008",
-        "project_total_contribut": 5,
-        "project_start": "2026-03-15",
-        "project_end": "2026-06-30",
+        "type": "Web App",
+        "status": "Review",
+        "created_id": "USR008",
+        "total_contribut": 5,
+        "start_date": "2026-03-15",
+        "end_date": "2026-06-30",
       },
       {
-        "project_name": "E-Commerce Dashboard",
-        "project_id": "PRJ010",
+        "name": "E-Commerce Dashboard",
+        "id": "PRJ010",
         "workspace_id": "WS002",
-        "project_type": "Admin Panel",
-        "project_status": "On Progress",
-        "project_created_by": "Citra",
-        "project_created_id": "USR009",
-        "project_total_contribut": 6,
-        "project_start": "2026-04-12",
-        "project_end": "2026-08-01",
+        "type": "Admin Panel",
+        "status": "On Progress",
+        "created_id": "USR009",
+        "total_contribut": 6,
+        "start_date": "2026-04-12",
+        "end_date": "2026-08-01",
       },
       {
-        "project_name": "Booking Reservation System",
-        "project_id": "PRJ011",
+        "name": "Booking Reservation System",
+        "id": "PRJ011",
         "workspace_id": "WS003",
-        "project_type": "Web App",
-        "project_status": "Todo",
-        "project_created_by": "Fajar",
-        "project_created_id": "USR010",
-        "project_total_contribut": 4,
-        "project_start": "2026-08-01",
-        "project_end": "2026-11-01",
+        "type": "Web App",
+        "status": "Todo",
+        "created_id": "USR010",
+        "total_contribut": 4,
+        "start_date": "2026-08-01",
+        "end_date": "2026-11-01",
       },
       {
-        "project_name": "Analytics Reporting",
-        "project_id": "PRJ012",
+        "name": "Analytics Reporting",
+        "id": "PRJ012",
         "workspace_id": "WS003",
-        "project_type": "Backend Service",
-        "project_status": "On Progress",
-        "project_created_by": "Lukman",
-        "project_created_id": "USR011",
-        "project_total_contribut": 5,
-        "project_start": "2026-05-15",
-        "project_end": "2026-08-15",
+        "type": "Backend Service",
+        "status": "On Progress",
+        "created_id": "USR011",
+        "total_contribut": 5,
+        "start_date": "2026-05-15",
+        "end_date": "2026-08-15",
       },
     ],
   };
 
   static final user = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {
         "id": "USR001",
         "name": "Oky",
@@ -298,9 +280,7 @@ class DummyData {
   };
 
   static final projectMember = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {"project_id": "PRJ001", "user_id": "USR001", "role": "Project Manager"},
       {
         "project_id": "PRJ001",
@@ -342,9 +322,7 @@ class DummyData {
   };
 
   static final task = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {
         "id": "TASK001",
         "project_id": "PRJ002",
@@ -355,7 +333,6 @@ class DummyData {
         "story_point": 5,
         "reporter_id": "USR001",
         "assignee_id": "USR002",
-        "label_ids": ["LBL002", "LBL006"],
         "start_date": "2026-06-01",
         "due_date": "2026-06-03",
         "created_at": "2026-06-01T08:00:00Z",
@@ -371,7 +348,6 @@ class DummyData {
         "story_point": 3,
         "reporter_id": "USR001",
         "assignee_id": "USR003",
-        "label_ids": ["LBL002", "LBL005"],
         "start_date": "2026-06-01",
         "due_date": "2026-06-02",
         "created_at": "2026-06-01T09:00:00Z",
@@ -387,7 +363,6 @@ class DummyData {
         "story_point": 3,
         "reporter_id": "USR001",
         "assignee_id": "USR004",
-        "label_ids": ["LBL001", "LBL003"],
         "start_date": "2026-06-02",
         "due_date": "2026-06-04",
         "created_at": "2026-06-02T08:00:00Z",
@@ -403,7 +378,6 @@ class DummyData {
         "story_point": 8,
         "reporter_id": "USR001",
         "assignee_id": "USR002",
-        "label_ids": ["LBL002", "LBL005"],
         "start_date": "2026-06-03",
         "due_date": "2026-06-08",
         "created_at": "2026-06-03T08:00:00Z",
@@ -419,7 +393,7 @@ class DummyData {
         "story_point": 13,
         "reporter_id": "USR001",
         "assignee_id": "USR003",
-        "label_ids": ["LBL005"],
+
         "start_date": "2026-06-05",
         "due_date": "2026-06-15",
         "created_at": "2026-06-05T09:00:00Z",
@@ -435,7 +409,7 @@ class DummyData {
         "story_point": 13,
         "reporter_id": "USR001",
         "assignee_id": "USR002",
-        "label_ids": ["LBL005"],
+
         "start_date": "2026-06-05",
         "due_date": "2026-06-15",
         "created_at": "2026-06-05T09:10:00Z",
@@ -451,7 +425,7 @@ class DummyData {
         "story_point": 21,
         "reporter_id": "USR001",
         "assignee_id": "USR003",
-        "label_ids": ["LBL005"],
+
         "start_date": "2026-06-10",
         "due_date": "2026-06-25",
         "created_at": "2026-06-06T08:00:00Z",
@@ -467,7 +441,6 @@ class DummyData {
         "story_point": 13,
         "reporter_id": "USR001",
         "assignee_id": "USR002",
-        "label_ids": ["LBL001", "LBL005"],
         "start_date": "2026-06-12",
         "due_date": "2026-06-25",
         "created_at": "2026-06-06T09:00:00Z",
@@ -483,7 +456,6 @@ class DummyData {
         "story_point": 8,
         "reporter_id": "USR001",
         "assignee_id": "USR011",
-        "label_ids": ["LBL002", "LBL005", "LBL007"],
         "start_date": "2026-06-15",
         "due_date": "2026-06-30",
         "created_at": "2026-06-06T10:00:00Z",
@@ -499,7 +471,7 @@ class DummyData {
         "story_point": 5,
         "reporter_id": "USR001",
         "assignee_id": "USR001",
-        "label_ids": ["LBL007"],
+
         "start_date": "2026-08-25",
         "due_date": "2026-09-01",
         "created_at": "2026-06-06T11:00:00Z",
@@ -509,9 +481,7 @@ class DummyData {
   };
 
   static final subTask = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {
         "id": "SUB001",
         "task_id": "TASK005",
@@ -564,9 +534,7 @@ class DummyData {
   };
 
   static final label = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {"id": "LBL001", "name": "Frontend", "color": "#4CAF50"},
       {"id": "LBL002", "name": "Backend", "color": "#2196F3"},
       {"id": "LBL003", "name": "UI/UX", "color": "#FF9800"},
@@ -578,9 +546,7 @@ class DummyData {
   };
 
   static final comment = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {
         "id": "COM001",
         "task_id": "TASK004",
@@ -745,9 +711,7 @@ class DummyData {
   };
 
   static final attachment = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {
         "id": "ATT001",
         "task_id": "TASK004",
@@ -887,9 +851,7 @@ class DummyData {
   };
 
   static final activity = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {
         "id": "ACT001",
         "workspace_id": "WS001",
@@ -1201,30 +1163,28 @@ class DummyData {
   };
 
   static final workspace = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {
-        "workspace_id": "WS001",
-        "workspace_name": "Ringkas Development",
-        "workspace_description": "Internal product development",
-        "workspace_owner_id": "USR001",
+        "id": "WS001",
+        "name": "Ringkas Development",
+        "description": "Internal product development",
+        "owner_id": "USR001",
         "created_at": "2026-01-01T08:00:00Z",
         "company_id": "demo1",
       },
       {
-        "workspace_id": "WS002",
-        "workspace_name": "PT Maju Bersama",
-        "workspace_description": "Client workspace",
-        "workspace_owner_id": "USR004",
+        "id": "WS002",
+        "name": "PT Maju Bersama",
+        "description": "Client workspace",
+        "owner_id": "USR004",
         "created_at": "2026-02-01T08:00:00Z",
         "company_id": "demo1",
       },
       {
-        "workspace_id": "WS003",
-        "workspace_name": "Freelance Projects",
-        "workspace_description": "Freelance client management",
-        "workspace_owner_id": "USR001",
+        "id": "WS003",
+        "name": "Freelance Projects",
+        "description": "Freelance client management",
+        "owner_id": "USR001",
         "created_at": "2026-03-01T08:00:00Z",
         "company_id": "demo1",
       },
@@ -1232,9 +1192,7 @@ class DummyData {
   };
 
   static final workspaceMember = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {"workspace_id": "WS001", "user_id": "USR001", "role": "Owner"},
       {"workspace_id": "WS001", "user_id": "USR002", "role": "Admin"},
       {"workspace_id": "WS001", "user_id": "USR003", "role": "Member"},
@@ -1249,9 +1207,7 @@ class DummyData {
   };
 
   static final sprint = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {
         "sprint_id": "SPR001",
         "project_id": "PRJ002",
@@ -1292,9 +1248,7 @@ class DummyData {
   };
 
   static final notification = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {
         "id": "NTF001",
         "user_id": "USR002",
@@ -1363,9 +1317,7 @@ class DummyData {
   };
 
   static final taskHistory = const {
-    'status': 'success',
-    'message': "Sukses",
-    'results': [
+    [
       {
         "id": "HIS001",
         "workspace_id": "WS001",

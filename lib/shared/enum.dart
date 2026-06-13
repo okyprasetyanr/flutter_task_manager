@@ -5,10 +5,10 @@ import 'package:task_manager/shared/model/model_task_history.dart';
 import 'package:task_manager/shared/model/model_user.dart';
 
 enum EnumWorkspace {
-  workspaceId('workspace_id'),
-  workspaceName('workspace_name'),
-  workspaceDescription('workspace_description'),
-  workspaceOwnerId('workspace_owner_id'),
+  id('id'),
+  name('name'),
+  description('description'),
+  ownerId('owner_id'),
   createdAt('created_at'),
   companyId('company_id');
 
@@ -38,16 +38,15 @@ enum EnumUser {
 }
 
 enum EnumProject {
-  projectId('project_id'),
-  projectName('project_name'),
-  projectType('project_type'),
-  projectStatus('project_status'),
-  projectCreatedBy('project_created_by'),
-  projectCreatedId('project_created_id'),
-  projectTotalContribut('project_total_contribut'),
-  projectStart('project_start'),
-  projectEnd('project_end'),
-  projectWorkspaceId('workspace_id');
+  id('id'),
+  name('name'),
+  type('type'),
+  status('status'),
+  createdId('created_id'),
+  totalContribut('total_contribut'),
+  start('start_date'),
+  end('end_date'),
+  workspaceId('workspace_id');
 
   final String value;
   const EnumProject(this.value);

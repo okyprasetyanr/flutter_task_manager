@@ -7,10 +7,10 @@ import 'package:task_manager/feature/login/data/remote/login_remote.dart';
 import 'package:task_manager/feature/login/domain/repository/login_repository.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
+import 'package:task_manager/core/services/collector/collector_data.dart';
 
 class LoginRepositoryImp implements LoginRepository {
-  final HelperCollectData helper;
+  final CollectData helper;
   final LoginRemote remote;
   final LoginLocal local;
   final UserSession userSession;

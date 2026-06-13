@@ -36,8 +36,8 @@ class ProjectDetailProject extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(data.projectName, style: lv05TextStyle),
-                Text(data.projectType, style: lv05TextStyle),
+                Text(data.name, style: lv05TextStyle),
+                Text(data.type, style: lv05TextStyle),
               ],
             ),
             const SizedBox(height: 4),
@@ -45,10 +45,10 @@ class ProjectDetailProject extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  data.projectStatus.text,
+                  data.status.text,
                   style: lv05TextStyle.copyWith(color: Colors.grey),
                 ),
-                Text(data.projectCreatedBy, style: lv05TextStyle),
+                Text(data.createdId, style: lv05TextStyle),
               ],
             ),
             const SizedBox(height: 4),
@@ -56,17 +56,17 @@ class ProjectDetailProject extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  HelperDateConvert.toDisplayUI(date: data.projectStart),
+                  HelperDateConvert.toDisplayUI(date: data.start),
                   style: lv05TextStyle,
                 ),
                 Text(
-                  HelperDateConvert.toDisplayUI(date: data.projectEnd),
+                  HelperDateConvert.toDisplayUI(date: data.end),
                   style: lv05TextStyle,
                 ),
               ],
             ),
             const SizedBox(height: 4),
-            Text(data.projectTotalContribut.toString(), style: lv05TextStyle),
+            Text(data.totalContribut.toString(), style: lv05TextStyle),
             const SizedBox(height: 4),
           ],
         );

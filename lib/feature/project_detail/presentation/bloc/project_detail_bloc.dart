@@ -27,8 +27,7 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
         ? state as ProjectDetailStateLoaded
         : ProjectDetailStateLoaded();
     add(ProjectDetailEventChangeStatus(status: EnumStatusState.loading));
-    final projectId =
-        event.data?.projectId ?? currentState.dataProject!.projectId;
+    final projectId = event.data?.id ?? currentState.dataProject!.id;
     final data = await repo.getProjectDetail(projectId: projectId);
     emit(
       currentState.copyWith(

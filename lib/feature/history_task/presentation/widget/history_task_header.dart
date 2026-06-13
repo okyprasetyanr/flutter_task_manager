@@ -21,7 +21,7 @@ class HistoryTaskHeader extends StatelessWidget {
             (String?, EnumStatusState)
           >(
             selector: (state) => state is HistoryTaskStateLoaded
-                ? (state.dataWorkspace?.workspaceName ?? "...", state.status)
+                ? (state.dataWorkspace?.name ?? "...", state.status)
                 : (null, EnumStatusState.loading),
             builder: (context, state) => state.$2 == EnumStatusState.loading
                 ? CustomLoading()

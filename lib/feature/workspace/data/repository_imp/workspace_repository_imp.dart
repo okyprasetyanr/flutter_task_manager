@@ -4,16 +4,16 @@ import 'package:task_manager/feature/workspace/data/local/workspace_local.dart';
 import 'package:task_manager/feature/workspace/data/remote/workspace_remote.dart';
 import 'package:task_manager/feature/workspace/domain/repository/workspace_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
+import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
-import 'package:task_manager/shared/model/model_message_collector.dart';
+import 'package:task_manager/core/services/collector/collector_message.dart';
 
 class WorkspaceRepositoryImp implements WorkspaceRepository {
   final WorkspaceRemote remote;
   final WorkspaceLocal local;
   final UserSession userSession;
-  final HelperCollectData helper;
-  final ModelMessageCollector messageCollector;
+  final CollectData helper;
+  final CollectorMessage messageCollector;
 
   WorkspaceRepositoryImp({
     required this.remote,
@@ -23,7 +23,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
     required this.messageCollector,
   });
   @override
-  Future<(Map<EnumFetchApiStatus, dynamic>, ModelMessageCollector)>
+  Future<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>
   getWorkspace() async {
     final data = await helper.helperCollectData(
       remoteFunc: () async =>

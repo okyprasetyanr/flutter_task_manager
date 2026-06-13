@@ -14,8 +14,8 @@ import 'package:task_manager/feature/shared_component/notification/data/remote/n
 import 'package:task_manager/feature/shared_component/notification/data/repository_imp/notification_repository_imp.dart';
 import 'package:task_manager/feature/shared_component/notification/domain/repository/notification_repository.dart';
 import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_bloc.dart';
-import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
-import 'package:task_manager/shared/model/model_message_collector.dart';
+import 'package:task_manager/core/services/collector/collector_data.dart';
+import 'package:task_manager/core/services/collector/collector_message.dart';
 
 void main() {
   runApp(
@@ -25,7 +25,7 @@ void main() {
         RepositoryProvider(lazy: false, create: (context) => UserSession()),
         RepositoryProvider(lazy: false, create: (context) => LocalServices()),
         RepositoryProvider(lazy: false, create: (context) => ApiServices()),
-        RepositoryProvider(create: (context) => ModelMessageCollector()),
+        RepositoryProvider(create: (context) => CollectorMessage()),
         RepositoryProvider<ConnectionService>(
           lazy: false,
           create: (context) => ConnectionServiceImpl(),
@@ -33,7 +33,7 @@ void main() {
         RepositoryProvider(
           lazy: false,
           create: (context) =>
-              HelperCollectData(connection: context.read<ConnectionService>()),
+              CollectData(connection: context.read<ConnectionService>()),
         ),
         RepositoryProvider<NotificationRepository>(
           create: (context) => NotificationRepositoryImp(
@@ -42,8 +42,8 @@ void main() {
             ),
             local: NotificationLocal(),
             userSession: context.read<UserSession>(),
-            helper: context.read<HelperCollectData>(),
-            messageCollector: context.read<ModelMessageCollector>(),
+            helper: context.read<CollectData>(),
+            messageCollector: context.read<CollectorMessage>(),
           ),
         ),
       ],

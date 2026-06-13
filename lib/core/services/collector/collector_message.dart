@@ -1,14 +1,14 @@
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 
-class ModelMessageCollector {
+class CollectorMessage {
   final String? error;
   final String? failed;
   final String? noconnection;
 
-  ModelMessageCollector({this.error, this.failed, this.noconnection});
+  CollectorMessage({this.error, this.failed, this.noconnection});
 
-  ModelMessageCollector getMessage(Map<EnumFetchApiStatus, dynamic> data) {
-    return ModelMessageCollector(
+  CollectorMessage getMessage(Map<EnumFetchApiStatus, dynamic> data) {
+    return CollectorMessage(
       error: data[EnumFetchApiStatus.error],
       failed: data[EnumFetchApiStatus.failed],
       noconnection: data[EnumFetchApiStatus.noconnection],

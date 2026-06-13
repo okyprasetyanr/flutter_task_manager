@@ -25,10 +25,10 @@ class WorkspaceListWorkspace extends StatelessWidget {
       builder: (context, state) {
         return CustomListViewBuilderV<ModelWorkspace>(
           content: (data, _) => [
-            Text(data.workspaceName, style: lv05TextStyle),
+            Text(data.name, style: lv05TextStyle),
             const SizedBox(height: 4),
             Text(
-              data.workspaceDescription,
+              data.description,
               style: lv05TextStyle.copyWith(color: Colors.grey),
             ),
           ],

@@ -21,7 +21,7 @@ class WorkspaceDetailHeader extends StatelessWidget {
             (String?, EnumStatusState)
           >(
             selector: (state) => state is WorkspaceDetailStateLoaded
-                ? (state.dataWorkspace?.workspaceName ?? "...", state.status)
+                ? (state.dataWorkspace?.name ?? "...", state.status)
                 : (null, EnumStatusState.loading),
             builder: (context, state) => state.$2 == EnumStatusState.loading
                 ? CustomLoading()

@@ -5,16 +5,16 @@ import 'package:task_manager/feature/workspace_detail/data/local/workspace_detai
 import 'package:task_manager/feature/workspace_detail/data/remote/workspace_detail_remote.dart';
 import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
-import 'package:task_manager/shared/model/model_message_collector.dart';
+import 'package:task_manager/core/services/collector/collector_data.dart';
+import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/shared/model/model_user.dart';
 
 class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   final WorkspaceDetailRemote remote;
   final WorkspaceDetailLocal local;
   final UserSession userSession;
-  final HelperCollectData helper;
-  final ModelMessageCollector messageCollector;
+  final CollectData helper;
+  final CollectorMessage messageCollector;
   final UserCache userCache;
 
   WorkspaceDetailRepositoryImp({
@@ -27,7 +27,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   });
 
   @override
-  Future<(Map<EnumFetchApiStatus, dynamic>, ModelMessageCollector)>
+  Future<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>
   getWorkspaceDetai({
     required String workspaceId,
     required String companyId,

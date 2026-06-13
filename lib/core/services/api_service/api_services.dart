@@ -1,147 +1,129 @@
 import 'package:task_manager/core/dummy/dummy_data.dart';
+import 'package:task_manager/core/services/response_wrapper/response_wrapper.dart';
 import 'package:task_manager/shared/enum.dart';
-import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class ApiServices {
   Future<Map<String, dynamic>> getProject(
     String workspaceId,
     String companyId,
   ) async {
-    final data = DummyData.project;
-    final filteredData = {
-      ...data,
-      'results': (data['results'] as List)
+    return ResponseWrapper(
+      getData: () async => (await DummyData.project as List)
           .where(
-            (element) =>
-                element[EnumProject.projectWorkspaceId.value] == workspaceId,
+            (element) => element[EnumProject.workspaceId.value] == workspaceId,
           )
           .toList(),
-    };
-
-    devLog(
-      "Log ApiServices getProject: $filteredData, workspace_id: $workspaceId",
-    );
-    return filteredData;
+    ).wrap();
   }
 
   Future<Map<String, dynamic>> getUser(String companyId) async {
-    return DummyData.user;
+    return ResponseWrapper(getData: () async => await DummyData.user).wrap();
   }
 
   Future<Map<String, dynamic>> getProjectMember(
     String projectId,
     String companyId,
   ) async {
-    return DummyData.projectMember;
+    return ResponseWrapper(
+      getData: () async => await DummyData.projectMember,
+    ).wrap();
   }
 
   Future<Map<String, dynamic>> getTasks(
     String companyId,
     String projectId,
   ) async {
-    return DummyData.task;
+    return ResponseWrapper(getData: () async => await DummyData.task).wrap();
   }
 
   Future<Map<String, dynamic>> getSubTasks(
     String companyId,
     String idTasks,
   ) async {
-    return DummyData.subTask;
+    return ResponseWrapper(getData: () async => await DummyData.subTask).wrap();
   }
 
   Future<Map<String, dynamic>> getLabel(String companyId) async {
-    return DummyData.label;
+    return ResponseWrapper(getData: () async => await DummyData.label).wrap();
   }
 
   Future<Map<String, dynamic>> getComments(
     String companyId,
     String idTask,
   ) async {
-    final data = DummyData.comment;
-    final filteredData = {
-      ...data,
-      'results': (data['results'] as List)
+    return ResponseWrapper(
+      getData: () async => (await DummyData.comment as List)
           .where((e) => e[EnumComment.taskId.value] == idTask)
           .toList(),
-    };
-    return filteredData;
+    ).wrap();
   }
 
   Future<Map<String, dynamic>> getAttachment(
     String companyId,
     String idTask,
   ) async {
-    return DummyData.attachment;
+    return ResponseWrapper(
+      getData: () async => await DummyData.attachment,
+    ).wrap();
   }
 
   Future<Map<String, dynamic>> getActivities({
     required String companyId,
     required String workspaceId,
   }) async {
-    return DummyData.activity;
+    return ResponseWrapper(
+      getData: () async => await DummyData.activity,
+    ).wrap();
   }
 
   Future<Map<String, dynamic>> getWorkSpace(String companyId) async {
-    return DummyData.workspace;
+    return ResponseWrapper(
+      getData: () async => await DummyData.workspace,
+    ).wrap();
   }
 
   Future<Map<String, dynamic>> getWorkspaceMember(
     String workspaceId,
     String companyId,
   ) async {
-    final data = DummyData.workspaceMember;
-    final filteredData = {
-      ...data,
-      'results': (data['results'] as List)
+    return ResponseWrapper(
+      getData: () async => (await DummyData.workspaceMember as List)
           .where(
             (element) =>
                 element[EnumWorkspaceMember.workspaceId.value] == workspaceId,
           )
           .toList(),
-    };
-    return filteredData;
+    ).wrap();
   }
 
   Future<Map<String, dynamic>> getSprint(String projectId) async {
-    return DummyData.sprint;
+    return ResponseWrapper(getData: () async => (DummyData.sprint)).wrap();
   }
 
   Future<Map<String, dynamic>> getNotification(String userId) async {
-    final data = DummyData.notification;
-    final filteredData = {
-      ...data,
-      'results': (data['results'] as List)
+    return ResponseWrapper(
+      getData: () async => (await DummyData.notification as List)
           .where((element) => element[EnumNotification.userId.value] == userId)
           .toList(),
-    };
-    devLog(
-      "Log ApiServices getNotification: data: $filteredData, userId:$userId",
-    );
-    return filteredData;
+    ).wrap();
   }
 
   Future<Map<String, dynamic>> getTaskHistory({
     required String workspaceId,
   }) async {
-    final data = DummyData.taskHistory;
-    final filteredData = {
-      ...data,
-      'results': (data['results'] as List)
+    return ResponseWrapper(
+      getData: () async => (await DummyData.taskHistory as List)
           .where(
             (element) =>
                 element[EnumHistoryTask.workspaceId.value] == workspaceId,
           )
           .toList(),
-    };
-
-    devLog(
-      "Log ApiServices: getTaskHistory: data:$filteredData, workspaceId: $workspaceId",
-    );
-
-    return filteredData;
+    ).wrap();
   }
 
   Future<Map<String, dynamic>> getLogin() async {
-    return DummyData.loginSuccess;
+    return ResponseWrapper(
+      getData: () async => await DummyData.loginSuccess,
+    ).wrap();
   }
 }

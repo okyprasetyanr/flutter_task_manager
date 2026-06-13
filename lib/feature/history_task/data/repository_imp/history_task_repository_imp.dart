@@ -4,17 +4,17 @@ import 'package:task_manager/feature/history_task/data/local/history_task_local.
 import 'package:task_manager/feature/history_task/data/remote/history_task_remote.dart';
 import 'package:task_manager/feature/history_task/domain/repository/history_task_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/shared/helper/helper_collect_data/helper_collect_data.dart';
+import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
-import 'package:task_manager/shared/model/model_message_collector.dart';
+import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/shared/model/model_user.dart';
 
 class HistoryTaskRepositoryImp implements HistoryTaskRepository {
   final HistoryTaskRemote remote;
   final HistoryTaskLocal local;
   final UserSession userSession;
-  final HelperCollectData helper;
-  final ModelMessageCollector messageCollector;
+  final CollectData helper;
+  final CollectorMessage messageCollector;
   final UserCache userCache;
 
   HistoryTaskRepositoryImp({
@@ -26,8 +26,9 @@ class HistoryTaskRepositoryImp implements HistoryTaskRepository {
     required this.messageCollector,
   });
   @override
-  Future<(Map<EnumFetchApiStatus, dynamic>, ModelMessageCollector)>
-  getHistoryTask({required String workspaceId}) async {
+  Future<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> getHistoryTask({
+    required String workspaceId,
+  }) async {
     final data = await helper.helperCollectData(
       remoteFunc: () async => await remote.getHistoryTask(
         companyId: userSession.getCompanyId(),

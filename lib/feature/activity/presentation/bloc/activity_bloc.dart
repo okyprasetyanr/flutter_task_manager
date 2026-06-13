@@ -24,7 +24,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
         ? state as ActivityStateLoaded
         : ActivityStateLoaded();
     final dataWorkspace = event.data ?? currentState.dataWorkspace!;
-    final data = await repo.getActivity(workspaceId: dataWorkspace.workspaceId);
+    final data = await repo.getActivity(workspaceId: dataWorkspace.id);
     emit(
       currentState.copyWith(
         dataActivity: data.$1.containsKey(EnumFetchApiStatus.success)

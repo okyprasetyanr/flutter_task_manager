@@ -3,28 +3,28 @@ import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 
 class ModelWorkspace extends Equatable {
-  final String workspaceId;
-  final String workspaceName;
-  final String workspaceDescription;
-  final String workspaceOwnerId;
+  final String id;
+  final String name;
+  final String description;
+  final String ownerId;
   final DateTime createdAt;
   final String companyId;
 
   const ModelWorkspace({
-    required this.workspaceId,
-    required this.workspaceName,
-    required this.workspaceDescription,
-    required this.workspaceOwnerId,
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.ownerId,
     required this.createdAt,
     required this.companyId,
   });
 
   factory ModelWorkspace.fromJson(Map<String, dynamic> data) {
     return ModelWorkspace(
-      workspaceId: data[EnumWorkspace.workspaceId.value],
-      workspaceName: data[EnumWorkspace.workspaceName.value],
-      workspaceDescription: data[EnumWorkspace.workspaceDescription.value],
-      workspaceOwnerId: data[EnumWorkspace.workspaceOwnerId.value],
+      id: data[EnumWorkspace.id.value],
+      name: data[EnumWorkspace.name.value],
+      description: data[EnumWorkspace.description.value],
+      ownerId: data[EnumWorkspace.ownerId.value],
       createdAt: HelperDateConvert.toDateTime(
         data[EnumWorkspace.createdAt.value],
       ),
@@ -33,10 +33,10 @@ class ModelWorkspace extends Equatable {
   }
   Map<String, dynamic> toJson() {
     return {
-      EnumWorkspace.workspaceId.value: workspaceId,
-      EnumWorkspace.workspaceName.value: workspaceName,
-      EnumWorkspace.workspaceDescription.value: workspaceDescription,
-      EnumWorkspace.workspaceOwnerId.value: workspaceOwnerId,
+      EnumWorkspace.id.value: id,
+      EnumWorkspace.name.value: name,
+      EnumWorkspace.description.value: description,
+      EnumWorkspace.ownerId.value: ownerId,
       EnumWorkspace.createdAt.value: createdAt,
       EnumWorkspace.companyId.value: companyId,
     };
@@ -44,10 +44,10 @@ class ModelWorkspace extends Equatable {
 
   @override
   List<Object?> get props => [
-    workspaceId,
-    workspaceName,
-    workspaceDescription,
-    workspaceOwnerId,
+    id,
+    name,
+    description,
+    ownerId,
     createdAt,
     companyId,
   ];
