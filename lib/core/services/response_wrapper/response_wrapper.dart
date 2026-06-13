@@ -2,10 +2,9 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ResponseWrapper {
-  final Future<dynamic> Function() getData;
-  ResponseWrapper({required this.getData});
-
-  Future<Map<String, dynamic>> wrap() async {
+  Future<Map<String, dynamic>> wrap({
+    required Future<dynamic> Function() getData,
+  }) async {
     try {
       return {
         'status': 'success',

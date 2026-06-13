@@ -4,10 +4,11 @@ import 'package:task_manager/app_properties/app_properties.dart';
 import 'package:task_manager/core/cache/user_cache.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/routes/routes_navigator.dart';
-import 'package:task_manager/core/services/api_service/api_services.dart';
+import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/services/connection_service/connection_service.dart';
 import 'package:task_manager/core/services/connection_service/connection_service_imp.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
+import 'package:task_manager/core/services/response_wrapper/response_wrapper.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/shared_component/notification/data/local/notification_local.dart';
 import 'package:task_manager/feature/shared_component/notification/data/remote/notification_remote.dart';
@@ -24,7 +25,11 @@ void main() {
         RepositoryProvider(create: (context) => UserCache(user: const [])),
         RepositoryProvider(lazy: false, create: (context) => UserSession()),
         RepositoryProvider(lazy: false, create: (context) => LocalServices()),
-        RepositoryProvider(lazy: false, create: (context) => ApiServices()),
+        RepositoryProvider(
+          lazy: false,
+          create: (context) =>
+              RemoteService(responseWrapper: ResponseWrapper()),
+        ),
         RepositoryProvider(create: (context) => CollectorMessage()),
         RepositoryProvider<ConnectionService>(
           lazy: false,
@@ -38,7 +43,7 @@ void main() {
         RepositoryProvider<NotificationRepository>(
           create: (context) => NotificationRepositoryImp(
             remote: NotificationRemote(
-              apiServices: context.read<ApiServices>(),
+              apiServices: context.read<RemoteService>(),
             ),
             local: NotificationLocal(),
             userSession: context.read<UserSession>(),

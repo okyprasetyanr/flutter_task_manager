@@ -1,7 +1,7 @@
-import 'package:task_manager/core/services/api_service/api_services.dart';
+import 'package:task_manager/core/services/remote_service/remote_service.dart';
 
 class ActivityRemote {
-  final ApiServices apiServices;
+  final RemoteService apiServices;
 
   ActivityRemote({required this.apiServices});
   Future<Map<String, dynamic>> getActivity({

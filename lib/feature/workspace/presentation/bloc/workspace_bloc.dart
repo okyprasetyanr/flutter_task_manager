@@ -13,6 +13,7 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
   WorkspaceBloc(this.repo) : super(WorkspaceStateInitial()) {
     on<WorkspaceEventGetData>(_onGetData);
     on<WorkspaceEventChangeStatus>(_onChangeStatus);
+    on<WorkspaceEventCreateWorkspace>(_onCreateWorkspace);
   }
 
   Future<void> _onGetData(
@@ -52,5 +53,12 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
               : WorkspaceStateLoaded())
           .copyWith(status: event.status),
     );
+  }
+
+  FutureOr<void> _onCreateWorkspace(
+    WorkspaceEventCreateWorkspace event,
+    Emitter<WorkspaceState> emit,
+  ) {
+    final currentState = state as WorkspaceStateLoaded;
   }
 }

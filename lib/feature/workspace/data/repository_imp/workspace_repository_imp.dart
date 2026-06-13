@@ -7,6 +7,7 @@ import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
+import 'package:task_manager/shared/model/model_workspace.dart';
 
 class WorkspaceRepositoryImp implements WorkspaceRepository {
   final WorkspaceRemote remote;
@@ -37,5 +38,23 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   @override
   String getCompanyName() {
     return userSession.getCompanyName();
+  }
+
+  @override
+  CollectorMessage createWorkspace({required ModelWorkspace data}) {
+    // TODO: implement createWorkspace
+    throw UnimplementedError();
+  }
+
+  @override
+  CollectorMessage deleteWorkspace({required ModelWorkspace data}) {
+    // TODO: implement deleteWorkspace
+    throw UnimplementedError();
+  }
+
+  @override
+  CollectorMessage updateWorkspace({required ModelWorkspace data}) {
+    // TODO: implement updateWorkspace
+    throw UnimplementedError();
   }
 }

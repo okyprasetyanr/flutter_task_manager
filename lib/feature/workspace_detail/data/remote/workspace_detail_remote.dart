@@ -1,8 +1,8 @@
-import 'package:task_manager/core/services/api_service/api_services.dart';
+import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class WorkspaceDetailRemote {
-  final ApiServices apiServices;
+  final RemoteService apiServices;
 
   WorkspaceDetailRemote({required this.apiServices});
 
