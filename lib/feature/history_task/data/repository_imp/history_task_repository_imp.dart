@@ -1,7 +1,7 @@
 import 'package:task_manager/core/cache/user_cache.dart';
+import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/history_task/data/local/history_task_local.dart';
-import 'package:task_manager/feature/history_task/data/remote/history_task_remote.dart';
 import 'package:task_manager/feature/history_task/domain/repository/history_task_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
@@ -10,7 +10,7 @@ import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/shared/model/model_user.dart';
 
 class HistoryTaskRepositoryImp implements HistoryTaskRepository {
-  final HistoryTaskRemote remote;
+  final RemoteService remote;
   final HistoryTaskLocal local;
   final UserSession userSession;
   final CollectData helper;
@@ -30,7 +30,7 @@ class HistoryTaskRepositoryImp implements HistoryTaskRepository {
     required String workspaceId,
   }) async {
     final data = await helper.helperCollectData(
-      remoteFunc: () async => await remote.getHistoryTask(
+      remoteFunc: () async => await remote.historyTaskRemote.getHistoryTask(
         companyId: userSession.getCompanyId(),
         workspaceId: workspaceId,
       ),

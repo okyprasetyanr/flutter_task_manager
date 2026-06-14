@@ -1,14 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:task_manager/core/services/remote_service/remote_service.dart';
+import 'package:task_manager/core/services/response_wrapper/response_wrapper.dart';
 
 class TaskDetailRemote {
-  final RemoteService apiServices;
-  TaskDetailRemote({required this.apiServices});
+  final ResponseWrapper responseWrapper;
+  TaskDetailRemote({required this.responseWrapper});
 
   Future<Map<String, dynamic>> getComment({
     required String companyId,
     required String taskId,
   }) async {
-    return await apiServices.getComments(companyId, taskId);
+    return responseWrapper.wrap(getData: () async => {});
   }
 }

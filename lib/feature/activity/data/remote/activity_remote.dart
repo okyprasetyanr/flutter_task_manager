@@ -1,16 +1,13 @@
-import 'package:task_manager/core/services/remote_service/remote_service.dart';
+import 'package:task_manager/core/services/response_wrapper/response_wrapper.dart';
 
 class ActivityRemote {
-  final RemoteService apiServices;
+  final ResponseWrapper responseWrapper;
 
-  ActivityRemote({required this.apiServices});
+  ActivityRemote({required this.responseWrapper});
   Future<Map<String, dynamic>> getActivity({
     required String workspaceId,
     required String companyId,
   }) async {
-    return await apiServices.getActivities(
-      companyId: companyId,
-      workspaceId: workspaceId,
-    );
+    return responseWrapper.wrap(getData: () async => {});
   }
 }

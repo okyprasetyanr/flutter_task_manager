@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:task_manager/shared/model/model_workspace.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 import 'package:task_manager/shared/model/model_workspace_member.dart';
 
 class ModelWorkspaceDetail extends Equatable {

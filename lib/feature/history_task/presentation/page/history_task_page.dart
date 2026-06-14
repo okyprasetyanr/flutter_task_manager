@@ -7,7 +7,7 @@ import 'package:task_manager/feature/history_task/presentation/bloc/history_task
 import 'package:task_manager/feature/history_task/presentation/bloc/history_task_state.dart';
 import 'package:task_manager/feature/history_task/presentation/widget/history_task_header.dart';
 import 'package:task_manager/feature/history_task/presentation/widget/history_task_list_history.dart';
-import 'package:task_manager/shared/model/model_workspace.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 import 'package:task_manager/shared/navigator_content/navigator_content.dart';
 import 'package:task_manager/shared/style/icon_size.dart';
 import 'package:task_manager/shared/style/text_size.dart';

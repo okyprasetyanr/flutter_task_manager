@@ -1,12 +1,11 @@
-import 'package:task_manager/core/services/remote_service/remote_service.dart';
+import 'package:task_manager/core/services/response_wrapper/response_wrapper.dart';
 
 class NotificationRemote {
-  final RemoteService apiServices;
+  final ResponseWrapper responseWrapper;
 
-  NotificationRemote({required this.apiServices});
+  NotificationRemote({required this.responseWrapper});
 
   Future<Map<String, dynamic>> getNotification({required String userId}) async {
-    final data = await apiServices.getNotification(userId);
-    return data;
+    return responseWrapper.wrap(getData: () async => {});
   }
 }

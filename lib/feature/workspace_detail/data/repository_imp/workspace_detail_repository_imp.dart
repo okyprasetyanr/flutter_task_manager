@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:task_manager/core/cache/user_cache.dart';
+import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/workspace_detail/data/local/workspace_detail_local.dart';
-import 'package:task_manager/feature/workspace_detail/data/remote/workspace_detail_remote.dart';
 import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
@@ -10,7 +10,7 @@ import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/shared/model/model_user.dart';
 
 class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
-  final WorkspaceDetailRemote remote;
+  final RemoteService remote;
   final WorkspaceDetailLocal local;
   final UserSession userSession;
   final CollectData helper;
@@ -35,10 +35,8 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     await fetchUser();
 
     final data = await helper.helperCollectData(
-      remoteFunc: () async => await remote.getWorkspaceDetail(
-        workspaceId: workspaceId,
-        companyId: companyId,
-      ),
+      remoteFunc: () async => await remote.workspaceDetailRemote
+          .getWorkspaceDetail(workspaceId: workspaceId, companyId: companyId),
       localFunc: () async => {},
     );
 
@@ -47,8 +45,9 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
 
   Future<void> fetchUser() async {
     final data = await helper.helperCollectData(
-      remoteFunc: () async =>
-          await remote.getUser(companyId: userSession.getCompanyId()),
+      remoteFunc: () async => await remote.workspaceDetailRemote.getUser(
+        companyId: userSession.getCompanyId(),
+      ),
       localFunc: () async => {},
     );
 

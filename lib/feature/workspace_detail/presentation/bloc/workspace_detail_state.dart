@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_project.dart';
 import 'package:task_manager/shared/model/model_user.dart';
-import 'package:task_manager/shared/model/model_workspace.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 import 'package:task_manager/shared/model/model_workspace_member.dart';
 
 class WorkspaceDetailState {}

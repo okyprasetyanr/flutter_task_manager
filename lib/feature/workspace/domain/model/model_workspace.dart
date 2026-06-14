@@ -31,15 +31,33 @@ class ModelWorkspace extends Equatable {
       companyId: data[EnumWorkspace.companyId.value],
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       EnumWorkspace.id.value: id,
       EnumWorkspace.name.value: name,
       EnumWorkspace.description.value: description,
       EnumWorkspace.ownerId.value: ownerId,
-      EnumWorkspace.createdAt.value: createdAt,
+      EnumWorkspace.createdAt.value: HelperDateConvert.toJsonISO(createdAt),
       EnumWorkspace.companyId.value: companyId,
     };
+  }
+
+  static Map<String, dynamic> workspaceGetChangedData({
+    required Map<String, dynamic> original,
+    required Map<String, dynamic> edited,
+  }) {
+    Map<String, dynamic> changedData = {
+      EnumWorkspace.id.value: original[EnumWorkspace.id.value],
+    };
+
+    edited.forEach((key, value) {
+      if (original[key] != value) {
+        changedData[key] = value;
+      }
+    });
+
+    return changedData;
   }
 
   @override

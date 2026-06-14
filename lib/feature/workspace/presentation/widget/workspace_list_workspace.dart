@@ -5,7 +5,7 @@ import 'package:task_manager/core/routes/routes_navigator.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_bloc.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
-import 'package:task_manager/shared/model/model_workspace.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/widget/listview/custom_list_view_builder_v.dart';
 

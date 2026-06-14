@@ -1,6 +1,6 @@
+import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/project_detail/data/local/project_detail_local.dart';
-import 'package:task_manager/feature/project_detail/data/remote/project_detail_remote.dart';
 import 'package:task_manager/feature/project_detail/domain/repository/project_detail_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
@@ -8,7 +8,7 @@ import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 
 class ProjectDetailRepositoryImp implements ProjectDetailRepository {
-  final ProjectDetailRemote remote;
+  final RemoteService remote;
   final ProjectDetailLocal local;
   final UserSession userSession;
   final CollectData helper;
@@ -25,7 +25,7 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
   Future<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>
   getProjectDetail({required String projectId}) async {
     final data = await helper.helperCollectData(
-      remoteFunc: () async => await remote.getProjectDetail(
+      remoteFunc: () async => await remote.projectDetailRemote.getProjectDetail(
         projectId: projectId,
         companyId: userSession.getCompanyId(),
       ),

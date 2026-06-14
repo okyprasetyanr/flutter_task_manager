@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, collection_methods_unrelated_type
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:task_manager/core/services/remote_service/remote_service.dart';
 
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/login/data/local/login_local.dart';
-import 'package:task_manager/feature/login/data/remote/login_remote.dart';
 import 'package:task_manager/feature/login/domain/repository/login_repository.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
@@ -11,7 +11,7 @@ import 'package:task_manager/core/services/collector/collector_data.dart';
 
 class LoginRepositoryImp implements LoginRepository {
   final CollectData helper;
-  final LoginRemote remote;
+  final RemoteService remote;
   final LoginLocal local;
   final UserSession userSession;
 
@@ -29,7 +29,7 @@ class LoginRepositoryImp implements LoginRepository {
   }) async {
     final data = await helper.helperCollectData(
       remoteFunc: () async =>
-          await remote.login(email: email, password: password),
+          await remote.loginRemote.login(email: email, password: password),
       localFunc: () async => {},
     );
     if (data.containsKey(EnumFetchApiStatus.success)) {

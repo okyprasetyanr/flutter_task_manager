@@ -2,7 +2,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:task_manager/shared/enum/enum_status_state.dart';
-import 'package:task_manager/shared/model/model_workspace.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 
 class WorkspaceState {}
 
@@ -15,8 +15,10 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
   final String? error;
   final String? noconnection;
   final List<ModelWorkspace> dataWorkspace;
+  final ModelWorkspace? selectedWorkspace;
 
   WorkspaceStateLoaded({
+    this.selectedWorkspace,
     this.status = EnumStatusState.none,
     this.companyName,
     this.failed,
@@ -26,6 +28,7 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
   });
 
   WorkspaceStateLoaded copyWith({
+    ModelWorkspace? selectedWorkspace,
     EnumStatusState? status,
     List<ModelWorkspace>? dataWorkspace,
     String? companyName,
@@ -34,6 +37,7 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
     String? noconnection,
   }) {
     return WorkspaceStateLoaded(
+      selectedWorkspace: selectedWorkspace,
       noconnection: noconnection,
       companyName: companyName ?? this.companyName,
       error: error,
@@ -45,6 +49,7 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
 
   @override
   List<Object?> get props => [
+    selectedWorkspace,
     companyName,
     status,
     dataWorkspace,
