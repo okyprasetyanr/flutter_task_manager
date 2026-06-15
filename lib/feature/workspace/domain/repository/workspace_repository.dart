@@ -7,7 +7,10 @@ abstract class WorkspaceRepository {
 
   String getCompanyName();
 
-  Future<CollectorMessage?> createWorkspace({required ModelWorkspace data});
+  Future<CollectorMessage?> createWorkspace({
+    required String name,
+    required String description,
+  });
   Future<CollectorMessage?> updateWorkspace({
     required ModelWorkspace original,
     required ModelWorkspace edited,

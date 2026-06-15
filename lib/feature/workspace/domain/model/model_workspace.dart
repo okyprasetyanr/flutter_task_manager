@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
+import 'package:task_manager/shared/helper/helper_date/helper_date_filter/helper_date_filter.dart';
+import 'package:uuid/uuid.dart';
 
 class ModelWorkspace extends Equatable {
   final String id;
@@ -43,6 +45,22 @@ class ModelWorkspace extends Equatable {
     };
   }
 
+  static ModelWorkspace createWorkspace({
+    required String name,
+    required String description,
+    required String companyId,
+    required String userId,
+  }) {
+    return ModelWorkspace(
+      id: "WS${Uuid().v4().toString().substring(0, 6)}",
+      name: name,
+      description: description,
+      ownerId: userId,
+      createdAt: dateNowYMDBLOC(),
+      companyId: companyId,
+    );
+  }
+
   static Map<String, dynamic> workspaceGetChangedData({
     required Map<String, dynamic> original,
     required Map<String, dynamic> edited,
@@ -58,6 +76,24 @@ class ModelWorkspace extends Equatable {
     });
 
     return changedData;
+  }
+
+  ModelWorkspace copyWith({
+    String? id,
+    String? name,
+    String? description,
+    String? ownerId,
+    DateTime? createdAt,
+    String? companyId,
+  }) {
+    return ModelWorkspace(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      ownerId: ownerId ?? this.ownerId,
+      createdAt: createdAt ?? this.createdAt,
+      companyId: companyId ?? this.companyId,
+    );
   }
 
   @override

@@ -31,18 +31,16 @@ class CollectData {
             };
           }
         } else {
-          return {
-            EnumFetchApiStatus.error:
-                "Kesalahan tidak diketahui, mohon ulangi kembali!",
-          };
+          return {EnumFetchApiStatus.error: "Unknown error, please try again!"};
         }
       } else {
         return {
-          EnumFetchApiStatus.noconnection: "Koneksi tidak tersedia/stabil!",
+          EnumFetchApiStatus.noconnection:
+              "Connection is unavailable/unstable!",
         };
       }
     } catch (e) {
-      return {EnumFetchApiStatus.error: "Terjadi kesalahan: ${e.toString()}"};
+      return {EnumFetchApiStatus.error: "There is an error: ${e.toString()}"};
     }
   }
 }

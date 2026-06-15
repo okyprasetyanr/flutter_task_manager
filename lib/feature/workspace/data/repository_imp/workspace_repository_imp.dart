@@ -1,16 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
+import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
-import 'package:task_manager/feature/workspace/data/local/workspace_local.dart';
 import 'package:task_manager/feature/workspace/domain/repository/workspace_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class WorkspaceRepositoryImp implements WorkspaceRepository {
   final RemoteService remote;
-  final WorkspaceLocal local;
+  final LocalServices local;
   final UserSession userSession;
   final CollectData helper;
   final CollectorMessage messageCollector;
@@ -40,14 +41,24 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
                 localFunc: () async => {},
               );
           final collectorMessage = messageCollector.getMessage(data);
+          devLog(
+            "Log WorkspaceRepositoryImp: Error: ${collectorMessage.error}",
+          );
           return (data, collectorMessage);
         });
   }
 
   @override
   Future<CollectorMessage?> createWorkspace({
-    required ModelWorkspace data,
+    required String name,
+    required String description,
   }) async {
+    final data = ModelWorkspace.createWorkspace(
+      name: name,
+      description: description,
+      companyId: userSession.getCompanyId(),
+      userId: userSession.getUserId(),
+    );
     final response = await helper.helperCollectData(
       remoteFunc: () async =>
           await remote.workspaceRemote.createWorkspace(data.toJson()),

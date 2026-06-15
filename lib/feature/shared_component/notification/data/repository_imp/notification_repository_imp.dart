@@ -1,14 +1,15 @@
+import 'package:task_manager/core/services/local_service/local_service.dart';
+import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
-import 'package:task_manager/feature/shared_component/notification/data/local/notification_local.dart';
-import 'package:task_manager/feature/shared_component/notification/data/remote/notification_remote.dart';
 import 'package:task_manager/feature/shared_component/notification/domain/repository/notification_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
+import 'package:task_manager/shared/model/model_notification.dart';
 
 class NotificationRepositoryImp implements NotificationRepository {
-  final NotificationRemote remote;
-  final NotificationLocal local;
+  final RemoteService remote;
+  final LocalServices local;
   final UserSession userSession;
   final CollectData helper;
   final CollectorMessage messageCollector;
@@ -22,14 +23,33 @@ class NotificationRepositoryImp implements NotificationRepository {
   });
 
   @override
-  Future<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>
-  getNotification() async {
-    final data = await helper.helperCollectData(
-      remoteFunc: () async =>
-          await remote.getNotification(userId: userSession.getUserId()),
-      localFunc: () async => {},
-    );
+  Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>
+  watchNotification() {
+    return remote.notificationRemote
+        .watchNotification(userId: userSession.getUserId())
+        .asyncMap((rawMapFromRemote) async {
+          final Map<EnumFetchApiStatus, dynamic> data = await helper
+              .helperCollectData(
+                remoteFunc: () async => rawMapFromRemote,
+                localFunc: () async => {},
+              );
+          final collectorMessage = messageCollector.getMessage(data);
+          return (data, collectorMessage);
+        });
+  }
 
-    return (data, messageCollector.getMessage(data));
+  @override
+  Future<CollectorMessage?> updateIsRead({
+    required String notificationId,
+  }) async {
+    final data = await helper.helperCollectData(
+      remoteFunc: () => remote.notificationRemote.updateNotification(
+        data: ModelNotification.updateIsRead(notificationId: notificationId),
+      ),
+      localFunc: () => {},
+    );
+    return data.containsKey(EnumFetchApiStatus.success)
+        ? null
+        : messageCollector.getMessage(data);
   }
 }

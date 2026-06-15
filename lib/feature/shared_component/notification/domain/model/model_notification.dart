@@ -32,6 +32,13 @@ class ModelNotification extends Equatable {
     );
   }
 
+  static Map<String, dynamic> updateIsRead({required String notificationId}) {
+    return {
+      EnumNotification.id.value: notificationId,
+      EnumNotification.isRead.value: true,
+    };
+  }
+
   @override
   List<Object?> get props => [id, userId, title, body, isRead, createdAt];
 }

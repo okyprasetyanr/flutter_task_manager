@@ -5,17 +5,19 @@ import 'package:task_manager/shared/enum.dart';
 
 class WorkspaceRemote {
   final ResponseWrapper responseWrapper;
-
-  WorkspaceRemote({required this.responseWrapper});
-  final SupabaseClient _supabaseClient = Supabase.instance.client;
+  final SupabaseClient supabaseClient;
+  WorkspaceRemote({
+    required this.responseWrapper,
+    required this.supabaseClient,
+  });
 
   Stream<Map<String, dynamic>> watchWorkspaces({required String companyId}) {
     return responseWrapper.wrapStream(
-      getStream: () => _supabaseClient
-          .from('workspaces')
-          .stream(primaryKey: ['id'])
-          .eq('company_id', companyId)
-          .order('created_at', ascending: false),
+      getStream: () => supabaseClient
+          .from(EnumTable.workspaces.value)
+          .stream(primaryKey: [EnumWorkspace.id.value])
+          .eq(EnumWorkspace.companyId.value, companyId)
+          .order(EnumWorkspace.createdAt.value, ascending: false),
     );
   }
 
@@ -23,8 +25,11 @@ class WorkspaceRemote {
     Map<String, dynamic> data,
   ) async {
     return await responseWrapper.wrap(
-      getData: () async =>
-          _supabaseClient.from('workspaces').insert(data).select().single(),
+      getData: () async => supabaseClient
+          .from(EnumTable.workspaces.value)
+          .insert(data)
+          .select()
+          .single(),
     );
   }
 
@@ -32,8 +37,8 @@ class WorkspaceRemote {
     Map<String, dynamic> data,
   ) async {
     return await responseWrapper.wrap(
-      getData: () async => _supabaseClient
-          .from('workspaces')
+      getData: () async => supabaseClient
+          .from(EnumTable.workspaces.value)
           .update(data)
           .eq(EnumWorkspace.id.value, data[EnumWorkspace.id.value])
           .select()
@@ -43,8 +48,8 @@ class WorkspaceRemote {
 
   Future<Map<String, dynamic>> deleteWorkspace(String workspaceId) async {
     return await responseWrapper.wrap(
-      getData: () async => _supabaseClient
-          .from('workspaces')
+      getData: () async => supabaseClient
+          .from(EnumTable.workspaces.value)
           .delete()
           .eq(EnumWorkspace.id.value, workspaceId)
           .select()

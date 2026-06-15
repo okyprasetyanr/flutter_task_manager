@@ -16,7 +16,7 @@ class BaseLayout extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppPropertyColor.white,
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: const EdgeInsets.all(10),
           child: Stack(
             children: [
               Positioned(top: 0, bottom: 0, left: 0, right: 0, child: uiPage),

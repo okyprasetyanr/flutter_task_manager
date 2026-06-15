@@ -1,11 +1,9 @@
 class DummyData {
   static final loginSuccess = const {
-    {
-      'company_name': "Demo",
-      'company_id': "demo1",
-      'company_join': "2026-08-30",
-      'user_id': 'USR002',
-    },
+    'company_name': "Demo",
+    'company_id': "demo1",
+    'company_join': "2026-08-30",
+    'user_id': 'USR002',
   };
 
   static final loginFailed = const {};

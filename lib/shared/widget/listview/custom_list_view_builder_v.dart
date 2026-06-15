@@ -13,6 +13,7 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
   final List<Widget> Function(T data, EnumStatusState status) content;
   final int? limit;
   final Function(T data)? onPressed;
+  final Function(T data)? onEdit;
 
   const CustomListViewBuilderV({
     super.key,
@@ -22,6 +23,7 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
     required this.data,
     required this.content,
     this.onPressed,
+    this.onEdit,
   });
 
   @override
@@ -59,20 +61,46 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
           final finalData = data[index];
           return Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: CustomButton(
-              backgroundColor: AppPropertyColor.white,
-              padding: true,
-              onPressed: onPressed != null
-                  ? () {
-                      onPressed!(finalData);
-                    }
-                  : null,
-              child: SizedBox(
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: content(finalData, status),
-                ),
+            child: Card(
+              color: AppPropertyColor.white,
+              elevation: 3,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Material(
+                      color: AppPropertyColor.white,
+                      borderRadius: BorderRadius.circular(8),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(8),
+                        onTap: onPressed != null
+                            ? () {
+                                onPressed!(finalData);
+                              }
+                            : null,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: content(finalData, status),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (onEdit != null)
+                    CustomButton(
+                      backgroundColor: AppPropertyColor.white,
+                      onPressed: onEdit != null
+                          ? () {
+                              onEdit!(finalData);
+                            }
+                          : null,
+                      child: Icon(
+                        Icons.edit_rounded,
+                        color: AppPropertyColor.primary,
+                      ),
+                    ),
+                ],
               ),
             ),
           );

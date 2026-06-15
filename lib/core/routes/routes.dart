@@ -40,7 +40,6 @@ import 'package:task_manager/feature/login/data/repository_imp/login_repository_
 import 'package:task_manager/feature/login/domain/repository/login_repository.dart';
 import 'package:task_manager/feature/login/presentation/bloc/login_bloc.dart';
 import 'package:task_manager/feature/login/presentation/page/login_page.dart';
-import 'package:task_manager/feature/workspace/data/local/workspace_local.dart';
 import 'package:task_manager/feature/workspace/data/repository_imp/workspace_repository_imp.dart';
 import 'package:task_manager/feature/workspace/domain/repository/workspace_repository.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_bloc.dart';
@@ -75,7 +74,7 @@ final routes = {
         create: (context) => WorkspaceRepositoryImp(
           messageCollector: context.read<CollectorMessage>(),
           remote: context.read<RemoteService>(),
-          local: WorkspaceLocal(localService: context.read<LocalServices>()),
+          local: context.read<LocalServices>(),
           userSession: context.read<UserSession>(),
           helper: context.read<CollectData>(),
         ),
@@ -85,8 +84,8 @@ final routes = {
             BlocProvider(
               create: (context) =>
                   WorkspaceBloc(context.read<WorkspaceRepository>())
-                    ..add(WorkspaceEventGetData())
-                    ..add(WorkspaceEventChangeStatus(status: statusInit)),
+                    ..add(WorkspaceEventChangeStatus(status: statusInit))
+                    ..add(WorkspaceEventWatchWorkspace()),
             ),
           ],
           child: WorkspacePage(),

@@ -15,7 +15,6 @@ import 'package:task_manager/feature/activity/data/remote/activity_remote.dart';
 import 'package:task_manager/feature/history_task/data/remote/history_task_remote.dart';
 import 'package:task_manager/feature/login/data/remote/login_remote.dart';
 import 'package:task_manager/feature/project_detail/data/remote/project_detail_remote.dart';
-import 'package:task_manager/feature/shared_component/notification/data/local/notification_local.dart';
 import 'package:task_manager/feature/shared_component/notification/data/remote/notification_remote.dart';
 import 'package:task_manager/feature/shared_component/notification/data/repository_imp/notification_repository_imp.dart';
 import 'package:task_manager/feature/shared_component/notification/domain/repository/notification_repository.dart';
@@ -28,10 +27,8 @@ import 'package:task_manager/feature/workspace_detail/data/remote/workspace_deta
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // 1. Inisialisasi Supabase secara Global
   await Supabase.initialize(
-    url: 'https://sqaaayjctlrdwcviorik.supabase.co/rest/v1/',
+    url: 'https://sqaaayjctlrdwcviorik.supabase.co',
     publishableKey: 'sb_publishable_ZL5BbfE1aOb5cdJK6bfvBw_s8trWyN-',
   );
   runApp(
@@ -51,44 +48,39 @@ Future<void> main() async {
           create: (context) =>
               CollectData(connection: context.read<ConnectionService>()),
         ),
+        RepositoryProvider(
+          create: (context) {
+            final client = Supabase.instance.client;
+            final wrapper = context.read<ResponseWrapper>();
+            return RemoteService(
+              workspaceRemote: WorkspaceRemote(
+                responseWrapper: wrapper,
+                supabaseClient: client,
+              ),
+              workspaceDetailRemote: WorkspaceDetailRemote(
+                responseWrapper: wrapper,
+              ),
+              loginRemote: LoginRemote(responseWrapper: wrapper),
+              projectDetailRemote: ProjectDetailRemote(
+                responseWrapper: wrapper,
+              ),
+              historyTaskRemote: HistoryTaskRemote(responseWrapper: wrapper),
+              taskDetailRemote: TaskDetailRemote(responseWrapper: wrapper),
+              activityRemote: ActivityRemote(responseWrapper: wrapper),
+              notificationRemote: NotificationRemote(
+                responseWrapper: wrapper,
+                supabaseClient: client,
+              ),
+            );
+          },
+        ),
         RepositoryProvider<NotificationRepository>(
           create: (context) => NotificationRepositoryImp(
-            remote: NotificationRemote(
-              responseWrapper: context.read<ResponseWrapper>(),
-            ),
-            local: NotificationLocal(),
+            remote: context.read<RemoteService>(),
+            local: context.read<LocalServices>(),
             userSession: context.read<UserSession>(),
             helper: context.read<CollectData>(),
             messageCollector: context.read<CollectorMessage>(),
-          ),
-        ),
-
-        RepositoryProvider(
-          create: (context) => RemoteService(
-            workspaceRemote: WorkspaceRemote(
-              responseWrapper: context.read<ResponseWrapper>(),
-            ),
-            workspaceDetailRemote: WorkspaceDetailRemote(
-              responseWrapper: context.read<ResponseWrapper>(),
-            ),
-            loginRemote: LoginRemote(
-              responseWrapper: context.read<ResponseWrapper>(),
-            ),
-            projectDetailRemote: ProjectDetailRemote(
-              responseWrapper: context.read<ResponseWrapper>(),
-            ),
-            historyTaskRemote: HistoryTaskRemote(
-              responseWrapper: context.read<ResponseWrapper>(),
-            ),
-            taskDetailRemote: TaskDetailRemote(
-              responseWrapper: context.read<ResponseWrapper>(),
-            ),
-            activityRemote: ActivityRemote(
-              responseWrapper: context.read<ResponseWrapper>(),
-            ),
-            notificationRemote: NotificationRemote(
-              responseWrapper: context.read<ResponseWrapper>(),
-            ),
           ),
         ),
       ],

@@ -8,6 +8,7 @@ import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
   final WorkspaceRepository repo;
@@ -43,11 +44,13 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
         ? state as WorkspaceStateLoaded
         : WorkspaceStateLoaded();
     final company = repo.getCompanyName();
+    devLog("Log WorkspaceBloc: Watchworkspace: cek");
     await emit.forEach<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>(
       repo.watchWorkspace(),
       onData: (data) {
         final List<dynamic> listData =
             data.$1[EnumFetchApiStatus.success] as List? ?? [];
+        devLog("Log WorkspaceBloc: onData: Success");
 
         return currentState.copyWith(
           companyName: company,
@@ -60,10 +63,7 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
         );
       },
       onError: (error, stackTrace) {
-        final currentState = state is WorkspaceStateLoaded
-            ? state as WorkspaceStateLoaded
-            : WorkspaceStateLoaded();
-
+        devLog("Log WorkspaceBloc: onError: ${error.toString()}");
         return currentState.copyWith(
           status: EnumStatusState.none,
           error: error.toString(),
@@ -85,13 +85,16 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     WorkspaceEventCreateWorkspace event,
     Emitter<WorkspaceState> emit,
   ) async {
-    add(WorkspaceEventChangeStatus(status: EnumStatusState.loading));
-    final data = await repo.createWorkspace(data: event.data);
+    add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
+    final data = await repo.createWorkspace(
+      description: event.description,
+      name: event.name,
+    );
     if (data != null) {
       emit(
         (state as WorkspaceStateLoaded).copyWith(
           error: data.error,
-          failed: data.error,
+          failed: data.failed,
           status: EnumStatusState.none,
         ),
       );
@@ -103,17 +106,22 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     Emitter<WorkspaceState> emit,
   ) async {
     final currentState = state as WorkspaceStateLoaded;
-    if (currentState.selectedWorkspace != event.data) {
-      add(WorkspaceEventChangeStatus(status: EnumStatusState.loading));
+    final original = currentState.selectedWorkspace!;
+    final edited = original.copyWith(
+      name: event.name,
+      description: event.description,
+    );
+    if (original != edited) {
+      add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
       final data = await repo.updateWorkspace(
         original: currentState.selectedWorkspace!,
-        edited: event.data,
+        edited: edited,
       );
       if (data != null) {
         emit(
           currentState.copyWith(
             error: data.error,
-            failed: data.error,
+            failed: data.failed,
             status: EnumStatusState.none,
           ),
         );
@@ -132,13 +140,16 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     WorkspaceEventDeleteWorkspace event,
     Emitter<WorkspaceState> emit,
   ) async {
-    add(WorkspaceEventChangeStatus(status: EnumStatusState.loading));
-    final data = await repo.deleteWorkspace(workspaceId: event.idWorkspace);
+    add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
+    final currentState = state as WorkspaceStateLoaded;
+    final data = await repo.deleteWorkspace(
+      workspaceId: currentState.selectedWorkspace!.id,
+    );
     if (data != null) {
       emit(
-        (state as WorkspaceStateLoaded).copyWith(
+        currentState.copyWith(
           error: data.error,
-          failed: data.error,
+          failed: data.failed,
           status: EnumStatusState.none,
         ),
       );

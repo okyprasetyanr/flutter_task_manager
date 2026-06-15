@@ -42,8 +42,10 @@ class _LoginPageState extends State<LoginPage> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is LoginStateSuccess) {
-          context.read<NotificationBloc>().add(NotificationEventgetData());
-          customSnackBar(context, "Login Berhasil");
+          context.read<NotificationBloc>().add(
+            NotificationEventWatchWorkspace(),
+          );
+          customSnackBar(context, "Login Success");
           RoutesNavigator(
             context: context,
             routeName: RoutesEnum.workspace,

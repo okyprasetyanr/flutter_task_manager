@@ -15,7 +15,8 @@ class CustomRowHeader extends StatelessWidget {
     return Row(
       children: [
         Expanded(child: widgetLeft),
-        Expanded(child: widgetRight),
+        widgetRight,
+        const SizedBox(width: 10),
         NotificationWidget(),
       ],
     );

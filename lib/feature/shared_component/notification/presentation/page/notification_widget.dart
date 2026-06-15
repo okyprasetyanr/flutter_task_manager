@@ -67,7 +67,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                     right: 0,
                     bottom: 0,
                     child: Container(
-                      padding: EdgeInsets.all(6),
+                      padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                         color: AppPropertyColor.black.withValues(alpha: 0.1),
@@ -87,11 +87,23 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                 content: (scrollController) {
                   return BlocProvider.value(
                     value: bloc,
-                    child: NotificationListNotification(
-                      controller: scrollController,
-                      data: state.$1,
-                      status: state.$2,
-                    ),
+                    child:
+                        BlocSelector<
+                          NotificationBloc,
+                          NotificationState,
+                          (List<ModelNotification>, EnumStatusState)
+                        >(
+                          selector: (state) => state is NotificationStateLoaded
+                              ? (state.dataNotification, state.status)
+                              : (const [], EnumStatusState.loading),
+                          builder: (context, state) {
+                            return NotificationListNotification(
+                              controller: scrollController,
+                              data: state.$1,
+                              status: state.$2,
+                            );
+                          },
+                        ),
                   );
                 },
               );

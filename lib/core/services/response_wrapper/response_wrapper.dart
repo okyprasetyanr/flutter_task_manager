@@ -1,14 +1,13 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ResponseWrapper {
-  // 🟢 1. BUAT FUTURE (Tetap utuh pakai gaya lama kamu)
   Future<Map<String, dynamic>> wrap({
     required Future<dynamic> Function() getData,
   }) async {
     try {
       return {
         'status': 'success',
-        'message': "Sukses",
+        'message': "Success",
         'results': await getData(),
       };
     } on PostgrestException catch (error) {
@@ -23,7 +22,7 @@ class ResponseWrapper {
   }) {
     return getStream()
         .map((event) {
-          return {'status': 'success', 'message': "Sukses", 'results': event};
+          return {'status': 'success', 'message': "Success", 'results': event};
         })
         .handleError((error) {
           if (error is PostgrestException) {
