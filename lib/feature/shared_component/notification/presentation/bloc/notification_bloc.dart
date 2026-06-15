@@ -8,7 +8,7 @@ import 'package:task_manager/feature/shared_component/notification/presentation/
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
-import 'package:task_manager/shared/model/model_notification.dart';
+import 'package:task_manager/feature/shared_component/notification/domain/model/model_notification.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final NotificationRepository repo;

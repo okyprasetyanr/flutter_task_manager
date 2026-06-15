@@ -6,7 +6,7 @@ import 'package:task_manager/feature/shared_component/notification/presentation/
 import 'package:task_manager/feature/shared_component/notification/presentation/widget/notification_list_notification.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
-import 'package:task_manager/shared/model/model_notification.dart';
+import 'package:task_manager/feature/shared_component/notification/domain/model/model_notification.dart';
 import 'package:task_manager/shared/widget/button/custom_button.dart';
 
 class NotificationWidget extends StatefulWidget {

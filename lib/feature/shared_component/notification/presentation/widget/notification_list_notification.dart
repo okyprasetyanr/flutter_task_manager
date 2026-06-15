@@ -5,7 +5,7 @@ import 'package:task_manager/feature/shared_component/notification/presentation/
 import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_event.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
-import 'package:task_manager/shared/model/model_notification.dart';
+import 'package:task_manager/feature/shared_component/notification/domain/model/model_notification.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/widget/listview/custom_list_view_builder_v.dart';
 import 'package:task_manager/shared/widget/loading/custom_loading.dart';

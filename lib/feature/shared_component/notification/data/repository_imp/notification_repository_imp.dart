@@ -5,7 +5,7 @@ import 'package:task_manager/feature/shared_component/notification/domain/reposi
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
-import 'package:task_manager/shared/model/model_notification.dart';
+import 'package:task_manager/feature/shared_component/notification/domain/model/model_notification.dart';
 
 class NotificationRepositoryImp implements NotificationRepository {
   final RemoteService remote;

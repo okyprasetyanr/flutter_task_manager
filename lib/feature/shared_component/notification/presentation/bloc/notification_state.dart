@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
-import 'package:task_manager/shared/model/model_notification.dart';
+import 'package:task_manager/feature/shared_component/notification/domain/model/model_notification.dart';
 
 class NotificationState {}
 
