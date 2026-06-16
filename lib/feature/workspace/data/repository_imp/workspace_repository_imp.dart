@@ -3,10 +3,11 @@ import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
+import 'package:task_manager/core/stream_manager/stream_manager.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 import 'package:task_manager/feature/workspace/domain/repository/workspace_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class WorkspaceRepositoryImp implements WorkspaceRepository {
@@ -15,6 +16,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   final UserSession userSession;
   final CollectData helper;
   final CollectorMessage messageCollector;
+  final StreamManager streamManager;
 
   WorkspaceRepositoryImp({
     required this.remote,
@@ -22,6 +24,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
     required this.userSession,
     required this.helper,
     required this.messageCollector,
+    required this.streamManager,
   });
 
   @override

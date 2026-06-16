@@ -10,7 +10,7 @@ import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_label.dart';
 import 'package:task_manager/shared/model/model_sub_task.dart';
 import 'package:task_manager/shared/model/model_task.dart';
-import 'package:task_manager/shared/model/model_user.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 
 class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
   final ProjectDetailRepository repo;

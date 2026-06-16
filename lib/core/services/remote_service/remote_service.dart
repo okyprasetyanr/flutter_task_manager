@@ -4,6 +4,7 @@ import 'package:task_manager/feature/history_task/data/remote/history_task_remot
 import 'package:task_manager/feature/login/data/remote/login_remote.dart';
 import 'package:task_manager/feature/project_detail/data/remote/project_detail_remote.dart';
 import 'package:task_manager/feature/shared_component/notification/data/remote/notification_remote.dart';
+import 'package:task_manager/feature/shared_component/user/data/remote/user_remote.dart';
 import 'package:task_manager/feature/task_detail/data/remote/task_detail_remote.dart';
 import 'package:task_manager/feature/workspace/data/remote/workspace_remote.dart';
 import 'package:task_manager/feature/workspace_detail/data/remote/workspace_detail_remote.dart';
@@ -17,6 +18,7 @@ class RemoteService {
   final TaskDetailRemote taskDetailRemote;
   final ActivityRemote activityRemote;
   final NotificationRemote notificationRemote;
+  final UserRemote userRemote;
 
   RemoteService({
     required this.workspaceRemote,
@@ -27,5 +29,6 @@ class RemoteService {
     required this.taskDetailRemote,
     required this.activityRemote,
     required this.notificationRemote,
+    required this.userRemote,
   });
 }

@@ -4,6 +4,7 @@ import 'package:task_manager/core/cache/user_cache.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
+import 'package:task_manager/core/stream_manager/stream_manager.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/activity/data/local/activity_local.dart';
 import 'package:task_manager/feature/activity/data/repository_imp/activity_repository_imp.dart';
@@ -23,6 +24,7 @@ import 'package:task_manager/feature/project_detail/domain/repository/project_de
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_event.dart';
 import 'package:task_manager/feature/project_detail/presentation/page/project_detail_page.dart';
+import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
 import 'package:task_manager/feature/task_detail/data/local/task_detail_local.dart';
 import 'package:task_manager/feature/task_detail/data/repository_imp/task_detail_repository_imp.dart';
 import 'package:task_manager/feature/task_detail/domain/repository/task_detail_repository.dart';
@@ -55,13 +57,19 @@ import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart
 
 final statusInit = EnumStatusState.loading;
 final routes = {
-  '/${RoutesEnum.login}': (context) => RepositoryProvider<LoginRepository>(
-    create: (context) => LoginRepositoryImp(
-      userSession: context.read<UserSession>(),
-      helper: context.read<CollectData>(),
-      remote: context.read<RemoteService>(),
-      local: LoginLocal(localService: context.read<LocalServices>()),
-    ),
+  '/${RoutesEnum.login}': (context) => MultiRepositoryProvider(
+    providers: [
+      RepositoryProvider<LoginRepository>(
+        create: (context) => LoginRepositoryImp(
+          streamManager: context.read<StreamManager>(),
+          userRepository: context.read<UserRepository>(),
+          userSession: context.read<UserSession>(),
+          helper: context.read<CollectData>(),
+          remote: context.read<RemoteService>(),
+          local: LoginLocal(localService: context.read<LocalServices>()),
+        ),
+      ),
+    ],
 
     child: BlocProvider(
       create: (context) => LoginBloc(context.read<LoginRepository>()),
@@ -72,6 +80,7 @@ final routes = {
   '/${RoutesEnum.workspace}': (context) =>
       RepositoryProvider<WorkspaceRepository>(
         create: (context) => WorkspaceRepositoryImp(
+          streamManager: context.read<StreamManager>(),
           messageCollector: context.read<CollectorMessage>(),
           remote: context.read<RemoteService>(),
           local: context.read<LocalServices>(),
@@ -106,7 +115,7 @@ final routes = {
       child: BlocProvider(
         create: (context) =>
             WorkspaceDetailBloc(context.read<WorkspaceDetailRepository>())
-              ..add(WorkspaceDetailEventGetData(data: data)),
+              ..add(WorkspaceDetailEventWatch(data: data)),
         child: WorkspaceDetailPage(),
       ),
     );

@@ -7,7 +7,7 @@ import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspac
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_header.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_list_project.dart';
-import 'package:task_manager/shared/model/model_user.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 import 'package:task_manager/shared/navigator_content/navigator_content.dart';
 import 'package:task_manager/shared/style/icon_size.dart';

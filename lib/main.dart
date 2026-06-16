@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_manager/app_properties/app_properties.dart';
 import 'package:task_manager/core/cache/user_cache.dart';
+import 'package:task_manager/core/root_scaffold_messenger_key/root_scaffold_message_key.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/routes/routes_navigator.dart';
 import 'package:task_manager/core/services/connection_service/connection_service.dart';
@@ -10,6 +11,7 @@ import 'package:task_manager/core/services/connection_service/connection_service
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/services/response_wrapper/response_wrapper.dart';
+import 'package:task_manager/core/stream_manager/stream_manager.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/activity/data/remote/activity_remote.dart';
 import 'package:task_manager/feature/history_task/data/remote/history_task_remote.dart';
@@ -21,6 +23,9 @@ import 'package:task_manager/feature/shared_component/notification/domain/reposi
 import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_bloc.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
+import 'package:task_manager/feature/shared_component/user/data/remote/user_remote.dart';
+import 'package:task_manager/feature/shared_component/user/data/repository_imp/user_repository_imp.dart';
+import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
 import 'package:task_manager/feature/task_detail/data/remote/task_detail_remote.dart';
 import 'package:task_manager/feature/workspace/data/remote/workspace_remote.dart';
 import 'package:task_manager/feature/workspace_detail/data/remote/workspace_detail_remote.dart';
@@ -31,10 +36,12 @@ Future<void> main() async {
     url: 'https://sqaaayjctlrdwcviorik.supabase.co',
     publishableKey: 'sb_publishable_ZL5BbfE1aOb5cdJK6bfvBw_s8trWyN-',
   );
+  final client = Supabase.instance.client;
   runApp(
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider(create: (context) => UserCache(user: const [])),
+        RepositoryProvider(create: (context) => StreamManager()),
         RepositoryProvider(lazy: false, create: (context) => UserSession()),
         RepositoryProvider(lazy: false, create: (context) => LocalServices()),
         RepositoryProvider(lazy: false, create: (context) => ResponseWrapper()),
@@ -50,14 +57,18 @@ Future<void> main() async {
         ),
         RepositoryProvider(
           create: (context) {
-            final client = Supabase.instance.client;
             final wrapper = context.read<ResponseWrapper>();
             return RemoteService(
+              userRemote: UserRemote(
+                responseWrapper: wrapper,
+                supabaseClient: client,
+              ),
               workspaceRemote: WorkspaceRemote(
                 responseWrapper: wrapper,
                 supabaseClient: client,
               ),
               workspaceDetailRemote: WorkspaceDetailRemote(
+                supabaseClient: client,
                 responseWrapper: wrapper,
               ),
               loginRemote: LoginRemote(responseWrapper: wrapper),
@@ -83,11 +94,26 @@ Future<void> main() async {
             messageCollector: context.read<CollectorMessage>(),
           ),
         ),
+        RepositoryProvider<UserRepository>(
+          create: (context) => UserRepositoryImp(
+            streamSubsc: context.read<StreamManager>(),
+            remote: context.read<RemoteService>(),
+            local: context.read<LocalServices>(),
+            userSession: context.read<UserSession>(),
+            helper: context.read<CollectData>(),
+            messageCollector: context.read<CollectorMessage>(),
+            userCache: context.read<UserCache>(),
+          ),
+        ),
       ],
       child: BlocProvider(
         create: (context) =>
             NotificationBloc(context.read<NotificationRepository>()),
-        child: MaterialApp(home: MainApp(), debugShowCheckedModeBanner: false),
+        child: MaterialApp(
+          scaffoldMessengerKey: rootScaffoldMessengerKey,
+          home: MainApp(),
+          debugShowCheckedModeBanner: false,
+        ),
       ),
     ),
   );

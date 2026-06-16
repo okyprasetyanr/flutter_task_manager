@@ -7,7 +7,7 @@ import 'package:task_manager/feature/workspace_detail/domain/repository/workspac
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
-import 'package:task_manager/shared/model/model_user.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 
 class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   final RemoteService remote;
@@ -27,41 +27,36 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   });
 
   @override
-  Future<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>
-  getWorkspaceDetai({
-    required String workspaceId,
-    required String companyId,
-  }) async {
-    await fetchUser();
-
-    final data = await helper.helperCollectData(
-      remoteFunc: () async => await remote.workspaceDetailRemote
-          .getWorkspaceDetail(workspaceId: workspaceId, companyId: companyId),
-      localFunc: () async => {},
-    );
-
-    return (data, messageCollector.getMessage(data));
-  }
-
-  Future<void> fetchUser() async {
-    final data = await helper.helperCollectData(
-      remoteFunc: () async => await remote.workspaceDetailRemote.getUser(
-        companyId: userSession.getCompanyId(),
-      ),
-      localFunc: () async => {},
-    );
-
-    if (data.containsKey(EnumFetchApiStatus.success)) {
-      userCache.setUser(
-        (data[EnumFetchApiStatus.success] as List)
-            .map((e) => ModelUser.fromJson(e))
-            .toList(),
-      );
-    }
+  List<ModelUser> getUser() {
+    return userCache.getUser();
   }
 
   @override
-  List<ModelUser> getUser() {
-    return userCache.getUser();
+  Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchProject({
+    required String workspaceId,
+  }) {
+    return remote.workspaceDetailRemote
+        .watchProject(workspaceId: workspaceId)
+        .asyncMap((event) async {
+          final data = await helper.helperCollectData(
+            remoteFunc: () async => event,
+            localFunc: () async => {},
+          );
+          return (data, messageCollector.getMessage(data));
+        });
+  }
+
+  @override
+  Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>
+  watchProjectMember({required List<String> projectIds}) {
+    return remote.workspaceDetailRemote
+        .watchProjectMember(projectIds: projectIds)
+        .asyncMap((event) async {
+          final data = await helper.helperCollectData(
+            remoteFunc: () async => event,
+            localFunc: () async => {},
+          );
+          return (data, messageCollector.getMessage(data));
+        });
   }
 }

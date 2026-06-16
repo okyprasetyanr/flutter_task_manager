@@ -13,7 +13,7 @@ import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
   final WorkspaceRepository repo;
   WorkspaceBloc(this.repo) : super(WorkspaceStateInitial()) {
-    on<WorkspaceEventWatchWorkspace>(_watchWorkspace);
+    on<WorkspaceEventWatchWorkspace>(_onWatch);
     on<WorkspaceEventChangeStatus>(_onChangeStatus);
     on<WorkspaceEventCreateWorkspace>(_onCreateWorkspace);
     on<WorkspaceEventSelectedData>(_onSelectedData);
@@ -36,10 +36,11 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     );
   }
 
-  Future<void> _watchWorkspace(
+  Future<void> _onWatch(
     WorkspaceEventWatchWorkspace event,
     Emitter<WorkspaceState> emit,
   ) async {
+    add(WorkspaceEventChangeStatus(status: EnumStatusState.loading));
     final currentState = state is WorkspaceStateLoaded
         ? state as WorkspaceStateLoaded
         : WorkspaceStateLoaded();

@@ -22,6 +22,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     NotificationEventWatchWorkspace event,
     Emitter<NotificationState> emit,
   ) async {
+    add(NotificationEventChangeStatus(status: EnumStatusState.synchronize));
     final currentState = state is NotificationStateLoaded
         ? state as NotificationStateLoaded
         : NotificationStateLoaded();

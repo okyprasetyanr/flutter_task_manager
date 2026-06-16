@@ -7,7 +7,7 @@ import 'package:task_manager/feature/task_detail/domain/repository/task_detail_r
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
-import 'package:task_manager/shared/model/model_user.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 
 class TaskDetailRepositoryImp implements TaskDetailRepository {
   final RemoteService remote;

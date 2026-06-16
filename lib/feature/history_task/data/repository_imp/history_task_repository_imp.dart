@@ -7,7 +7,7 @@ import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
-import 'package:task_manager/shared/model/model_user.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 
 class HistoryTaskRepositoryImp implements HistoryTaskRepository {
   final RemoteService remote;

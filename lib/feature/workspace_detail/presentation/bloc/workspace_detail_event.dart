@@ -3,10 +3,10 @@ import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart
 
 class WorkspaceDetailEvent {}
 
-class WorkspaceDetailEventGetData extends WorkspaceDetailEvent {
+class WorkspaceDetailEventWatch extends WorkspaceDetailEvent {
   final ModelWorkspace? data;
 
-  WorkspaceDetailEventGetData({required this.data});
+  WorkspaceDetailEventWatch({required this.data});
 }
 
 class WorkspaceDetailEventChangeStatus extends WorkspaceDetailEvent {
@@ -14,3 +14,5 @@ class WorkspaceDetailEventChangeStatus extends WorkspaceDetailEvent {
 
   WorkspaceDetailEventChangeStatus({required this.status});
 }
+
+class WorkspaceDetailEventWatchMember extends WorkspaceDetailEvent {}

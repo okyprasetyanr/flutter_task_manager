@@ -2,7 +2,7 @@ import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helpe
 import 'package:task_manager/shared/model/model_activity.dart';
 import 'package:task_manager/shared/model/model_display_history.dart';
 import 'package:task_manager/shared/model/model_task_history.dart';
-import 'package:task_manager/shared/model/model_user.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 
 enum EnumWorkspace {
   id('id'),
@@ -19,7 +19,8 @@ enum EnumWorkspace {
 enum EnumWorkspaceMember {
   workspaceId('workspace_id'),
   userId('user_id'),
-  role('role');
+  role('role'),
+  id('id');
 
   final String value;
   const EnumWorkspaceMember(this.value);
@@ -55,7 +56,8 @@ enum EnumProject {
 enum EnumProjectMember {
   projectId('project_id'),
   userId('user_id'),
-  role('role');
+  role('role'),
+  id('id');
 
   final String value;
   const EnumProjectMember(this.value);

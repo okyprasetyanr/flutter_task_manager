@@ -5,11 +5,13 @@ class UserSession {
   String? companyId;
   String? nameCompany;
   String? userId;
-  void init() async {
+
+  Future<bool> init() async {
     final pref = await SharedPreferences.getInstance();
-    companyId = pref.getString(EnumCompany.companyId.value) ?? "demo1";
-    nameCompany = pref.getString(EnumCompany.companyName.value) ?? "Demmo";
-    userId = pref.getString(EnumCompany.userId.value) ?? "USR002";
+    companyId = pref.getString(EnumCompany.companyId.value) ?? "";
+    nameCompany = pref.getString(EnumCompany.companyName.value) ?? "";
+    userId = pref.getString(EnumCompany.userId.value) ?? "";
+    return true;
   }
 
   String getCompanyId() {
