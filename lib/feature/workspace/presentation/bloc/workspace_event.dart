@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
-import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 
 class WorkspaceEvent {}
 
@@ -31,9 +31,11 @@ class WorkspaceEventUpdateWorkspace extends WorkspaceEvent {
 
 class WorkspaceEventDeleteWorkspace extends WorkspaceEvent {}
 
-class WorkspaceEventWatchWorkspace extends WorkspaceEvent {}
+class WorkspaceEventWatch extends WorkspaceEvent {}
+
+class WorkspaceEventWatchMember extends WorkspaceEvent {}
 
 class WorkspaceEventSelectedData extends WorkspaceEvent {
-  final ModelWorkspace data;
+  final ModelWorkspaceMerge data;
   WorkspaceEventSelectedData({required this.data});
 }

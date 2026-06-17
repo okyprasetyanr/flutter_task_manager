@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace/domain/repository/workspace_repository.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_event.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
@@ -9,11 +10,13 @@ import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_member.dart';
 
 class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
   final WorkspaceRepository repo;
   WorkspaceBloc(this.repo) : super(WorkspaceStateInitial()) {
-    on<WorkspaceEventWatchWorkspace>(_onWatch);
+    on<WorkspaceEventWatch>(_onWatch);
+    on<WorkspaceEventWatchMember>(_onWatchMember);
     on<WorkspaceEventChangeStatus>(_onChangeStatus);
     on<WorkspaceEventCreateWorkspace>(_onCreateWorkspace);
     on<WorkspaceEventSelectedData>(_onSelectedData);
@@ -37,7 +40,7 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
   }
 
   Future<void> _onWatch(
-    WorkspaceEventWatchWorkspace event,
+    WorkspaceEventWatch event,
     Emitter<WorkspaceState> emit,
   ) async {
     add(WorkspaceEventChangeStatus(status: EnumStatusState.loading));
@@ -57,9 +60,22 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
           companyName: company,
           status: EnumStatusState.none,
           dataWorkspace: data.$1.containsKey(EnumFetchApiStatus.success)
-              ? listData.map((e) => ModelWorkspace.fromJson(e)).toList()
+              ? listData
+                    .map(
+                      (e) => ModelWorkspaceMerge(
+                        dataWorkspace: ModelWorkspace.fromJson(e),
+                        dataWorkspaceMember:
+                            currentState
+                                .selectedWorkspace
+                                ?.dataWorkspaceMember ??
+                            const [],
+                      ),
+                    )
+                    .toList()
               : const [],
+          dataUser: repo.getUser(),
           failed: data.$2.failed,
+          initMember: currentState.initMember ?? true,
           noconnection: data.$2.noconnection,
         );
       },
@@ -70,6 +86,49 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
           error: error.toString(),
         );
       },
+    );
+  }
+
+  Future<void> _onWatchMember(
+    WorkspaceEventWatchMember event,
+    Emitter<WorkspaceState> emit,
+  ) async {
+    add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
+    final currentState = state as WorkspaceStateLoaded;
+    await emit.forEach(
+      repo.watchWorkspaceMember(),
+      onData: (data) {
+        List<ModelWorkspaceMember> finalData =
+            data.$1.containsKey(EnumFetchApiStatus.success)
+            ? (data.$1[EnumFetchApiStatus.success] as List)
+                  .map((e) => ModelWorkspaceMember.fromJson(e))
+                  .toList()
+            : const [];
+        devLog("Log WorkspaceBloc: watchMember: data: $finalData");
+        return currentState.copyWith(
+          dataWorkspace: currentState.dataWorkspace.map((workspace) {
+            return workspace.copyWith(
+              dataWorkspaceMember: currentState.dataUser.where((user) {
+                return finalData.any(
+                  (workspaceMember) =>
+                      workspaceMember.workspaceId ==
+                          workspace.dataWorkspace.id &&
+                      workspaceMember.userId == user.id,
+                );
+              }).toList(),
+            );
+          }).toList(),
+          initMember: false,
+          status: EnumStatusState.none,
+          error: data.$2.error,
+          failed: data.$2.failed,
+          noconnection: data.$2.noconnection,
+        );
+      },
+      onError: (error, stackTrace) => currentState.copyWith(
+        status: EnumStatusState.none,
+        error: error.toString(),
+      ),
     );
   }
 
@@ -108,14 +167,14 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
   ) async {
     final currentState = state as WorkspaceStateLoaded;
     final original = currentState.selectedWorkspace!;
-    final edited = original.copyWith(
+    final edited = original.dataWorkspace.copyWith(
       name: event.name,
       description: event.description,
     );
     if (original != edited) {
       add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
       final data = await repo.updateWorkspace(
-        original: currentState.selectedWorkspace!,
+        original: currentState.selectedWorkspace!.dataWorkspace,
         edited: edited,
       );
       if (data != null) {
@@ -144,7 +203,7 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
     final currentState = state as WorkspaceStateLoaded;
     final data = await repo.deleteWorkspace(
-      workspaceId: currentState.selectedWorkspace!.id,
+      workspaceId: currentState.selectedWorkspace!.dataWorkspace.id,
     );
     if (data != null) {
       emit(

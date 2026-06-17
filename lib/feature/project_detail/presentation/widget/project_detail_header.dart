@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/header/custom_row_header.dart';
-import 'package:task_manager/shared/widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/header/custom_row_header.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
 
 class ProjectDetailHeader extends StatelessWidget {
   const ProjectDetailHeader({super.key});

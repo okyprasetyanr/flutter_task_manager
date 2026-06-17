@@ -11,8 +11,8 @@ import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart
 import 'package:task_manager/shared/navigator_content/navigator_content.dart';
 import 'package:task_manager/shared/style/icon_size.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/button/custom_button_icon.dart';
-import 'package:task_manager/shared/widget/navigation_gesture/widget_navigation_gesture.dart';
+import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart';
+import 'package:task_manager/shared/common_widget/navigation_gesture/widget_navigation_gesture.dart';
 
 class HistoryTaskPage extends StatefulWidget {
   const HistoryTaskPage({super.key});

@@ -21,6 +21,17 @@ class WorkspaceRemote {
     );
   }
 
+  Stream<Map<String, dynamic>> watchWorkspaceMembers({
+    required String companyId,
+  }) {
+    return responseWrapper.wrapStream(
+      getStream: () => supabaseClient
+          .from(EnumTable.workspaceMembers.value)
+          .stream(primaryKey: [EnumWorkspaceMember.id.value])
+          .eq(EnumWorkspaceMember.companyId.value, companyId),
+    );
+  }
+
   Future<Map<String, dynamic>> createWorkspace(
     Map<String, dynamic> data,
   ) async {

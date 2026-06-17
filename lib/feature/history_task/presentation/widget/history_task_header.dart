@@ -4,8 +4,8 @@ import 'package:task_manager/feature/history_task/presentation/bloc/history_task
 import 'package:task_manager/feature/history_task/presentation/bloc/history_task_state.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/header/custom_row_header.dart';
-import 'package:task_manager/shared/widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/header/custom_row_header.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
 
 class HistoryTaskHeader extends StatelessWidget {
   const HistoryTaskHeader({super.key});

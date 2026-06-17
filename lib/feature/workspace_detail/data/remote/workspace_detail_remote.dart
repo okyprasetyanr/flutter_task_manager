@@ -3,7 +3,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:task_manager/core/services/response_wrapper/response_wrapper.dart';
 import 'package:task_manager/shared/enum.dart';
-import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class WorkspaceDetailRemote {
   final ResponseWrapper responseWrapper;
@@ -25,14 +24,74 @@ class WorkspaceDetailRemote {
   }
 
   Stream<Map<String, dynamic>> watchProjectMember({
-    required List<String> projectIds,
+    required String workspaceId,
   }) {
-    devLog("Log WorkspaceDetailRemote: watchProjectMember: $projectIds");
     return responseWrapper.wrapStream(
       getStream: () => supabaseClient
           .from(EnumTable.projectMembers.value)
           .stream(primaryKey: [EnumProjectMember.id.value])
-          .eq(EnumProjectMember.projectId.value, projectIds),
+          .eq('workspace_id', workspaceId),
+    );
+  }
+
+  Future<Map<String, dynamic>> createProject({
+    required Map<String, dynamic> data,
+  }) {
+    return responseWrapper.wrap(
+      getData: () => supabaseClient
+          .from(EnumTable.projects.value)
+          .insert(data)
+          .select()
+          .single(),
+    );
+  }
+
+  Future<Map<String, dynamic>> updateProject(Map<String, dynamic> data) async {
+    return await responseWrapper.wrap(
+      getData: () async => supabaseClient
+          .from(EnumTable.projects.value)
+          .update(data)
+          .eq(EnumProject.id.value, data[EnumProject.id.value])
+          .select()
+          .single(),
+    );
+  }
+
+  Future<Map<String, dynamic>> updateProjectMember(
+    List<Map<String, dynamic>> data,
+  ) async {
+    return await responseWrapper.wrap(
+      getData: () async => supabaseClient
+          .from(EnumTable.projectMembers.value)
+          .insert(data)
+          .select()
+          .single(),
+    );
+  }
+
+  Future<Map<String, dynamic>> deleteProject(String idProject) async {
+    return await responseWrapper.wrap(
+      getData: () => supabaseClient
+          .from(EnumTable.projects.value)
+          .delete()
+          .eq(EnumProject.id.value, idProject)
+          .select()
+          .maybeSingle(),
+    );
+  }
+
+  Future<Map<String, dynamic>> deleteProjectMember(
+    List<String> userId,
+    String projectId,
+  ) async {
+    return await responseWrapper.wrap(
+      getData: () => supabaseClient
+          .from(EnumTable.projects.value)
+          .delete()
+          .eq(EnumProjectMember.projectId.value, projectId)
+          .inFilter(EnumProjectMember.userId.value, userId)
+          .select()
+          .maybeSingle(),
     );
   }
 }

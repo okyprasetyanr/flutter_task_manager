@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_bloc.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/header/custom_row_header.dart';
-import 'package:task_manager/shared/widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/header/custom_row_header.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
 
 class WorkspaceHeader extends StatelessWidget {
   const WorkspaceHeader({super.key});

@@ -5,9 +5,9 @@ import 'package:task_manager/feature/workspace/presentation/bloc/workspace_bloc.
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/button/custom_button_icon.dart';
-import 'package:task_manager/shared/widget/loading/custom_loading.dart';
-import 'package:task_manager/shared/widget/text_field/custom_text_field.dart';
+import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/text_field/custom_text_field.dart';
 
 class WorkspaceBotshetContent extends StatelessWidget {
   final TextEditingController nameController;

@@ -6,10 +6,10 @@ import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_b
 import 'package:task_manager/feature/task_detail/presentation/widget/task_detail_list_comment.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/button/custom_button.dart';
-import 'package:task_manager/shared/widget/button/custom_button_icon.dart';
-import 'package:task_manager/shared/widget/snackbar/custom_snackbar.dart';
-import 'package:task_manager/shared/widget/text_field/custom_text_field.dart';
+import 'package:task_manager/shared/common_widget/button/custom_button.dart';
+import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart';
+import 'package:task_manager/shared/common_widget/snackbar/custom_snackbar.dart';
+import 'package:task_manager/shared/common_widget/text_field/custom_text_field.dart';
 
 class TaskDetailButtonComment extends StatelessWidget {
   final TextEditingController controller;

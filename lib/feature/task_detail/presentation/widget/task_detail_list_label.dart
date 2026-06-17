@@ -4,7 +4,7 @@ import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_b
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_state.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_label.dart';
-import 'package:task_manager/shared/widget/listview/custom_list_view_builder_h.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_h.dart';
 
 class TaskDetailListLabel extends StatelessWidget {
   const TaskDetailListLabel({super.key});

@@ -10,7 +10,7 @@ import 'package:task_manager/feature/shared_component/user/domain/model/model_us
 import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/shared/widget/snackbar/custom_snackbar_root.dart';
+import 'package:task_manager/shared/common_widget/snackbar/custom_snackbar_root.dart';
 
 class UserRepositoryImp implements UserRepository {
   final RemoteService remote;

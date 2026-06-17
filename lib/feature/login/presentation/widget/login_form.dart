@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/feature/login/presentation/bloc/login_bloc.dart';
 import 'package:task_manager/feature/login/presentation/bloc/login_state.dart';
-import 'package:task_manager/shared/widget/text_field/custom_text_field.dart';
+import 'package:task_manager/shared/common_widget/text_field/custom_text_field.dart';
 
 class LoginForm extends StatelessWidget {
   final GlobalKey<FormState> keyform;

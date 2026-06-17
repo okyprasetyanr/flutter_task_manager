@@ -10,7 +10,7 @@ import 'package:task_manager/feature/login/presentation/widget/login_form.dart';
 import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_bloc.dart';
 import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_event.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/snackbar/custom_snackbar.dart';
+import 'package:task_manager/shared/common_widget/snackbar/custom_snackbar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

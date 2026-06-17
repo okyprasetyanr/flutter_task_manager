@@ -8,7 +8,7 @@ import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/shared/model/model_task_history.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
-import 'package:task_manager/shared/widget/listview/custom_list_view_builder_v.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 
 class HistoryTaskListHistory extends StatelessWidget {
   const HistoryTaskListHistory({super.key});

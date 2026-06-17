@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/app_properties/app_properties.dart';
 import 'package:task_manager/feature/login/presentation/bloc/login_bloc.dart';
 import 'package:task_manager/feature/login/presentation/bloc/login_event.dart';
-import 'package:task_manager/shared/widget/button/custom_button.dart';
-import 'package:task_manager/shared/widget/snackbar/custom_snackbar.dart';
+import 'package:task_manager/shared/common_widget/button/custom_button.dart';
+import 'package:task_manager/shared/common_widget/snackbar/custom_snackbar.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
 class LoginButton extends StatelessWidget {

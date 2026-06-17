@@ -5,10 +5,10 @@ import 'package:task_manager/feature/project_detail/presentation/bloc/project_de
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
-import 'package:task_manager/shared/model/model_project.dart';
+import 'package:task_manager/feature/workspace_detail/domain/model/model_project.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/loading/custom_loading.dart';
-import 'package:task_manager/shared/widget/text/custom_text_empty.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/text/custom_text_empty.dart';
 
 class ProjectDetailProject extends StatelessWidget {
   const ProjectDetailProject({super.key});
@@ -48,7 +48,7 @@ class ProjectDetailProject extends StatelessWidget {
                   data.status.text,
                   style: lv05TextStyle.copyWith(color: Colors.grey),
                 ),
-                Text(data.createdId, style: lv05TextStyle),
+                Text(data.createdBy, style: lv05TextStyle),
               ],
             ),
             const SizedBox(height: 4),

@@ -31,6 +31,7 @@ import 'package:task_manager/feature/task_detail/domain/repository/task_detail_r
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_bloc.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_event.dart';
 import 'package:task_manager/feature/task_detail/presentation/page/task_detail_page.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace_detail/data/local/workspace_detail_local.dart';
 import 'package:task_manager/feature/workspace_detail/data/repository_imp/workspace_detail_repository_imp.dart';
 import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
@@ -51,7 +52,7 @@ import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
-import 'package:task_manager/shared/model/model_project.dart';
+import 'package:task_manager/feature/workspace_detail/domain/model/model_project.dart';
 import 'package:task_manager/shared/model/model_task.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 
@@ -80,6 +81,7 @@ final routes = {
   '/${RoutesEnum.workspace}': (context) =>
       RepositoryProvider<WorkspaceRepository>(
         create: (context) => WorkspaceRepositoryImp(
+          userCache: context.read<UserCache>(),
           streamManager: context.read<StreamManager>(),
           messageCollector: context.read<CollectorMessage>(),
           remote: context.read<RemoteService>(),
@@ -94,7 +96,7 @@ final routes = {
               create: (context) =>
                   WorkspaceBloc(context.read<WorkspaceRepository>())
                     ..add(WorkspaceEventChangeStatus(status: statusInit))
-                    ..add(WorkspaceEventWatchWorkspace()),
+                    ..add(WorkspaceEventWatch()),
             ),
           ],
           child: WorkspacePage(),
@@ -102,7 +104,7 @@ final routes = {
       ),
   '/${RoutesEnum.workspaceDetail}': (context) {
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
-    final data = args!['dataTransfered'] as ModelWorkspace;
+    final data = args!['dataTransfered'] as ModelWorkspaceMerge;
     return RepositoryProvider<WorkspaceDetailRepository>(
       create: (context) => WorkspaceDetailRepositoryImp(
         userCache: context.read<UserCache>(),

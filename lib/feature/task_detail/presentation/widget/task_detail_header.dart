@@ -4,8 +4,8 @@ import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_b
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_state.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/header/custom_row_header.dart';
-import 'package:task_manager/shared/widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/header/custom_row_header.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
 
 class TaskDetailHeader extends StatelessWidget {
   const TaskDetailHeader({super.key});

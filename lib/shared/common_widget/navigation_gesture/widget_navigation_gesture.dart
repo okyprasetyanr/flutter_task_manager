@@ -3,8 +3,8 @@ import 'package:task_manager/app_properties/app_properties.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/routes/routes_navigator.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/button/custom_button_icon.dart';
-import 'package:task_manager/shared/widget/snackbar/custom_snackbar.dart';
+import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart';
+import 'package:task_manager/shared/common_widget/snackbar/custom_snackbar.dart';
 
 class NavigationGesture extends StatefulWidget {
   final List<Map<String, dynamic>> attContent;

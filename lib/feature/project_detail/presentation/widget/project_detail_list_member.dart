@@ -6,7 +6,7 @@ import 'package:task_manager/feature/project_detail/presentation/bloc/project_de
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/listview/custom_list_view_builder_v.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 
 class ProjectDetailListMember extends StatelessWidget {
   const ProjectDetailListMember({super.key});

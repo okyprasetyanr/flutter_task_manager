@@ -4,8 +4,8 @@ import 'package:task_manager/app_properties/app_properties.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/loading/custom_loading.dart';
-import 'package:task_manager/shared/widget/text/custom_text_empty.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/text/custom_text_empty.dart';
 
 class CustomListViewBuilderH<T> extends StatelessWidget {
   final List<T> data;

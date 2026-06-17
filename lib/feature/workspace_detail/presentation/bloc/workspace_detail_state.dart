@@ -1,9 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
+import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
-import 'package:task_manager/shared/model/model_project.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
-import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
-import 'package:task_manager/shared/model/model_project_member.dart';
 
 class WorkspaceDetailState {}
 
@@ -11,16 +10,18 @@ class WorkspaceDetailStateInitial extends WorkspaceDetailState {}
 
 class WorkspaceDetailStateLoaded extends WorkspaceDetailState
     with EquatableMixin {
-  final ModelWorkspace? dataWorkspace;
+  final ModelWorkspaceMerge? dataWorkspace;
   final List<ModelUser> dataUser;
-  final List<ModelProject> dataProject;
+  final List<ModelProjectMerge> dataProject;
   final EnumStatusState status;
   final bool initMember;
   final String? failed;
   final String? error;
   final String? noconnection;
+  final ModelProjectMerge? selectedProject;
 
   WorkspaceDetailStateLoaded({
+    this.selectedProject,
     this.initMember = false,
     this.failed,
     this.error,
@@ -32,18 +33,19 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
   });
 
   WorkspaceDetailStateLoaded copyWith({
+    ModelProjectMerge? selectedProject,
     String? workspaceName,
     String? failed,
     String? error,
     String? noconnection,
-    ModelWorkspace? dataWorkspace,
+    ModelWorkspaceMerge? dataWorkspace,
     List<ModelUser>? dataUser,
-    List<ModelProjectMember>? dataWorkspaceMember,
-    List<ModelProject>? dataProject,
+    List<ModelProjectMerge>? dataProject,
     EnumStatusState? status,
     bool? initMember,
   }) {
     return WorkspaceDetailStateLoaded(
+      selectedProject: selectedProject ?? this.selectedProject,
       error: error,
       failed: failed,
       noconnection: noconnection,
@@ -57,6 +59,7 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
 
   @override
   List<Object?> get props => [
+    selectedProject,
     initMember,
     dataWorkspace,
     dataProject,

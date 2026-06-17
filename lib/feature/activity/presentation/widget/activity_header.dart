@@ -4,8 +4,8 @@ import 'package:task_manager/feature/activity/presentation/bloc/activity_bloc.da
 import 'package:task_manager/feature/activity/presentation/bloc/activity_state.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/header/custom_row_header.dart';
-import 'package:task_manager/shared/widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/header/custom_row_header.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
 
 class ActivityHeader extends StatelessWidget {
   const ActivityHeader({super.key});

@@ -3,17 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/app_properties/app_properties.dart';
 import 'package:task_manager/base_layout/base_layout.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_header.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_list_project.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
-import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 import 'package:task_manager/shared/navigator_content/navigator_content.dart';
 import 'package:task_manager/shared/style/icon_size.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/button/custom_button_icon.dart';
-import 'package:task_manager/shared/widget/navigation_gesture/widget_navigation_gesture.dart';
+import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart';
+import 'package:task_manager/shared/common_widget/navigation_gesture/widget_navigation_gesture.dart';
 
 class WorkspaceDetailPage extends StatefulWidget {
   const WorkspaceDetailPage({super.key});
@@ -62,7 +62,7 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
     return BlocSelector<
       WorkspaceDetailBloc,
       WorkspaceDetailState,
-      (ModelWorkspace?, List<ModelUser>)
+      (ModelWorkspaceMerge?, List<ModelUser>)
     >(
       selector: (state) {
         return state is WorkspaceDetailStateLoaded

@@ -7,7 +7,7 @@ import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helpe
 import 'package:task_manager/shared/model/model_comment.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/widget/listview/custom_list_view_builder_v.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 
 class TaskDetailListComment extends StatelessWidget {
   final ScrollController controller;

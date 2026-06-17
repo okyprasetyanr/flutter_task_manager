@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_event.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
-import 'package:task_manager/shared/model/model_project.dart';
-import 'package:task_manager/shared/model/model_project_member.dart';
+import 'package:task_manager/feature/workspace_detail/domain/model/model_project.dart';
+import 'package:task_manager/feature/workspace_detail/domain/model/model_project_member.dart';
 
 class WorkspaceDetailBloc
     extends Bloc<WorkspaceDetailEvent, WorkspaceDetailState> {
@@ -18,6 +19,10 @@ class WorkspaceDetailBloc
     on<WorkspaceDetailEventWatch>(_onWatch);
     on<WorkspaceDetailEventWatchMember>(_onWatchMember);
     on<WorkspaceDetailEventChangeStatus>(_onChangeStatus);
+    on<WorkspaceDetailEventCreateProject>(_onCreateProject);
+    on<WorkspaceDetailEventUpdateProject>(_onUpdateProject);
+    on<WorkspaceDetailEventDeleteProject>(_onDeleteProject);
+    on<WorkspaceDEtailEventSelectedProject>(_onSelectedProject);
   }
 
   FutureOr<void> _onChangeStatus(
@@ -42,14 +47,21 @@ class WorkspaceDetailBloc
         : WorkspaceDetailStateLoaded();
     final dataWorkspace = event.data!;
     await emit.forEach(
-      repo.watchProject(workspaceId: dataWorkspace.id),
+      repo.watchProject(workspaceId: dataWorkspace.dataWorkspace.id),
       onData: (data) {
         return currentState.copyWith(
           dataWorkspace: dataWorkspace,
           dataUser: repo.getUser(),
           dataProject: data.$1.containsKey(EnumFetchApiStatus.success)
               ? (data.$1[EnumFetchApiStatus.success] as List)
-                    .map((e) => ModelProject.fromJson(e))
+                    .map(
+                      (e) => ModelProjectMerge(
+                        dataProject: ModelProject.fromJson(e),
+                        dataProjectMember:
+                            currentState.selectedProject?.dataProjectMember ??
+                            const [],
+                      ),
+                    )
                     .toList()
               : const [],
           initMember: true,
@@ -73,13 +85,14 @@ class WorkspaceDetailBloc
     add(WorkspaceDetailEventChangeStatus(status: EnumStatusState.synchronize));
     final currentState = state as WorkspaceDetailStateLoaded;
     devLog(
-      "Log WorkspaceDetailBloc: watchMember: listId: ${(state as WorkspaceDetailStateLoaded).dataProject.map((e) => e.id).toList()}",
+      "Log WorkspaceDetailBloc: watchMember: listId: ${(state as WorkspaceDetailStateLoaded).dataProject.map((e) => e.dataProject.id).toList()}",
     );
     await emit.forEach(
       repo.watchProjectMember(
-        projectIds: (state as WorkspaceDetailStateLoaded).dataProject
-            .map((e) => e.id)
-            .toList(),
+        workspaceId: (state as WorkspaceDetailStateLoaded)
+            .dataWorkspace!
+            .dataWorkspace
+            .id,
       ),
       onData: (data) {
         List<ModelProjectMember> finalData =
@@ -92,10 +105,10 @@ class WorkspaceDetailBloc
         return currentState.copyWith(
           dataProject: currentState.dataProject.map((project) {
             return project.copyWith(
-              dataMember: currentState.dataUser.where((user) {
+              dataProjectMember: currentState.dataUser.where((user) {
                 return finalData.any(
                   (projectMember) =>
-                      projectMember.projectId == project.id &&
+                      projectMember.projectId == project.dataProject.id &&
                       projectMember.userId == user.id,
                 );
               }).toList(),
@@ -113,5 +126,81 @@ class WorkspaceDetailBloc
         error: error.toString(),
       ),
     );
+  }
+
+  FutureOr<void> _onSelectedProject(
+    WorkspaceDEtailEventSelectedProject event,
+    Emitter<WorkspaceDetailState> emit,
+  ) {
+    emit(
+      (state as WorkspaceDetailStateLoaded).copyWith(
+        selectedProject: event.data,
+      ),
+    );
+  }
+
+  Future<void> _onCreateProject(
+    WorkspaceDetailEventCreateProject event,
+    Emitter<WorkspaceDetailState> emit,
+  ) async {
+    add(WorkspaceDetailEventChangeStatus(status: EnumStatusState.synchronize));
+    final currentState = state as WorkspaceDetailStateLoaded;
+    final data = await repo.createProject(
+      name: event.name,
+      start: event.start,
+      end: event.end,
+      totalContribut: event.contributor.length,
+      type: event.type,
+      workspaceId: currentState.dataWorkspace!.dataWorkspace.id,
+    );
+
+    if (data != null) {
+      emit(currentState.copyWith(error: data.error, failed: data.failed));
+    }
+  }
+
+  Future<void> _onUpdateProject(
+    WorkspaceDetailEventUpdateProject event,
+    Emitter<WorkspaceDetailState> emit,
+  ) async {
+    add(WorkspaceDetailEventChangeStatus(status: EnumStatusState.synchronize));
+    final currentState = state as WorkspaceDetailStateLoaded;
+    final original = currentState.selectedProject!;
+    final edited = currentState.selectedProject!.copyWith(
+      dataProject: original.dataProject.copyWith(
+        name: event.name,
+        end: event.end,
+        start: event.start,
+        type: event.type,
+        totalContribut: event.contributor.length,
+        status: event.status,
+      ),
+      dataProjectMember: event.contributor,
+    );
+    final data = await repo.updateProject(
+      original: currentState.selectedProject!,
+      edited: edited,
+      role: "",
+    );
+
+    if (data != null) {
+      emit(currentState.copyWith(error: data.error, failed: data.failed));
+    }
+  }
+
+  Future<void> _onDeleteProject(
+    WorkspaceDetailEventDeleteProject event,
+    Emitter<WorkspaceDetailState> emit,
+  ) async {
+    add(WorkspaceDetailEventChangeStatus(status: EnumStatusState.synchronize));
+    final data = await repo.deleteProject(event.idProject);
+    if (data != null) {
+      emit(
+        (state as WorkspaceDetailStateLoaded).copyWith(
+          error: data.error,
+          failed: data.failed,
+        ),
+      );
+    }
   }
 }

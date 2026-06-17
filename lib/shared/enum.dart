@@ -18,6 +18,7 @@ enum EnumWorkspace {
 
 enum EnumWorkspaceMember {
   workspaceId('workspace_id'),
+  companyId('company_id'),
   userId('user_id'),
   role('role'),
   id('id');
@@ -43,7 +44,8 @@ enum EnumProject {
   name('name'),
   type('type'),
   status('status'),
-  createdId('created_id'),
+  createdAt('created_at'),
+  createdBy('created_by'),
   totalContribut('total_contribut'),
   start('start_date'),
   end('end_date'),
@@ -55,6 +57,7 @@ enum EnumProject {
 
 enum EnumProjectMember {
   projectId('project_id'),
+  workspaceId('workspace_id'),
   userId('user_id'),
   role('role'),
   id('id');
