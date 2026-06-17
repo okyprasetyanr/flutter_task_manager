@@ -4,7 +4,7 @@ import 'package:task_manager/feature/workspace_detail/domain/model/model_project
 
 class ModelProjectMerge extends Equatable {
   final ModelProject dataProject;
-  final List<ModelUser> dataProjectMember;
+  final Set<ModelUser> dataProjectMember;
 
   const ModelProjectMerge({
     required this.dataProject,
@@ -13,7 +13,7 @@ class ModelProjectMerge extends Equatable {
 
   ModelProjectMerge copyWith({
     ModelProject? dataProject,
-    List<ModelUser>? dataProjectMember,
+    Set<ModelUser>? dataProjectMember,
   }) {
     return ModelProjectMerge(
       dataProject: dataProject ?? this.dataProject,

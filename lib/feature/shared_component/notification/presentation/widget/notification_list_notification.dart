@@ -12,7 +12,7 @@ import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
 import 'package:task_manager/shared/common_widget/text/custom_text_empty.dart';
 
 class NotificationListNotification extends StatelessWidget {
-  final List<ModelNotification> data;
+  final Set<ModelNotification> data;
   final EnumStatusState status;
   final ScrollController controller;
   const NotificationListNotification({
@@ -41,7 +41,7 @@ class NotificationListNotification extends StatelessWidget {
             child: CustomListViewBuilderV<ModelNotification>(
               controller: controller,
               status: status,
-              data: data,
+              data: data.toList(),
               content: (data, status) {
                 if (status != EnumStatusState.loading) {
                   return [

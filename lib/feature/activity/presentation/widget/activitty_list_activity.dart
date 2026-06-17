@@ -22,20 +22,20 @@ class ActivittyListActivity extends StatelessWidget {
           BlocSelector<
             ActivityBloc,
             ActivityState,
-            (List<ModelActivity>, EnumStatusState)
+            (Set<ModelActivity>, EnumStatusState)
           >(
             selector: (state) => state is ActivityStateLoaded
                 ? (state.dataActivity, state.status)
-                : (const [], EnumStatusState.loading),
+                : (const {}, EnumStatusState.loading),
             builder: (context, state) {
               return CustomListViewBuilderV<ModelActivity>(
                 status: state.$2,
-                data: state.$1,
+                data: state.$1.toList(),
                 content: (data, _) {
                   final bloc = context.read<ActivityBloc>().state;
                   final users = bloc is ActivityStateLoaded
                       ? bloc.dataUser
-                      : const <ModelUser>[];
+                      : const <ModelUser>{};
                   final display = data.display(users: users);
 
                   final actor =

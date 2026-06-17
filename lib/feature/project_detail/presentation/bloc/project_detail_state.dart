@@ -11,9 +11,9 @@ class ProjectDetailStateInitial extends ProjectDetailState {}
 
 class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
   final ModelProject? dataProject;
-  final List<ModelUser> dataProjectMember;
-  final List<ModelTask> dataTask;
-  final List<ModelLabel> dataLabelTask;
+  final Set<ModelUser> dataProjectMember;
+  final Set<ModelTask> dataTask;
+  final Set<ModelLabel> dataLabelTask;
   final EnumStatusState status;
   final String? error;
   final String? failed;
@@ -21,9 +21,9 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
 
   ProjectDetailStateLoaded({
     this.dataProject,
-    this.dataProjectMember = const [],
-    this.dataTask = const [],
-    this.dataLabelTask = const [],
+    this.dataProjectMember = const {},
+    this.dataTask = const {},
+    this.dataLabelTask = const {},
     this.status = EnumStatusState.none,
     this.error,
     this.failed,
@@ -32,9 +32,9 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
 
   ProjectDetailStateLoaded copyWith({
     ModelProject? dataProject,
-    List<ModelUser>? dataProjectMember,
-    List<ModelTask>? dataTask,
-    List<ModelLabel>? dataLabelTask,
+    Set<ModelUser>? dataProjectMember,
+    Set<ModelTask>? dataTask,
+    Set<ModelLabel>? dataLabelTask,
     EnumStatusState? status,
     String? error,
     String? failed,

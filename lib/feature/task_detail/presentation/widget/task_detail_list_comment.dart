@@ -18,15 +18,15 @@ class TaskDetailListComment extends StatelessWidget {
     return BlocSelector<
       TaskDetailBloc,
       TaskDetailState,
-      (List<ModelComment>, EnumStatusState, List<ModelUser>)
+      (Set<ModelComment>, EnumStatusState, Set<ModelUser>)
     >(
       selector: (state) => state is TaskDetailStateLoaded
           ? (state.dataComment, state.status, state.dataUser)
-          : (const [], EnumStatusState.loading, const []),
+          : (const {}, EnumStatusState.loading, const {}),
       builder: (context, state) => CustomListViewBuilderV<ModelComment>(
         controller: controller,
         status: state.$2,
-        data: state.$1,
+        data: state.$1.toList(),
         content: (data, _) => [
           Text(
             state.$3.firstWhere((element) => element.id == data.userId).name,

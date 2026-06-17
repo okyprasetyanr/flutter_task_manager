@@ -34,14 +34,14 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
         dataLabelTask: data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success]['label'] as List)
                   .map((e) => ModelLabel.fromJson(e))
-                  .toList()
-            : const [],
+                  .toSet()
+            : const {},
         dataProject: event.data ?? currentState.dataProject,
         dataProjectMember: data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success]['project_member'] as List)
                   .map((e) => ModelUser.fromJson(e))
-                  .toList()
-            : const [],
+                  .toSet()
+            : const {},
         dataTask: data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success]['task'] as List).map((e) {
                 final subTask =
@@ -52,8 +52,8 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
                               e[EnumTask.id.value],
                         )
                         .map((e) => ModelSubTask.fromJson(e))
-                        .toList();
-                List<ModelLabel> label = const [];
+                        .toSet();
+                Set<ModelLabel> label = const {};
 
                 for (final idLabelTask in e[EnumTask.labelIds.value] as List) {
                   for (final labelData
@@ -70,8 +70,8 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
                   subTask: subTask,
                   label: label,
                 );
-              }).toList()
-            : const [],
+              }).toSet()
+            : const {},
 
         error: data.$2.error,
         failed: data.$2.failed,

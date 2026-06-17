@@ -32,7 +32,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   });
 
   @override
-  List<ModelUser> getUser() {
+  Set<ModelUser> getUser() {
     return userCache.getUser();
   }
 
@@ -70,7 +70,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     required String name,
     required DateTime start,
     required DateTime end,
-    required int totalContribut,
+    required Set<(String userId, String role)> contributor,
     required String type,
     required String workspaceId,
   }) async {
@@ -81,7 +81,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
           start: start,
           end: end,
           createdAt: dateNowYMDBLOC(),
-          totalContribut: totalContribut,
+          totalContribut: contributor.length,
           type: type,
           status: EnumProjectStatus.todo,
           workspaceId: workspaceId,
@@ -90,6 +90,26 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
       ),
       localFunc: () => {},
     );
+
+    if (data.containsKey(EnumFetchApiStatus.success)) {
+      await helper.helperCollectData(
+        remoteFunc: () => remote.workspaceDetailRemote.createProjectMember(
+          contributor
+              .map(
+                (e) => ModelProjectMember.createProjectMember(
+                  projectId:
+                      data[EnumFetchApiStatus.success][EnumProject.id.value],
+                  workspaceId: workspaceId,
+                  userId: e.$1,
+                  role: e.$2,
+                ).toJson(),
+              )
+              .toSet(),
+        ),
+        localFunc: () => {},
+      );
+    }
+
     return data.containsKey(EnumFetchApiStatus.success)
         ? null
         : messageCollector.getMessage(data);
@@ -111,44 +131,51 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
       localFunc: () => {},
     );
 
-    final originalIds = original.dataProjectMember.map((e) => e.id).toSet();
-    final editedIds = edited.dataProjectMember.map((e) => e.id).toSet();
+    if (data.containsKey(EnumFetchApiStatus.success)) {
+      final originalIds = original.dataProjectMember.map((e) => e.id).toSet();
+      final editedIds = edited.dataProjectMember.map((e) => e.id).toSet();
 
-    final List<ModelUser> usersToCreate = edited.dataProjectMember
-        .where((user) => !originalIds.contains(user.id))
-        .toList();
+      final Set<String> usersToCreate = edited.dataProjectMember
+          .where((user) => !originalIds.contains(user.id))
+          .map((e) => e.id)
+          .toSet();
 
-    final List<ModelUser> usersToDelete = original.dataProjectMember
-        .where((user) => !editedIds.contains(user.id))
-        .toList();
+      final Set<String> usersToDelete = original.dataProjectMember
+          .where((user) => !editedIds.contains(user.id))
+          .map((e) => e.id)
+          .toSet();
+      if (usersToCreate.isNotEmpty) {
+        await helper.helperCollectData(
+          remoteFunc: () => remote.workspaceDetailRemote.createProjectMember(
+            usersToCreate
+                .map(
+                  (e) => ModelProjectMember.createProjectMember(
+                    projectId: original.dataProject.id,
+                    workspaceId: original.dataProject.workspaceId,
+                    userId: e,
+                    role: role,
+                  ).toJson(),
+                )
+                .toSet(),
+          ),
+          localFunc: () => {},
+        );
+      }
 
-    if (usersToCreate.isNotEmpty) {
-      helper.helperCollectData(
-        remoteFunc: () => remote.workspaceDetailRemote.updateProjectMember(
-          usersToCreate
-              .map(
-                (e) => ModelProjectMember.createProjectMember(
-                  projectId: original.dataProject.id,
-                  workspaceId: original.dataProject.workspaceId,
-                  userId: e.id,
-                  role: role,
-                ).toJson(),
-              )
-              .toList(),
-        ),
-        localFunc: () => {},
-      );
+      if (usersToDelete.isNotEmpty) {
+        await helper.helperCollectData(
+          remoteFunc: () => remote.workspaceDetailRemote.deleteProjectMember(
+            usersToDelete.map((e) => e).toList(),
+            original.dataProject.id,
+          ),
+          localFunc: () => {},
+        );
+      }
     }
 
-    if (usersToDelete.isNotEmpty) {
-      helper.helperCollectData(
-        remoteFunc: () => remote.workspaceDetailRemote.deleteProjectMember(
-          usersToDelete.map((e) => e.id).toList(),
-          original.dataProject.id,
-        ),
-        localFunc: () => {},
-      );
-    }
+    return data.containsKey(EnumFetchApiStatus.success)
+        ? null
+        : messageCollector.getMessage(data);
   }
 
   @override

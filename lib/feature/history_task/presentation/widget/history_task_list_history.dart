@@ -22,21 +22,21 @@ class HistoryTaskListHistory extends StatelessWidget {
           BlocSelector<
             HistoryTaskBloc,
             HistoryTaskState,
-            (List<ModelHistoryTask>, EnumStatusState)
+            (Set<ModelHistoryTask>, EnumStatusState)
           >(
             selector: (state) => state is HistoryTaskStateLoaded
                 ? (state.dataHistoryTask, state.status)
-                : (const [], EnumStatusState.loading),
+                : (const {}, EnumStatusState.loading),
             builder: (context, state) {
               return CustomListViewBuilderV<ModelHistoryTask>(
                 status: state.$2,
-                data: state.$1,
+                data: state.$1.toList(),
                 content: (data, _) {
                   final bloc = context.read<HistoryTaskBloc>().state;
 
                   final users = bloc is HistoryTaskStateLoaded
                       ? bloc.dataUser
-                      : const <ModelUser>[];
+                      : const <ModelUser>{};
 
                   final display = data.display(users: users!);
 

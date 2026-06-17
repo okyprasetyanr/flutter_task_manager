@@ -20,15 +20,15 @@ class ProjectDetailListMember extends StatelessWidget {
           BlocSelector<
             ProjectDetailBloc,
             ProjectDetailState,
-            (List<ModelUser>, EnumStatusState)
+            (Set<ModelUser>, EnumStatusState)
           >(
             selector: (state) => state is ProjectDetailStateLoaded
                 ? (state.dataProjectMember, state.status)
-                : (const [], EnumStatusState.loading),
+                : (const {}, EnumStatusState.loading),
             builder: (context, state) {
               return CustomListViewBuilderV<ModelUser>(
                 status: state.$2,
-                data: state.$1,
+                data: state.$1.toList(),
                 content: (data, _) => [
                   Text(data.name, style: lv05TextStyle),
                   Text(data.email, style: lv05TextStyle),

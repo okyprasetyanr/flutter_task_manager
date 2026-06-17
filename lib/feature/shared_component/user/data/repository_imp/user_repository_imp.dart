@@ -44,7 +44,7 @@ class UserRepositoryImp implements UserRepository {
             userCache.setUser(
               (data[EnumFetchApiStatus.success] as List)
                   .map((e) => ModelUser.fromJson(e))
-                  .toList(),
+                  .toSet(),
             );
           } else {
             customRootSnackBar(messageCollector.getMessage(data));

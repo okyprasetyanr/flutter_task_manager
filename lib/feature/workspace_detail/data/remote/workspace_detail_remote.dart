@@ -57,8 +57,8 @@ class WorkspaceDetailRemote {
     );
   }
 
-  Future<Map<String, dynamic>> updateProjectMember(
-    List<Map<String, dynamic>> data,
+  Future<Map<String, dynamic>> createProjectMember(
+    Set<Map<String, dynamic>> data,
   ) async {
     return await responseWrapper.wrap(
       getData: () async => supabaseClient

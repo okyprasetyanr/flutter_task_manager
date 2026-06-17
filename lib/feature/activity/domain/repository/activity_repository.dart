@@ -6,5 +6,5 @@ abstract class ActivityRepository {
   Future<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> getActivity({
     required String workspaceId,
   });
-  List<ModelUser> getUser();
+  Set<ModelUser> getUser();
 }

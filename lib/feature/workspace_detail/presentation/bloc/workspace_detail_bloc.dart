@@ -59,11 +59,11 @@ class WorkspaceDetailBloc
                         dataProject: ModelProject.fromJson(e),
                         dataProjectMember:
                             currentState.selectedProject?.dataProjectMember ??
-                            const [],
+                            const {},
                       ),
                     )
-                    .toList()
-              : const [],
+                    .toSet()
+              : const {},
           initMember: true,
           error: data.$2.error,
           failed: data.$2.failed,
@@ -95,12 +95,12 @@ class WorkspaceDetailBloc
             .id,
       ),
       onData: (data) {
-        List<ModelProjectMember> finalData =
+        Set<ModelProjectMember> finalData =
             data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success] as List)
                   .map((e) => ModelProjectMember.fromJson(e))
-                  .toList()
-            : const [];
+                  .toSet()
+            : const {};
         devLog("Log WorkspaceDetailBloc: watchMember: data: $finalData");
         return currentState.copyWith(
           dataProject: currentState.dataProject.map((project) {
@@ -111,9 +111,9 @@ class WorkspaceDetailBloc
                       projectMember.projectId == project.dataProject.id &&
                       projectMember.userId == user.id,
                 );
-              }).toList(),
+              }).toSet(),
             );
-          }).toList(),
+          }).toSet(),
           initMember: false,
           status: EnumStatusState.none,
           error: data.$2.error,
@@ -149,7 +149,9 @@ class WorkspaceDetailBloc
       name: event.name,
       start: event.start,
       end: event.end,
-      totalContribut: event.contributor.length,
+      contributor: event.contributor.map((e) {
+        return (e.$1.id, e.$2);
+      }).toSet(),
       type: event.type,
       workspaceId: currentState.dataWorkspace!.dataWorkspace.id,
     );

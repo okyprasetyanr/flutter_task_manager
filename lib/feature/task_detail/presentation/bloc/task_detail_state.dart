@@ -14,22 +14,22 @@ class TaskDetailStateInitial extends TaskDetailState {}
 
 class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
   final ModelTask? dataTask;
-  final List<ModelSubTask> dataSubTask;
-  final List<ModelLabel> dataLabel;
+  final Set<ModelSubTask> dataSubTask;
+  final Set<ModelLabel> dataLabel;
   final EnumStatusState status;
-  final List<ModelUser> dataUser;
-  final List<ModelComment> dataComment;
+  final Set<ModelUser> dataUser;
+  final Set<ModelComment> dataComment;
   final String? failed;
   final String? error;
   final String? noconnection;
 
   TaskDetailStateLoaded({
     this.dataTask,
-    this.dataSubTask = const [],
-    this.dataLabel = const [],
+    this.dataSubTask = const {},
+    this.dataLabel = const {},
     this.status = EnumStatusState.none,
-    this.dataUser = const [],
-    this.dataComment = const [],
+    this.dataUser = const {},
+    this.dataComment = const {},
     this.failed,
     this.error,
     this.noconnection,
@@ -37,11 +37,11 @@ class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
 
   TaskDetailStateLoaded copyWith({
     ModelTask? dataTask,
-    List<ModelSubTask>? dataSubTask,
-    List<ModelLabel>? dataLabel,
+    Set<ModelSubTask>? dataSubTask,
+    Set<ModelLabel>? dataLabel,
     EnumStatusState? status,
-    List<ModelComment>? dataComment,
-    List<ModelUser>? dataUser,
+    Set<ModelComment>? dataComment,
+    Set<ModelUser>? dataUser,
     String? failed,
     String? error,
     String? noconnection,

@@ -29,14 +29,14 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     await emit.forEach<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>(
       repo.watchNotification(),
       onData: (data) {
-        final List<dynamic> listData =
-            data.$1[EnumFetchApiStatus.success] as List? ?? [];
+        final Set<dynamic> listData =
+            (data.$1[EnumFetchApiStatus.success] as List?)?.toSet() ?? {};
 
         return currentState.copyWith(
           status: EnumStatusState.none,
           dataNotification: data.$1.containsKey(EnumFetchApiStatus.success)
-              ? listData.map((e) => ModelNotification.fromJson(e)).toList()
-              : const [],
+              ? listData.map((e) => ModelNotification.fromJson(e)).toSet()
+              : const {},
           failed: data.$2.failed,
           noconnection: data.$2.noconnection,
         );

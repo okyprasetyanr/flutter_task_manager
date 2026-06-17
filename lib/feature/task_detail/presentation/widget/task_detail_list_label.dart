@@ -14,13 +14,13 @@ class TaskDetailListLabel extends StatelessWidget {
     return BlocSelector<
       TaskDetailBloc,
       TaskDetailState,
-      (List<ModelLabel>, EnumStatusState)
+      (Set<ModelLabel>, EnumStatusState)
     >(
       selector: (state) => state is TaskDetailStateLoaded
           ? (state.dataLabel, state.status)
-          : (const [], EnumStatusState.loading),
+          : (const {}, EnumStatusState.loading),
       builder: (context, state) => CustomListViewBuilderH<ModelLabel>(
-        data: state.$1,
+        data: state.$1.toList(),
         status: state.$2,
         getName: (data) => data.name,
       ),

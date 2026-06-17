@@ -62,12 +62,12 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
     return BlocSelector<
       WorkspaceDetailBloc,
       WorkspaceDetailState,
-      (ModelWorkspaceMerge?, List<ModelUser>)
+      (ModelWorkspaceMerge?, Set<ModelUser>)
     >(
       selector: (state) {
         return state is WorkspaceDetailStateLoaded
             ? (state.dataWorkspace, state.dataUser)
-            : (null, const []);
+            : (null, const {});
       },
       builder: (context, state) {
         return NavigationGesture(

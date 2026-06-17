@@ -9,8 +9,8 @@ class ActivityState {}
 class ActivityStateInitial extends ActivityState {}
 
 class ActivityStateLoaded extends ActivityState with EquatableMixin {
-  final List<ModelActivity> dataActivity;
-  final List<ModelUser> dataUser;
+  final Set<ModelActivity> dataActivity;
+  final Set<ModelUser> dataUser;
   final ModelWorkspace? dataWorkspace;
   final EnumStatusState status;
   final String? failed;
@@ -18,8 +18,8 @@ class ActivityStateLoaded extends ActivityState with EquatableMixin {
   final String? noconnection;
 
   ActivityStateLoaded({
-    this.dataActivity = const [],
-    this.dataUser = const [],
+    this.dataActivity = const {},
+    this.dataUser = const {},
     this.dataWorkspace,
     this.status = EnumStatusState.none,
     this.failed,
@@ -28,8 +28,8 @@ class ActivityStateLoaded extends ActivityState with EquatableMixin {
   });
 
   ActivityStateLoaded copyWith({
-    List<ModelActivity>? dataActivity,
-    List<ModelUser>? dataUser,
+    Set<ModelActivity>? dataActivity,
+    Set<ModelUser>? dataUser,
     ModelWorkspace? dataWorkspace,
     EnumStatusState? status,
     String? failed,

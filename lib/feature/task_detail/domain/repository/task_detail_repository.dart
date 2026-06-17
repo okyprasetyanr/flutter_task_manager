@@ -7,5 +7,5 @@ abstract class TaskDetailRepository {
     required String taskId,
   });
 
-  List<ModelUser> getUser();
+  Set<ModelUser> getUser();
 }

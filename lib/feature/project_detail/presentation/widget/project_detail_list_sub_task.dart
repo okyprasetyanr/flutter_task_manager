@@ -6,7 +6,7 @@ import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 
 class ProjectDetailListSubTask extends StatelessWidget {
-  final List<ModelSubTask> data;
+  final Set<ModelSubTask> data;
   final EnumStatusState status;
   const ProjectDetailListSubTask({
     super.key,
@@ -19,7 +19,7 @@ class ProjectDetailListSubTask extends StatelessWidget {
     return CustomListViewBuilderV<ModelSubTask>(
       limit: 3,
       status: status,
-      data: data,
+      data: data.toList(),
       content: (data, _) => [
         Card(
           elevation: 2,

@@ -8,7 +8,7 @@ import 'package:task_manager/shared/model/model_sub_task.dart';
 class ModelTask extends Equatable {
   final String id;
   final String projectId;
-  final List<String> labelIds;
+  final Set<String> labelIds;
   final String? sprintId;
   final String title;
   final String description;
@@ -21,8 +21,8 @@ class ModelTask extends Equatable {
   final DateTime dueDate;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final List<ModelSubTask> subTask;
-  final List<ModelLabel> label;
+  final Set<ModelSubTask> subTask;
+  final Set<ModelLabel> label;
 
   const ModelTask({
     required this.id,
@@ -46,8 +46,8 @@ class ModelTask extends Equatable {
 
   factory ModelTask.fromJson({
     required Map<String, dynamic> data,
-    required List<ModelSubTask> subTask,
-    required List<ModelLabel> label,
+    required Set<ModelSubTask> subTask,
+    required Set<ModelLabel> label,
   }) {
     return ModelTask(
       id: data[EnumTask.id.value],
@@ -72,7 +72,7 @@ class ModelTask extends Equatable {
   ModelTask copyWith({
     String? id,
     String? projectId,
-    List<String>? labelIds,
+    Set<String>? labelIds,
     String? sprintId,
     String? title,
     String? description,
@@ -85,8 +85,8 @@ class ModelTask extends Equatable {
     DateTime? dueDate,
     DateTime? createdAt,
     DateTime? updatedAt,
-    List<ModelSubTask>? subTask,
-    List<ModelLabel>? label,
+    Set<ModelSubTask>? subTask,
+    Set<ModelLabel>? label,
   }) {
     return ModelTask(
       id: id ?? this.id,

@@ -22,11 +22,11 @@ class _NotificationWidgetState extends State<NotificationWidget> {
     return BlocSelector<
       NotificationBloc,
       NotificationState,
-      (List<ModelNotification>, EnumStatusState)
+      (Set<ModelNotification>, EnumStatusState)
     >(
       selector: (state) => state is NotificationStateLoaded
           ? (state.dataNotification, state.status)
-          : (const [], EnumStatusState.loading),
+          : (const {}, EnumStatusState.loading),
       builder: (context, state) {
         return SizedBox(
           height: 40,
@@ -91,11 +91,11 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                         BlocSelector<
                           NotificationBloc,
                           NotificationState,
-                          (List<ModelNotification>, EnumStatusState)
+                          (Set<ModelNotification>, EnumStatusState)
                         >(
                           selector: (state) => state is NotificationStateLoaded
                               ? (state.dataNotification, state.status)
-                              : (const [], EnumStatusState.loading),
+                              : (const {}, EnumStatusState.loading),
                           builder: (context, state) {
                             return NotificationListNotification(
                               controller: scrollController,

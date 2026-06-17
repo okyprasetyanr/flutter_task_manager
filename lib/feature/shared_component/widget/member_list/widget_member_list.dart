@@ -5,7 +5,7 @@ import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
 class SharedWidgetMemberList extends StatelessWidget {
-  final List<ModelUser> data;
+  final Set<ModelUser> data;
   final EnumStatusState status;
   const SharedWidgetMemberList({
     super.key,
@@ -28,7 +28,7 @@ class SharedWidgetMemberList extends StatelessWidget {
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(5),
-                child: Text(data[index].name, style: lv05TextStyle),
+                child: Text(data.elementAt(index).name, style: lv05TextStyle),
               ),
             ),
           ),

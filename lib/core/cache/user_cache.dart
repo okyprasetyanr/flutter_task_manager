@@ -2,14 +2,14 @@
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 
 class UserCache {
-  List<ModelUser> user;
+  Set<ModelUser> user;
   UserCache({required this.user});
 
-  List<ModelUser> getUser() {
+  Set<ModelUser> getUser() {
     return user;
   }
 
-  void setUser(List<ModelUser> data) {
+  void setUser(Set<ModelUser> data) {
     user = data;
   }
 }

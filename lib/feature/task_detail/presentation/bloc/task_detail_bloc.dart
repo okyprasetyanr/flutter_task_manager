@@ -35,8 +35,8 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
         dataComment: data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success] as List)
                   .map((e) => ModelComment.fromJson(e))
-                  .toList()
-            : const [],
+                  .toSet()
+            : const {},
         dataUser: dataUser,
         dataSubTask: dataSubTask,
         dataTask: dataTask,

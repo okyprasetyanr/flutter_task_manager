@@ -5,7 +5,7 @@ import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart
 
 class ModelWorkspaceMerge extends Equatable {
   final ModelWorkspace dataWorkspace;
-  final List<ModelUser> dataWorkspaceMember;
+  final Set<ModelUser> dataWorkspaceMember;
   const ModelWorkspaceMerge({
     required this.dataWorkspace,
     required this.dataWorkspaceMember,
@@ -13,7 +13,7 @@ class ModelWorkspaceMerge extends Equatable {
 
   ModelWorkspaceMerge copyWith({
     ModelWorkspace? dataWorkspace,
-    List<ModelUser>? dataWorkspaceMember,
+    Set<ModelUser>? dataWorkspaceMember,
   }) {
     return ModelWorkspaceMerge(
       dataWorkspace: dataWorkspace ?? this.dataWorkspace,

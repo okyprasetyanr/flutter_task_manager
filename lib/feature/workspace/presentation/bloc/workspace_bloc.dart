@@ -52,8 +52,8 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     await emit.forEach<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>(
       repo.watchWorkspace(),
       onData: (data) {
-        final List<dynamic> listData =
-            data.$1[EnumFetchApiStatus.success] as List? ?? [];
+        final Set<dynamic> listData =
+            (data.$1[EnumFetchApiStatus.success] as List?)?.toSet() ?? {};
         devLog("Log WorkspaceBloc: onData: Success");
 
         return currentState.copyWith(
@@ -68,11 +68,11 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
                             currentState
                                 .selectedWorkspace
                                 ?.dataWorkspaceMember ??
-                            const [],
+                            const {},
                       ),
                     )
-                    .toList()
-              : const [],
+                    .toSet()
+              : const {},
           dataUser: repo.getUser(),
           failed: data.$2.failed,
           initMember: currentState.initMember ?? true,
@@ -115,9 +115,9 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
                           workspace.dataWorkspace.id &&
                       workspaceMember.userId == user.id,
                 );
-              }).toList(),
+              }).toSet(),
             );
-          }).toList(),
+          }).toSet(),
           initMember: false,
           status: EnumStatusState.none,
           error: data.$2.error,

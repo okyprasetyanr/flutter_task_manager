@@ -440,7 +440,7 @@ enum EnumHistoryField {
 }
 
 extension ModelHistoryTaskX on ModelHistoryTask {
-  OldNewDisplayValue display({required List<ModelUser> users}) {
+  OldNewDisplayValue display({required Set<ModelUser> users}) {
     switch (field) {
       case EnumHistoryField.assigneeId:
         return OldNewDisplayValue(
@@ -582,7 +582,7 @@ extension EnumActivityActionX on EnumActivityAction {
 }
 
 extension ModelActivityX on ModelActivity {
-  OldNewDisplayValue display({required List<ModelUser> users}) {
+  OldNewDisplayValue display({required Set<ModelUser> users}) {
     switch (action) {
       case EnumActivityAction.createTask:
       case EnumActivityAction.deleteTask:

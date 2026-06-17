@@ -31,15 +31,15 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
           BlocSelector<
             ProjectDetailBloc,
             ProjectDetailState,
-            (List<ModelTask>, EnumStatusState)
+            (Set<ModelTask>, EnumStatusState)
           >(
             selector: (state) => state is ProjectDetailStateLoaded
                 ? (state.dataTask, state.status)
-                : (const [], EnumStatusState.loading),
+                : (const {}, EnumStatusState.loading),
             builder: (context, state) {
               return CustomListViewBuilderV(
                 status: state.$2,
-                data: state.$1,
+                data: state.$1.toList(),
                 content: (data, status) => [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

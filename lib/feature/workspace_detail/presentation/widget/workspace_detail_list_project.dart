@@ -37,15 +37,15 @@ class WorkspaceDetailListProject extends StatelessWidget {
           BlocSelector<
             WorkspaceDetailBloc,
             WorkspaceDetailState,
-            (List<ModelProjectMerge>, EnumStatusState)
+            (Set<ModelProjectMerge>, EnumStatusState)
           >(
             selector: (state) => state is WorkspaceDetailStateLoaded
                 ? (state.dataProject, state.status)
-                : (const [], EnumStatusState.loading),
+                : (const {}, EnumStatusState.loading),
             builder: (context, state) =>
                 CustomListViewBuilderV<ModelProjectMerge>(
                   status: state.$2,
-                  data: state.$1,
+                  data: state.$1.toList(),
                   content: (data, status) => [
                     Text(data.dataProject.name, style: lv05TextStyle),
                     const SizedBox(height: 4),

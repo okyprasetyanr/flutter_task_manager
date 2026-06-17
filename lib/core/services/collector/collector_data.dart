@@ -9,6 +9,7 @@ class CollectData {
   Future<Map<EnumFetchApiStatus, dynamic>> helperCollectData({
     required dynamic Function() remoteFunc,
     required dynamic Function() localFunc,
+    String? title,
   }) async {
     try {
       if (await connection.isConnected) {
@@ -31,16 +32,22 @@ class CollectData {
             };
           }
         } else {
-          return {EnumFetchApiStatus.error: "Unknown error, please try again!"};
+          return {
+            EnumFetchApiStatus.error:
+                "${title != null ? "$title : " : null}Unknown error, please try again!",
+          };
         }
       } else {
         return {
           EnumFetchApiStatus.noconnection:
-              "Connection is unavailable/unstable!",
+              "${title != null ? "$title : " : null}Connection is unavailable/unstable!",
         };
       }
     } catch (e) {
-      return {EnumFetchApiStatus.error: "There is an error: ${e.toString()}"};
+      return {
+        EnumFetchApiStatus.error:
+            "${title != null ? "$title : " : null}There is an error: ${e.toString()}",
+      };
     }
   }
 }

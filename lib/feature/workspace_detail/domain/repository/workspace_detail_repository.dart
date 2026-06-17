@@ -4,7 +4,7 @@ import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 
 abstract class WorkspaceDetailRepository {
-  List<ModelUser> getUser();
+  Set<ModelUser> getUser();
   Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchProject({
     required String workspaceId,
   });
@@ -21,7 +21,7 @@ abstract class WorkspaceDetailRepository {
     required String name,
     required DateTime start,
     required DateTime end,
-    required int totalContribut,
+    required Set<(String userId, String role)> contributor,
     required String type,
     required String workspaceId,
   });

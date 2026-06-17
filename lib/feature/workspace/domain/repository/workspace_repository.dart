@@ -10,7 +10,7 @@ abstract class WorkspaceRepository {
 
   String getCompanyName();
 
-  List<ModelUser> getUser();
+  Set<ModelUser> getUser();
 
   Future<CollectorMessage?> createWorkspace({
     required String name,

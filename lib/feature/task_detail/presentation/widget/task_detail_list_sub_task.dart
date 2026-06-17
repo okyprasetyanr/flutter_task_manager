@@ -16,14 +16,14 @@ class TaskDetailListSubTask extends StatelessWidget {
     return BlocSelector<
       TaskDetailBloc,
       TaskDetailState,
-      (List<ModelSubTask>, EnumStatusState)
+      (Set<ModelSubTask>, EnumStatusState)
     >(
       selector: (state) => state is TaskDetailStateLoaded
           ? (state.dataSubTask, state.status)
-          : (const [], EnumStatusState.loading),
+          : (const {}, EnumStatusState.loading),
       builder: (context, state) => CustomListViewBuilderV<ModelSubTask>(
         status: state.$2,
-        data: state.$1,
+        data: state.$1.toList(),
         content: (data, _) => [
           Card(
             elevation: 2,

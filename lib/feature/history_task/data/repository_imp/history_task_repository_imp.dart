@@ -41,7 +41,7 @@ class HistoryTaskRepositoryImp implements HistoryTaskRepository {
   }
 
   @override
-  List<ModelUser> getUser() {
+  Set<ModelUser> getUser() {
     return userCache.getUser();
   }
 }

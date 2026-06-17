@@ -32,8 +32,8 @@ class HistoryTaskBloc extends Bloc<HistoryTaskEvent, HistoryTaskState> {
         dataHistoryTask: data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success] as List)
                   .map((e) => ModelHistoryTask.fromJson(e))
-                  .toList()
-            : const [],
+                  .toSet()
+            : const {},
         dataWorkspace: dataWorkspace,
         error: data.$2.error,
         failed: data.$2.failed,

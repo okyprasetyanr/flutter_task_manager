@@ -15,8 +15,8 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
   final String? failed;
   final String? error;
   final String? noconnection;
-  final List<ModelWorkspaceMerge> dataWorkspace;
-  final List<ModelUser> dataUser;
+  final Set<ModelWorkspaceMerge> dataWorkspace;
+  final Set<ModelUser> dataUser;
   final ModelWorkspaceMerge? selectedWorkspace;
   final bool? initMember;
 
@@ -28,15 +28,15 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
     this.error,
     this.noconnection,
     this.initMember,
-    this.dataWorkspace = const [],
-    this.dataUser = const [],
+    this.dataWorkspace = const {},
+    this.dataUser = const {},
   });
 
   WorkspaceStateLoaded copyWith({
     ModelWorkspaceMerge? selectedWorkspace,
     EnumStatusState? status,
-    List<ModelWorkspaceMerge>? dataWorkspace,
-    List<ModelUser>? dataUser,
+    Set<ModelWorkspaceMerge>? dataWorkspace,
+    Set<ModelUser>? dataUser,
     String? companyName,
     String? failed,
     String? error,

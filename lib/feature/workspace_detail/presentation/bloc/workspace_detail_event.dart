@@ -26,7 +26,7 @@ class WorkspaceDetailEventCreateProject extends WorkspaceDetailEvent {
   final DateTime start;
   final DateTime end;
   final DateTime createdAt;
-  final List<ModelUser> contributor;
+  final Set<(ModelUser, String)> contributor;
   final String type;
 
   WorkspaceDetailEventCreateProject({
@@ -44,7 +44,7 @@ class WorkspaceDetailEventUpdateProject extends WorkspaceDetailEvent {
   final DateTime start;
   final DateTime end;
   final DateTime createdAt;
-  final List<ModelUser> contributor;
+  final Set<ModelUser> contributor;
   final String type;
   final EnumProjectStatus status;
 

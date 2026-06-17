@@ -30,8 +30,8 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
         dataActivity: data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success] as List)
                   .map((e) => ModelActivity.fromJson(e))
-                  .toList()
-            : const [],
+                  .toSet()
+            : const {},
         dataUser: repo.getUser(),
         dataWorkspace: dataWorkspace,
         error: data.$2.error,

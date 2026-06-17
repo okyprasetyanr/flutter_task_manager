@@ -11,8 +11,8 @@ class WorkspaceDetailStateInitial extends WorkspaceDetailState {}
 class WorkspaceDetailStateLoaded extends WorkspaceDetailState
     with EquatableMixin {
   final ModelWorkspaceMerge? dataWorkspace;
-  final List<ModelUser> dataUser;
-  final List<ModelProjectMerge> dataProject;
+  final Set<ModelUser> dataUser;
+  final Set<ModelProjectMerge> dataProject;
   final EnumStatusState status;
   final bool initMember;
   final String? failed;
@@ -28,8 +28,8 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
     this.noconnection,
     this.status = EnumStatusState.none,
     this.dataWorkspace,
-    this.dataProject = const [],
-    this.dataUser = const [],
+    this.dataProject = const {},
+    this.dataUser = const {},
   });
 
   WorkspaceDetailStateLoaded copyWith({
@@ -39,8 +39,8 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
     String? error,
     String? noconnection,
     ModelWorkspaceMerge? dataWorkspace,
-    List<ModelUser>? dataUser,
-    List<ModelProjectMerge>? dataProject,
+    Set<ModelUser>? dataUser,
+    Set<ModelProjectMerge>? dataProject,
     EnumStatusState? status,
     bool? initMember,
   }) {

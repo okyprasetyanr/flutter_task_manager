@@ -40,7 +40,7 @@ Future<void> main() async {
   runApp(
     MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(create: (context) => UserCache(user: const [])),
+        RepositoryProvider(create: (context) => UserCache(user: const {})),
         RepositoryProvider(create: (context) => StreamManager()),
         RepositoryProvider(lazy: false, create: (context) => UserSession()),
         RepositoryProvider(lazy: false, create: (context) => LocalServices()),

@@ -30,7 +30,9 @@ class ModelProject extends Equatable {
 
   factory ModelProject.fromJson(Map<String, dynamic> data) {
     return ModelProject(
-      createdAt: data[EnumProject.createdAt.value],
+      createdAt: HelperDateConvert.toDateTime(
+        data[EnumProject.createdAt.value],
+      ),
       workspaceId: data[EnumProject.workspaceId.value],
       id: data[EnumProject.id.value],
       name: data[EnumProject.name.value],

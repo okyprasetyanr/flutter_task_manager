@@ -43,14 +43,14 @@ class WorkspaceListWorkspace extends StatelessWidget {
           BlocSelector<
             WorkspaceBloc,
             WorkspaceState,
-            (List<ModelWorkspaceMerge>, EnumStatusState)
+            (Set<ModelWorkspaceMerge>, EnumStatusState)
           >(
             selector: (state) => state is WorkspaceStateLoaded
                 ? (state.dataWorkspace, state.status)
-                : (const [], EnumStatusState.loading),
+                : (const {}, EnumStatusState.loading),
             builder: (context, state) {
               return CustomListViewBuilderV<ModelWorkspaceMerge>(
-                data: state.$1,
+                data: state.$1.toList(),
                 status: state.$2,
                 content: (data, status) => [
                   Text(data.dataWorkspace.name, style: lv05TextStyle),

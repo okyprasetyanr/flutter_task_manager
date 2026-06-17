@@ -9,18 +9,18 @@ class HistoryTaskState {}
 class HistoryTaskStateInitial extends HistoryTaskState {}
 
 class HistoryTaskStateLoaded extends HistoryTaskState with EquatableMixin {
-  final List<ModelHistoryTask> dataHistoryTask;
+  final Set<ModelHistoryTask> dataHistoryTask;
   final EnumStatusState status;
   final ModelWorkspace? dataWorkspace;
-  final List<ModelUser>? dataUser;
+  final Set<ModelUser>? dataUser;
   final String? failed;
   final String? error;
   final String? noconnection;
 
   HistoryTaskStateLoaded({
-    this.dataHistoryTask = const [],
+    this.dataHistoryTask = const {},
     this.status = EnumStatusState.none,
-    this.dataUser = const [],
+    this.dataUser = const {},
     this.failed,
     this.error,
     this.noconnection,
@@ -28,9 +28,9 @@ class HistoryTaskStateLoaded extends HistoryTaskState with EquatableMixin {
   });
 
   HistoryTaskStateLoaded copyWith({
-    List<ModelHistoryTask>? dataHistoryTask,
+    Set<ModelHistoryTask>? dataHistoryTask,
     EnumStatusState? status,
-    List<ModelUser>? dataUser,
+    Set<ModelUser>? dataUser,
     String? failed,
     String? error,
     String? noconnection,

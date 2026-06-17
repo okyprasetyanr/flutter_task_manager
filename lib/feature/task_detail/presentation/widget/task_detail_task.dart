@@ -19,11 +19,11 @@ class TaskDetailTask extends StatelessWidget {
     return BlocSelector<
       TaskDetailBloc,
       TaskDetailState,
-      (ModelTask?, List<ModelLabel>, EnumStatusState)
+      (ModelTask?, Set<ModelLabel>, EnumStatusState)
     >(
       selector: (state) => state is TaskDetailStateLoaded
           ? (state.dataTask, state.dataLabel, state.status)
-          : (null, const [], EnumStatusState.loading),
+          : (null, const {}, EnumStatusState.loading),
       builder: (context, state) {
         if (state.$1 == null && state.$3 == EnumStatusState.loading) {
           return CustomLoading();

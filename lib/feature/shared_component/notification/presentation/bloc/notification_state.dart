@@ -7,14 +7,14 @@ class NotificationState {}
 class NotificationStateInitial extends NotificationState {}
 
 class NotificationStateLoaded extends NotificationState with EquatableMixin {
-  final List<ModelNotification> dataNotification;
+  final Set<ModelNotification> dataNotification;
   final EnumStatusState status;
   final String? error;
   final String? noconnection;
   final String? failed;
 
   NotificationStateLoaded({
-    this.dataNotification = const [],
+    this.dataNotification = const {},
     this.status = EnumStatusState.none,
     this.error,
     this.noconnection,
@@ -22,7 +22,7 @@ class NotificationStateLoaded extends NotificationState with EquatableMixin {
   });
 
   NotificationStateLoaded copyWith({
-    List<ModelNotification>? dataNotification,
+    Set<ModelNotification>? dataNotification,
     EnumStatusState? status,
     String? error,
     String? failed,
