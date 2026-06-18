@@ -10,7 +10,8 @@ import 'package:task_manager/core/services/connection_service/connection_service
 import 'package:task_manager/core/services/connection_service/connection_service_imp.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
-import 'package:task_manager/core/services/response_wrapper/response_wrapper.dart';
+import 'package:task_manager/core/services/response_wrapper/response_wrapper_local.dart';
+import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
 import 'package:task_manager/core/stream_manager/stream_manager.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/activity/data/remote/activity_remote.dart';
@@ -21,14 +22,16 @@ import 'package:task_manager/feature/shared_component/notification/data/remote/n
 import 'package:task_manager/feature/shared_component/notification/data/repository_imp/notification_repository_imp.dart';
 import 'package:task_manager/feature/shared_component/notification/domain/repository/notification_repository.dart';
 import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_bloc.dart';
-import 'package:task_manager/core/services/collector/collector_data.dart';
+import 'package:task_manager/core/services/collector/collector_data_remote.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/feature/shared_component/user/data/remote/user_remote.dart';
 import 'package:task_manager/feature/shared_component/user/data/repository_imp/user_repository_imp.dart';
 import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
 import 'package:task_manager/feature/task_detail/data/remote/task_detail_remote.dart';
+import 'package:task_manager/feature/workspace/data/local/workspace_local.dart';
 import 'package:task_manager/feature/workspace/data/remote/workspace_remote.dart';
 import 'package:task_manager/feature/workspace_detail/data/remote/workspace_detail_remote.dart';
+import 'package:task_manager/core/services/local_database/local_database.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,8 +46,14 @@ Future<void> main() async {
         RepositoryProvider(create: (context) => UserCache(user: const {})),
         RepositoryProvider(create: (context) => StreamManager()),
         RepositoryProvider(lazy: false, create: (context) => UserSession()),
-        RepositoryProvider(lazy: false, create: (context) => LocalServices()),
-        RepositoryProvider(lazy: false, create: (context) => ResponseWrapper()),
+        RepositoryProvider(
+          lazy: false,
+          create: (context) => ResponseWrapperRemote(),
+        ),
+        RepositoryProvider(
+          lazy: false,
+          create: (context) => ResponseWrapperLocal(),
+        ),
         RepositoryProvider(create: (context) => CollectorMessage()),
         RepositoryProvider<ConnectionService>(
           lazy: false,
@@ -53,11 +62,24 @@ Future<void> main() async {
         RepositoryProvider(
           lazy: false,
           create: (context) =>
-              CollectData(connection: context.read<ConnectionService>()),
+              CollectDataRemote(connection: context.read<ConnectionService>()),
+        ),
+
+        RepositoryProvider(
+          lazy: false,
+          create: (context) {
+            final wrapper = context.read<ResponseWrapperLocal>();
+            return LocalServices(
+              workspaceLocal: WorkspaceLocal(
+                localDatabase: LocalDatabase(),
+                responseWrapper: wrapper,
+              ),
+            );
+          },
         ),
         RepositoryProvider(
           create: (context) {
-            final wrapper = context.read<ResponseWrapper>();
+            final wrapper = context.read<ResponseWrapperRemote>();
             return RemoteService(
               userRemote: UserRemote(
                 responseWrapper: wrapper,
@@ -90,7 +112,7 @@ Future<void> main() async {
             remote: context.read<RemoteService>(),
             local: context.read<LocalServices>(),
             userSession: context.read<UserSession>(),
-            helper: context.read<CollectData>(),
+            helper: context.read<CollectDataRemote>(),
             messageCollector: context.read<CollectorMessage>(),
           ),
         ),
@@ -100,7 +122,7 @@ Future<void> main() async {
             remote: context.read<RemoteService>(),
             local: context.read<LocalServices>(),
             userSession: context.read<UserSession>(),
-            helper: context.read<CollectData>(),
+            helper: context.read<CollectDataRemote>(),
             messageCollector: context.read<CollectorMessage>(),
             userCache: context.read<UserCache>(),
           ),

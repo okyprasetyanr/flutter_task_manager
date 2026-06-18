@@ -3,7 +3,7 @@ import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/project_detail/data/local/project_detail_local.dart';
 import 'package:task_manager/feature/project_detail/domain/repository/project_detail_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/core/services/collector/collector_data.dart';
+import 'package:task_manager/core/services/collector/collector_data_remote.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 
@@ -11,7 +11,7 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
   final RemoteService remote;
   final ProjectDetailLocal local;
   final UserSession userSession;
-  final CollectData helper;
+  final CollectDataRemote helper;
   final CollectorMessage messageCollector;
 
   ProjectDetailRepositoryImp({
@@ -29,7 +29,7 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
         projectId: projectId,
         companyId: userSession.getCompanyId(),
       ),
-      localFunc: () async => {},
+      localFunc: ({dataToCache}) async => {},
     );
     devLog("Log ProjectDetailRepositoryImp: data: $data");
     return (data, messageCollector.getMessage(data));

@@ -4,7 +4,7 @@ import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/history_task/data/local/history_task_local.dart';
 import 'package:task_manager/feature/history_task/domain/repository/history_task_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/core/services/collector/collector_data.dart';
+import 'package:task_manager/core/services/collector/collector_data_remote.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
@@ -13,7 +13,7 @@ class HistoryTaskRepositoryImp implements HistoryTaskRepository {
   final RemoteService remote;
   final HistoryTaskLocal local;
   final UserSession userSession;
-  final CollectData helper;
+  final CollectDataRemote helper;
   final CollectorMessage messageCollector;
   final UserCache userCache;
 
@@ -34,7 +34,7 @@ class HistoryTaskRepositoryImp implements HistoryTaskRepository {
         companyId: userSession.getCompanyId(),
         workspaceId: workspaceId,
       ),
-      localFunc: () async => {},
+      localFunc: ({dataToCache}) async => {},
     );
     devLog("Log ProjectDetailRepositoryImp: data: $data");
     return (data, messageCollector.getMessage(data));

@@ -4,7 +4,7 @@ import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/activity/data/local/activity_local.dart';
 import 'package:task_manager/feature/activity/domain/repository/activity_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/core/services/collector/collector_data.dart';
+import 'package:task_manager/core/services/collector/collector_data_remote.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 
@@ -12,7 +12,7 @@ class ActivityRepositoryImp implements ActivityRepository {
   final RemoteService remote;
   final ActivityLocal local;
   final UserSession userSession;
-  final CollectData helper;
+  final CollectDataRemote helper;
   final CollectorMessage messageCollector;
   final UserCache userCache;
 
@@ -34,7 +34,7 @@ class ActivityRepositoryImp implements ActivityRepository {
         workspaceId: workspaceId,
         companyId: userSession.getCompanyId(),
       ),
-      localFunc: () async => {},
+      localFunc: ({dataToCache}) async => {},
     );
     return (data, messageCollector.getMessage(data));
   }

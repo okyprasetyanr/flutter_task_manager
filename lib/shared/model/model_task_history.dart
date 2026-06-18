@@ -10,9 +10,11 @@ class ModelHistoryTask extends Equatable {
   final String newValue;
   final String changedBy;
   final DateTime changedAt;
+  final String workspaceId;
 
   const ModelHistoryTask({
     required this.id,
+    required this.workspaceId,
     required this.taskId,
     required this.field,
     required this.oldValue,
@@ -23,6 +25,7 @@ class ModelHistoryTask extends Equatable {
 
   factory ModelHistoryTask.fromJson(Map<String, dynamic> data) {
     return ModelHistoryTask(
+      workspaceId: data[EnumHistoryTask.workspaceId.value],
       id: data[EnumHistoryTask.id.value],
       taskId: data[EnumHistoryTask.taskId.value],
       field: EnumHistoryField.fromString(data[EnumHistoryTask.field.value]),
@@ -37,6 +40,7 @@ class ModelHistoryTask extends Equatable {
 
   @override
   List<Object?> get props => [
+    workspaceId,
     id,
     taskId,
     field,

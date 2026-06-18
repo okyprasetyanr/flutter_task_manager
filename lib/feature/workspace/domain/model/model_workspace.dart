@@ -34,6 +34,19 @@ class ModelWorkspace extends Equatable {
     );
   }
 
+  factory ModelWorkspace.fromDrift(Map<String, dynamic> data) {
+    return ModelWorkspace(
+      id: data[EnumWorkspace.id.name],
+      name: data[EnumWorkspace.name.name],
+      description: data[EnumWorkspace.description.name],
+      ownerId: data[EnumWorkspace.ownerId.name],
+      createdAt: HelperDateConvert.toDateTime(
+        data[EnumWorkspace.createdAt.name],
+      ),
+      companyId: data[EnumWorkspace.companyId.name],
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       EnumWorkspace.id.value: id,

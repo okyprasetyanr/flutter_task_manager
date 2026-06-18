@@ -8,7 +8,7 @@ import 'package:task_manager/feature/activity/presentation/bloc/activity_state.d
 import 'package:task_manager/feature/activity/presentation/widget/activitty_list_activity.dart';
 import 'package:task_manager/feature/activity/presentation/widget/activity_header.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
-import 'package:task_manager/shared/navigator_content/navigator_content.dart';
+import 'package:task_manager/feature/shared_component/navigator_content/navigator_content.dart';
 import 'package:task_manager/shared/style/icon_size.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart';

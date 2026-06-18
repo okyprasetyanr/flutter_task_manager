@@ -9,7 +9,7 @@ import 'package:task_manager/feature/workspace_detail/domain/model/model_project
 import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/core/services/collector/collector_data.dart';
+import 'package:task_manager/core/services/collector/collector_data_remote.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_filter/helper_date_filter.dart';
@@ -18,7 +18,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   final RemoteService remote;
   final WorkspaceDetailLocal local;
   final UserSession userSession;
-  final CollectData helper;
+  final CollectDataRemote helper;
   final CollectorMessage messageCollector;
   final UserCache userCache;
 
@@ -45,7 +45,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
         .asyncMap((event) async {
           final data = await helper.helperCollectData(
             remoteFunc: () async => event,
-            localFunc: () async => {},
+            localFunc: ({dataToCache}) async => {},
           );
           return (data, messageCollector.getMessage(data));
         });
@@ -59,7 +59,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
         .asyncMap((event) async {
           final data = await helper.helperCollectData(
             remoteFunc: () async => event,
-            localFunc: () async => {},
+            localFunc: ({dataToCache}) async => {},
           );
           return (data, messageCollector.getMessage(data));
         });
@@ -88,7 +88,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
           createdBy: userSession.userId!,
         ).toJson(),
       ),
-      localFunc: () => {},
+      localFunc: ({dataToCache}) async => {},
     );
 
     if (data.containsKey(EnumFetchApiStatus.success)) {
@@ -106,7 +106,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
               )
               .toSet(),
         ),
-        localFunc: () => {},
+        localFunc: ({dataToCache}) async => {},
       );
     }
 
@@ -128,7 +128,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
           edited: edited.dataProject.toJson(),
         ),
       ),
-      localFunc: () => {},
+      localFunc: ({dataToCache}) async => {},
     );
 
     if (data.containsKey(EnumFetchApiStatus.success)) {
@@ -158,7 +158,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
                 )
                 .toSet(),
           ),
-          localFunc: () => {},
+          localFunc: ({dataToCache}) async => {},
         );
       }
 
@@ -168,7 +168,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
             usersToDelete.map((e) => e).toList(),
             original.dataProject.id,
           ),
-          localFunc: () => {},
+          localFunc: ({dataToCache}) async => {},
         );
       }
     }
@@ -182,7 +182,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   Future<CollectorMessage?> deleteProject(String idProject) async {
     final data = await helper.helperCollectData(
       remoteFunc: () => remote.workspaceDetailRemote.deleteProject(idProject),
-      localFunc: () => {},
+      localFunc: ({dataToCache}) async => {},
     );
     return data.containsKey(EnumFetchApiStatus.success)
         ? null

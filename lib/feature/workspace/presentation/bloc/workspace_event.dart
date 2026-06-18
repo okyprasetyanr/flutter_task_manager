@@ -33,6 +33,8 @@ class WorkspaceEventDeleteWorkspace extends WorkspaceEvent {}
 
 class WorkspaceEventWatch extends WorkspaceEvent {}
 
+class WorkspaceEventWatchMessage extends WorkspaceEvent {}
+
 class WorkspaceEventWatchMember extends WorkspaceEvent {}
 
 class WorkspaceEventSelectedData extends WorkspaceEvent {

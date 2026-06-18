@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
+
 import 'package:task_manager/core/cache/user_cache.dart';
-import 'package:task_manager/core/services/collector/collector_data.dart';
+import 'package:task_manager/core/services/collector/collector_data_remote.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
@@ -16,7 +18,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   final RemoteService remote;
   final LocalServices local;
   final UserSession userSession;
-  final CollectData helper;
+  final CollectDataRemote helperRemote;
   final CollectorMessage messageCollector;
   final StreamManager streamManager;
   final UserCache userCache;
@@ -25,7 +27,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
     required this.remote,
     required this.local,
     required this.userSession,
-    required this.helper,
+    required this.helperRemote,
     required this.messageCollector,
     required this.streamManager,
     required this.userCache,
@@ -37,22 +39,40 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   }
 
   @override
-  Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>
-  watchWorkspace() {
-    return remote.workspaceRemote
-        .watchWorkspaces(companyId: userSession.getCompanyId())
-        .asyncMap((rawMapFromRemote) async {
-          final Map<EnumFetchApiStatus, dynamic> data = await helper
-              .helperCollectData(
-                remoteFunc: () async => rawMapFromRemote,
-                localFunc: () async => {},
-              );
-          final collectorMessage = messageCollector.getMessage(data);
-          devLog(
-            "Log WorkspaceRepositoryImp: Error: ${collectorMessage.error}",
-          );
-          return (data, collectorMessage);
-        });
+  Stream<Map<String, dynamic>> watchWorkspace() {
+    final companyId = userSession.getCompanyId();
+    return local.workspaceLocal.watchLocalWorkspace(companyId);
+  }
+
+  @override
+  Stream<CollectorMessage> watchWorkspaceMessage() {
+    final companyId = userSession.getCompanyId();
+
+    return watchAndCacheRemoteWorkspace(
+      companyId,
+    ).map(messageCollector.getMessage);
+  }
+
+  Stream<Map<EnumFetchApiStatus, dynamic>> watchAndCacheRemoteWorkspace(
+    String companyId,
+  ) {
+    return remote.workspaceRemote.watchWorkspaces(companyId: companyId).asyncMap((
+      remoteEvent,
+    ) async {
+      return await helperRemote.helperCollectData(
+        remoteFunc: () async => remoteEvent,
+        localFunc: ({dataToCache}) async {
+          if (dataToCache != null) {
+            final listWorkspace = List<Map<String, dynamic>>.from(dataToCache);
+
+            devLog(
+              "Log WorkspaceLocal: saveWorkspace: listWorkspace: $listWorkspace",
+            );
+            await local.workspaceLocal.saveWorkspacesToLocal(listWorkspace);
+          }
+        },
+      );
+    });
   }
 
   @override
@@ -61,10 +81,10 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
     return remote.workspaceRemote
         .watchWorkspaceMembers(companyId: userSession.getCompanyId())
         .asyncMap((rawMapFromRemote) async {
-          final Map<EnumFetchApiStatus, dynamic> data = await helper
+          final Map<EnumFetchApiStatus, dynamic> data = await helperRemote
               .helperCollectData(
                 remoteFunc: () async => rawMapFromRemote,
-                localFunc: () async => {},
+                localFunc: ({dataToCache}) async => {},
               );
           final collectorMessage = messageCollector.getMessage(data);
           devLog("Log WorkspaceRepositoryImp: data: $data");
@@ -83,10 +103,10 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
       companyId: userSession.getCompanyId(),
       userId: userSession.getUserId(),
     );
-    final response = await helper.helperCollectData(
+    final response = await helperRemote.helperCollectData(
       remoteFunc: () async =>
           await remote.workspaceRemote.createWorkspace(data.toJson()),
-      localFunc: () async => {},
+      localFunc: ({dataToCache}) async => {},
     );
     return response.containsKey(EnumFetchApiStatus.success)
         ? null
@@ -97,10 +117,10 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   Future<CollectorMessage?> deleteWorkspace({
     required String workspaceId,
   }) async {
-    final response = await helper.helperCollectData(
+    final response = await helperRemote.helperCollectData(
       remoteFunc: () async =>
           await remote.workspaceRemote.deleteWorkspace(workspaceId),
-      localFunc: () async => {},
+      localFunc: ({dataToCache}) async => {},
     );
     return response.containsKey(EnumFetchApiStatus.success)
         ? null
@@ -116,10 +136,10 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
       original: original.toJson(),
       edited: edited.toJson(),
     );
-    final response = await helper.helperCollectData(
+    final response = await helperRemote.helperCollectData(
       remoteFunc: () async =>
           await remote.workspaceRemote.updateWorkspace(finalUpdated),
-      localFunc: () async => {},
+      localFunc: ({dataToCache}) async => {},
     );
     return response.containsKey(EnumFetchApiStatus.success)
         ? null

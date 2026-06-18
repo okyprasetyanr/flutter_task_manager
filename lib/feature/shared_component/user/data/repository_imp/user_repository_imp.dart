@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:task_manager/core/cache/user_cache.dart';
-import 'package:task_manager/core/services/collector/collector_data.dart';
+import 'package:task_manager/core/services/collector/collector_data_remote.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
@@ -16,7 +16,7 @@ class UserRepositoryImp implements UserRepository {
   final RemoteService remote;
   final LocalServices local;
   final UserSession userSession;
-  final CollectData helper;
+  final CollectDataRemote helper;
   final CollectorMessage messageCollector;
   final UserCache userCache;
   final StreamManager streamSubsc;
@@ -37,8 +37,8 @@ class UserRepositoryImp implements UserRepository {
         .watchUser(companyId: userSession.getCompanyId())
         .listen((event) async {
           final data = await helper.helperCollectData(
-            remoteFunc: () => event,
-            localFunc: () => {},
+            remoteFunc: () async => event,
+            localFunc: ({dataToCache}) async => {},
           );
           if (data.containsKey(EnumFetchApiStatus.success)) {
             userCache.setUser(

@@ -1,7 +1,7 @@
-import 'package:task_manager/core/services/response_wrapper/response_wrapper.dart';
+import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
 
 class HistoryTaskRemote {
-  final ResponseWrapper responseWrapper;
+  final ResponseWrapperRemote responseWrapper;
 
   HistoryTaskRemote({required this.responseWrapper});
 

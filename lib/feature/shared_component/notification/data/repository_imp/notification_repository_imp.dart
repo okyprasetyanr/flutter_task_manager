@@ -3,7 +3,7 @@ import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/shared_component/notification/domain/repository/notification_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/core/services/collector/collector_data.dart';
+import 'package:task_manager/core/services/collector/collector_data_remote.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/feature/shared_component/notification/domain/model/model_notification.dart';
 
@@ -11,7 +11,7 @@ class NotificationRepositoryImp implements NotificationRepository {
   final RemoteService remote;
   final LocalServices local;
   final UserSession userSession;
-  final CollectData helper;
+  final CollectDataRemote helper;
   final CollectorMessage messageCollector;
 
   NotificationRepositoryImp({
@@ -31,7 +31,7 @@ class NotificationRepositoryImp implements NotificationRepository {
           final Map<EnumFetchApiStatus, dynamic> data = await helper
               .helperCollectData(
                 remoteFunc: () async => rawMapFromRemote,
-                localFunc: () async => {},
+                localFunc: ({dataToCache}) async => {},
               );
           final collectorMessage = messageCollector.getMessage(data);
           return (data, collectorMessage);
@@ -46,7 +46,7 @@ class NotificationRepositoryImp implements NotificationRepository {
       remoteFunc: () => remote.notificationRemote.updateNotification(
         data: ModelNotification.updateIsRead(notificationId: notificationId),
       ),
-      localFunc: () => {},
+      localFunc: ({dataToCache}) async => {},
     );
     return data.containsKey(EnumFetchApiStatus.success)
         ? null

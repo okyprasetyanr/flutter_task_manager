@@ -1,10 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:task_manager/core/services/response_wrapper/response_wrapper.dart';
+import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
 import 'package:task_manager/shared/enum.dart';
 
 class WorkspaceRemote {
-  final ResponseWrapper responseWrapper;
+  final ResponseWrapperRemote responseWrapper;
   final SupabaseClient supabaseClient;
   WorkspaceRemote({
     required this.responseWrapper,

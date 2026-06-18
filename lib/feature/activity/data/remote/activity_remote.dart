@@ -1,7 +1,7 @@
-import 'package:task_manager/core/services/response_wrapper/response_wrapper.dart';
+import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
 
 class ActivityRemote {
-  final ResponseWrapper responseWrapper;
+  final ResponseWrapperRemote responseWrapper;
 
   ActivityRemote({required this.responseWrapper});
   Future<Map<String, dynamic>> getActivity({

@@ -1,13 +1,11 @@
 class ModelCompany {
-  final String companyId;
+  final String id;
   final String companyName;
   final DateTime companyJoin;
-  final String userId;
 
   ModelCompany({
-    required this.companyId,
+    required this.id,
     required this.companyName,
     required this.companyJoin,
-    required this.userId,
   });
 }

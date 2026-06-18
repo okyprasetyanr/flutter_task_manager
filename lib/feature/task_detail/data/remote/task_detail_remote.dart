@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:task_manager/core/services/response_wrapper/response_wrapper.dart';
+import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
 
 class TaskDetailRemote {
-  final ResponseWrapper responseWrapper;
+  final ResponseWrapperRemote responseWrapper;
   TaskDetailRemote({required this.responseWrapper});
 
   Future<Map<String, dynamic>> getComment({
