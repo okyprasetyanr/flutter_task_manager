@@ -3,15 +3,15 @@ import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/shared_component/notification/domain/repository/notification_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/core/services/collector/collector_data_remote.dart';
+import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/feature/shared_component/notification/domain/model/model_notification.dart';
 
 class NotificationRepositoryImp implements NotificationRepository {
-  final RemoteService remote;
+  final RemoteServices remote;
   final LocalServices local;
   final UserSession userSession;
-  final CollectDataRemote helper;
+  final CollectData helper;
   final CollectorMessage messageCollector;
 
   NotificationRepositoryImp({
@@ -29,9 +29,9 @@ class NotificationRepositoryImp implements NotificationRepository {
         .watchNotification(userId: userSession.getUserId())
         .asyncMap((rawMapFromRemote) async {
           final Map<EnumFetchApiStatus, dynamic> data = await helper
-              .helperCollectData(
+              .collectDataRemote(
                 remoteFunc: () async => rawMapFromRemote,
-                localFunc: ({dataToCache}) async => {},
+                localFunc: ({required dataToCache}) async => {},
               );
           final collectorMessage = messageCollector.getMessage(data);
           return (data, collectorMessage);
@@ -42,11 +42,11 @@ class NotificationRepositoryImp implements NotificationRepository {
   Future<CollectorMessage?> updateIsRead({
     required String notificationId,
   }) async {
-    final data = await helper.helperCollectData(
+    final data = await helper.collectDataRemote(
       remoteFunc: () => remote.notificationRemote.updateNotification(
         data: ModelNotification.updateIsRead(notificationId: notificationId),
       ),
-      localFunc: ({dataToCache}) async => {},
+      localFunc: ({required dataToCache}) async => {},
     );
     return data.containsKey(EnumFetchApiStatus.success)
         ? null

@@ -28,7 +28,7 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
     final dataSubTask = dataTask.subTask;
     final dataLabel = dataTask.label;
     final data = await repo.getComment(taskId: dataTask.id);
-    final dataUser = repo.getUser();
+    // final dataUser = repo.getUser();
     emit(
       currentState.copyWith(
         dataLabel: dataLabel,
@@ -37,7 +37,7 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
                   .map((e) => ModelComment.fromJson(e))
                   .toSet()
             : const {},
-        dataUser: dataUser,
+        // dataUser: dataUser,
         dataSubTask: dataSubTask,
         dataTask: dataTask,
         status: EnumStatusState.none,

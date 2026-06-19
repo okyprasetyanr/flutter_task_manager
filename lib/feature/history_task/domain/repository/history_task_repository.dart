@@ -6,5 +6,4 @@ abstract class HistoryTaskRepository {
   Future<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> getHistoryTask({
     required String workspaceId,
   });
-  Set<ModelUser> getUser();
 }

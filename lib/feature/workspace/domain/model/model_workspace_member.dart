@@ -26,6 +26,16 @@ class ModelWorkspaceMember extends Equatable {
     );
   }
 
+  factory ModelWorkspaceMember.fromDrift(Map<String, dynamic> data) {
+    return ModelWorkspaceMember(
+      workspaceId: data[EnumWorkspaceMember.workspaceId.name],
+      companyId: data[EnumWorkspaceMember.companyId.name],
+      id: data[EnumWorkspaceMember.id.name],
+      userId: data[EnumWorkspaceMember.userId.name],
+      role: EnumWorkspaceRoleX.fromText(data[EnumWorkspaceMember.role.name]),
+    );
+  }
+
   @override
   List<Object?> get props => [workspaceId, userId, role, companyId, id];
 }

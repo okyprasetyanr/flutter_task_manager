@@ -9,16 +9,16 @@ import 'package:task_manager/feature/workspace_detail/domain/model/model_project
 import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/core/services/collector/collector_data_remote.dart';
+import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_filter/helper_date_filter.dart';
 
 class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
-  final RemoteService remote;
+  final RemoteServices remote;
   final WorkspaceDetailLocal local;
   final UserSession userSession;
-  final CollectDataRemote helper;
+  final CollectData helper;
   final CollectorMessage messageCollector;
   final UserCache userCache;
 
@@ -32,20 +32,15 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   });
 
   @override
-  Set<ModelUser> getUser() {
-    return userCache.getUser();
-  }
-
-  @override
   Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchProject({
     required String workspaceId,
   }) {
     return remote.workspaceDetailRemote
         .watchProject(workspaceId: workspaceId)
         .asyncMap((event) async {
-          final data = await helper.helperCollectData(
+          final data = await helper.collectDataRemote(
             remoteFunc: () async => event,
-            localFunc: ({dataToCache}) async => {},
+            localFunc: ({required dataToCache}) async => {},
           );
           return (data, messageCollector.getMessage(data));
         });
@@ -57,9 +52,9 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     return remote.workspaceDetailRemote
         .watchProjectMember(workspaceId: workspaceId)
         .asyncMap((event) async {
-          final data = await helper.helperCollectData(
+          final data = await helper.collectDataRemote(
             remoteFunc: () async => event,
-            localFunc: ({dataToCache}) async => {},
+            localFunc: ({required dataToCache}) async => {},
           );
           return (data, messageCollector.getMessage(data));
         });
@@ -74,7 +69,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     required String type,
     required String workspaceId,
   }) async {
-    final data = await helper.helperCollectData(
+    final data = await helper.collectDataRemote(
       remoteFunc: () => remote.workspaceDetailRemote.createProject(
         data: ModelProject.createProject(
           name: name,
@@ -88,11 +83,11 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
           createdBy: userSession.userId!,
         ).toJson(),
       ),
-      localFunc: ({dataToCache}) async => {},
+      localFunc: ({required dataToCache}) async => {},
     );
 
     if (data.containsKey(EnumFetchApiStatus.success)) {
-      await helper.helperCollectData(
+      await helper.collectDataRemote(
         remoteFunc: () => remote.workspaceDetailRemote.createProjectMember(
           contributor
               .map(
@@ -106,7 +101,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
               )
               .toSet(),
         ),
-        localFunc: ({dataToCache}) async => {},
+        localFunc: ({required dataToCache}) async => {},
       );
     }
 
@@ -121,14 +116,14 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     required ModelProjectMerge edited,
     required String role,
   }) async {
-    final data = await helper.helperCollectData(
+    final data = await helper.collectDataRemote(
       remoteFunc: () => remote.workspaceDetailRemote.updateProject(
         ModelProject.projectGetChangedData(
           original: original.dataProject.toJson(),
           edited: edited.dataProject.toJson(),
         ),
       ),
-      localFunc: ({dataToCache}) async => {},
+      localFunc: ({required dataToCache}) async => {},
     );
 
     if (data.containsKey(EnumFetchApiStatus.success)) {
@@ -145,7 +140,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
           .map((e) => e.id)
           .toSet();
       if (usersToCreate.isNotEmpty) {
-        await helper.helperCollectData(
+        await helper.collectDataRemote(
           remoteFunc: () => remote.workspaceDetailRemote.createProjectMember(
             usersToCreate
                 .map(
@@ -158,17 +153,17 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
                 )
                 .toSet(),
           ),
-          localFunc: ({dataToCache}) async => {},
+          localFunc: ({required dataToCache}) async => {},
         );
       }
 
       if (usersToDelete.isNotEmpty) {
-        await helper.helperCollectData(
+        await helper.collectDataRemote(
           remoteFunc: () => remote.workspaceDetailRemote.deleteProjectMember(
             usersToDelete.map((e) => e).toList(),
             original.dataProject.id,
           ),
-          localFunc: ({dataToCache}) async => {},
+          localFunc: ({required dataToCache}) async => {},
         );
       }
     }
@@ -180,9 +175,9 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
 
   @override
   Future<CollectorMessage?> deleteProject(String idProject) async {
-    final data = await helper.helperCollectData(
+    final data = await helper.collectDataRemote(
       remoteFunc: () => remote.workspaceDetailRemote.deleteProject(idProject),
-      localFunc: ({dataToCache}) async => {},
+      localFunc: ({required dataToCache}) async => {},
     );
     return data.containsKey(EnumFetchApiStatus.success)
         ? null

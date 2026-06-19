@@ -10,6 +10,7 @@ import 'package:task_manager/shared/model/model_task_history.dart';
 
 class HistoryTaskBloc extends Bloc<HistoryTaskEvent, HistoryTaskState> {
   final HistoryTaskRepository repo;
+  StreamSubscription? _sub;
   HistoryTaskBloc(this.repo) : super(HistoryTaskStateInitial()) {
     on<HistoryTaskEventGetData>(_onGetData);
     on<HistoryTaskEventChangeStatus>(_onChangeStatus);
@@ -25,10 +26,10 @@ class HistoryTaskBloc extends Bloc<HistoryTaskEvent, HistoryTaskState> {
     add(HistoryTaskEventChangeStatus(status: EnumStatusState.loading));
     final dataWorkspace = event.data ?? currentState.dataWorkspace!;
     final data = await repo.getHistoryTask(workspaceId: dataWorkspace.id);
-    final dataUser = repo.getUser();
+    // final dataUser = repo.getUser();
     emit(
       currentState.copyWith(
-        dataUser: dataUser,
+        // dataUser: dataUser,
         dataHistoryTask: data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success] as List)
                   .map((e) => ModelHistoryTask.fromJson(e))

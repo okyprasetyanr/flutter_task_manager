@@ -51,7 +51,6 @@ class WorkspaceDetailBloc
       onData: (data) {
         return currentState.copyWith(
           dataWorkspace: dataWorkspace,
-          dataUser: repo.getUser(),
           dataProject: data.$1.containsKey(EnumFetchApiStatus.success)
               ? (data.$1[EnumFetchApiStatus.success] as List)
                     .map(

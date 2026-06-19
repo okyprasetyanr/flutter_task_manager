@@ -9,7 +9,7 @@ import 'package:task_manager/feature/task_detail/data/remote/task_detail_remote.
 import 'package:task_manager/feature/workspace/data/remote/workspace_remote.dart';
 import 'package:task_manager/feature/workspace_detail/data/remote/workspace_detail_remote.dart';
 
-class RemoteService {
+class RemoteServices {
   final WorkspaceRemote workspaceRemote;
   final WorkspaceDetailRemote workspaceDetailRemote;
   final LoginRemote loginRemote;
@@ -20,7 +20,7 @@ class RemoteService {
   final NotificationRemote notificationRemote;
   final UserRemote userRemote;
 
-  RemoteService({
+  RemoteServices({
     required this.workspaceRemote,
     required this.workspaceDetailRemote,
     required this.loginRemote,

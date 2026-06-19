@@ -6,6 +6,4 @@ abstract class TaskDetailRepository {
   Future<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> getComment({
     required String taskId,
   });
-
-  Set<ModelUser> getUser();
 }

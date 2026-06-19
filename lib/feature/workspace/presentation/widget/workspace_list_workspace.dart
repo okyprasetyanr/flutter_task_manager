@@ -10,6 +10,7 @@ import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state
 import 'package:task_manager/feature/workspace/presentation/widget/workspace_botshet_content.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
@@ -36,7 +37,8 @@ class WorkspaceListWorkspace extends StatelessWidget {
           current.initMember == true,
       listener: (context, state) {
         if (state is WorkspaceStateLoaded) {
-          context.read<WorkspaceBloc>().add(WorkspaceEventWatchMember());
+          devLog("Log WorkspaceListWorkspace: check");
+          context.read<WorkspaceBloc>().add(WorkspaceEventMessageMember());
         }
       },
       child:

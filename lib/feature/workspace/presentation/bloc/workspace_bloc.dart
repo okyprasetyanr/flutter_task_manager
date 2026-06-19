@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace/domain/repository/workspace_repository.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_event.dart';
@@ -15,9 +16,11 @@ import 'package:task_manager/feature/workspace/domain/model/model_workspace_memb
 class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
   final WorkspaceRepository repo;
   WorkspaceBloc(this.repo) : super(WorkspaceStateInitial()) {
+    on<WorkspaceEventWatchUser>(_onWatchUser);
     on<WorkspaceEventWatch>(_onWatch);
     on<WorkspaceEventWatchMessage>(_onWatchMessage);
     on<WorkspaceEventWatchMember>(_onWatchMember);
+    on<WorkspaceEventMessageMember>(_onMessageMember);
     on<WorkspaceEventChangeStatus>(_onChangeStatus);
     on<WorkspaceEventCreateWorkspace>(_onCreateWorkspace);
     on<WorkspaceEventSelectedData>(_onSelectedData);
@@ -25,18 +28,21 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     on<WorkspaceEventDeleteWorkspace>(_onDelete);
   }
 
-  FutureOr<void> _onChangeStatus(
-    WorkspaceEventChangeStatus event,
+  Future<void> _onWatchUser(
+    WorkspaceEventWatchUser event,
     Emitter<WorkspaceState> emit,
-  ) {
-    final currentState = state is WorkspaceStateLoaded
-        ? state as WorkspaceStateLoaded
-        : WorkspaceStateLoaded();
-    emit(
-      currentState.copyWith(
-        status: event.status,
-        selectedWorkspace: currentState.selectedWorkspace,
-      ),
+  ) async {
+    await emit.forEach<Set<ModelUser>>(
+      repo.getUser(),
+      onData: (data) {
+        final currentState = state is WorkspaceStateLoaded
+            ? state as WorkspaceStateLoaded
+            : WorkspaceStateLoaded();
+        return currentState.copyWith(
+          dataUser: data,
+          initMember: currentState.initMember ?? true,
+        );
+      },
     );
   }
 
@@ -44,18 +50,17 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     WorkspaceEventWatch event,
     Emitter<WorkspaceState> emit,
   ) async {
-    add(WorkspaceEventChangeStatus(status: EnumStatusState.loading));
-    final currentState = state is WorkspaceStateLoaded
-        ? state as WorkspaceStateLoaded
-        : WorkspaceStateLoaded();
     final company = repo.getCompanyName();
-    await emit.forEach<Map<String, dynamic>>(
+    await emit.forEach<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>(
       repo.watchWorkspace(),
       onData: (data) {
+        final currentState = state is WorkspaceStateLoaded
+            ? state as WorkspaceStateLoaded
+            : WorkspaceStateLoaded();
         devLog("Log WorkspaceBloc: data:$data");
         return currentState.copyWith(
           companyName: company,
-          dataWorkspace: (data[EnumFetchApiValue.results.name] as List)
+          dataWorkspace: (data.$1[EnumFetchApiStatus.success] as List)
               .map(
                 (e) => ModelWorkspaceMerge(
                   dataWorkspace: ModelWorkspace.fromDrift(e),
@@ -65,11 +70,15 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
                 ),
               )
               .toSet(),
-          dataUser: repo.getUser(),
-          initMember: currentState.initMember ?? true,
+          status: EnumStatusState.none,
+          error: data.$2.error,
+          failed: data.$2.failed,
         );
       },
       onError: (error, stackTrace) {
+        final currentState = state is WorkspaceStateLoaded
+            ? state as WorkspaceStateLoaded
+            : WorkspaceStateLoaded();
         devLog("Log WorkspaceBloc: onError: ${error.toString()}");
         return currentState.copyWith(error: error.toString());
       },
@@ -80,20 +89,23 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     WorkspaceEventWatchMessage event,
     Emitter<WorkspaceState> emit,
   ) async {
-    final currentState = state is WorkspaceStateLoaded
-        ? state as WorkspaceStateLoaded
-        : WorkspaceStateLoaded();
+    add(WorkspaceEventChangeStatus(status: EnumStatusState.loading));
     await emit.forEach<CollectorMessage>(
-      repo.watchWorkspaceMessage(),
+      repo.messageWorkspace(),
       onData: (data) {
+        final currentState = state is WorkspaceStateLoaded
+            ? state as WorkspaceStateLoaded
+            : WorkspaceStateLoaded();
         return currentState.copyWith(
-          status: EnumStatusState.none,
           error: data.error,
           failed: data.failed,
           noconnection: data.noconnection,
         );
       },
       onError: (error, stackTrace) {
+        final currentState = state is WorkspaceStateLoaded
+            ? state as WorkspaceStateLoaded
+            : WorkspaceStateLoaded();
         devLog("Log WorkspaceBloc: onErrorMessage: ${error.toString()}");
         return currentState.copyWith(
           status: EnumStatusState.none,
@@ -107,15 +119,14 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     WorkspaceEventWatchMember event,
     Emitter<WorkspaceState> emit,
   ) async {
-    add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
-    final currentState = state as WorkspaceStateLoaded;
     await emit.forEach(
-      repo.watchWorkspaceMember(),
+      repo.watchMember(),
       onData: (data) {
+        final currentState = state as WorkspaceStateLoaded;
         List<ModelWorkspaceMember> finalData =
             data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success] as List)
-                  .map((e) => ModelWorkspaceMember.fromJson(e))
+                  .map((e) => ModelWorkspaceMember.fromDrift(e))
                   .toList()
             : const [];
         devLog("Log WorkspaceBloc: watchMember: data: $finalData");
@@ -132,16 +143,64 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
               }).toSet(),
             );
           }).toSet(),
-          initMember: false,
           status: EnumStatusState.none,
           error: data.$2.error,
           failed: data.$2.failed,
           noconnection: data.$2.noconnection,
         );
       },
-      onError: (error, stackTrace) => currentState.copyWith(
-        status: EnumStatusState.none,
-        error: error.toString(),
+      onError: (error, stackTrace) {
+        final currentState = state as WorkspaceStateLoaded;
+        return currentState.copyWith(
+          status: EnumStatusState.none,
+          error: error.toString(),
+        );
+      },
+    );
+  }
+
+  Future<void> _onMessageMember(
+    WorkspaceEventMessageMember event,
+    Emitter<WorkspaceState> emit,
+  ) async {
+    add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
+    await emit.forEach<CollectorMessage>(
+      repo.messageMember(),
+      onData: (data) {
+        final currentState = state is WorkspaceStateLoaded
+            ? state as WorkspaceStateLoaded
+            : WorkspaceStateLoaded();
+        return currentState.copyWith(
+          initMember: false,
+          error: data.error,
+          failed: data.failed,
+          noconnection: data.noconnection,
+        );
+      },
+      onError: (error, stackTrace) {
+        final currentState = state is WorkspaceStateLoaded
+            ? state as WorkspaceStateLoaded
+            : WorkspaceStateLoaded();
+        devLog("Log WorkspaceBloc: onErrorMessage: ${error.toString()}");
+        return currentState.copyWith(
+          status: EnumStatusState.none,
+          error: error.toString(),
+        );
+      },
+    );
+  }
+
+  FutureOr<void> _onChangeStatus(
+    WorkspaceEventChangeStatus event,
+    Emitter<WorkspaceState> emit,
+  ) {
+    final currentState = state is WorkspaceStateLoaded
+        ? state as WorkspaceStateLoaded
+        : WorkspaceStateLoaded();
+    emit(
+      currentState.copyWith(
+        status: event.status,
+        selectedWorkspace: currentState.selectedWorkspace,
       ),
     );
   }

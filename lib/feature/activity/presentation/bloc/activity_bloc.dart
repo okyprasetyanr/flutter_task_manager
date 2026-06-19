@@ -10,6 +10,7 @@ import 'package:task_manager/shared/model/model_activity.dart';
 
 class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   final ActivityRepository repo;
+  StreamSubscription? _sub;
   ActivityBloc(this.repo) : super(ActivityStateInitial()) {
     on<ActivityEventGetData>(_onGetData);
     on<ActivityEventChangeStatus>(_onChangeStatus);
@@ -32,7 +33,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
                   .map((e) => ModelActivity.fromJson(e))
                   .toSet()
             : const {},
-        dataUser: repo.getUser(),
+        // dataUser: repo.getUser(),
         dataWorkspace: dataWorkspace,
         error: data.$2.error,
         failed: data.$2.failed,

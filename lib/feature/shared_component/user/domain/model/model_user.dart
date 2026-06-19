@@ -6,7 +6,7 @@ class ModelUser extends Equatable {
   final String id;
   final String name;
   final String email;
-  final String photoUrl;
+  final String? photoUrl;
   final DateTime createdAt;
   final String companyId;
 
@@ -27,6 +27,17 @@ class ModelUser extends Equatable {
       photoUrl: data[EnumUser.photoUrl.value],
       createdAt: HelperDateConvert.toDateTime(data[EnumUser.createdAt.value]),
       companyId: data[EnumUser.companyId.value],
+    );
+  }
+
+  factory ModelUser.fromDrift(Map<String, dynamic> data) {
+    return ModelUser(
+      id: data[EnumUser.id.name],
+      name: data[EnumUser.name.name],
+      email: data[EnumUser.email.name],
+      photoUrl: data[EnumUser.photoUrl.name],
+      createdAt: HelperDateConvert.toDateTime(data[EnumUser.createdAt.name]),
+      companyId: data[EnumUser.companyId.name],
     );
   }
 

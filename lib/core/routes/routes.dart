@@ -48,7 +48,7 @@ import 'package:task_manager/feature/workspace/domain/repository/workspace_repos
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_bloc.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_event.dart';
 import 'package:task_manager/feature/workspace/presentation/page/workspace_page.dart';
-import 'package:task_manager/core/services/collector/collector_data_remote.dart';
+import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
@@ -65,8 +65,8 @@ final routes = {
           streamManager: context.read<StreamManager>(),
           userRepository: context.read<UserRepository>(),
           userSession: context.read<UserSession>(),
-          helper: context.read<CollectDataRemote>(),
-          remote: context.read<RemoteService>(),
+          helper: context.read<CollectData>(),
+          remote: context.read<RemoteServices>(),
           local: LoginLocal(localService: context.read<LocalServices>()),
         ),
       ),
@@ -84,19 +84,19 @@ final routes = {
           userCache: context.read<UserCache>(),
           streamManager: context.read<StreamManager>(),
           messageCollector: context.read<CollectorMessage>(),
-          remote: context.read<RemoteService>(),
+          remote: context.read<RemoteServices>(),
           local: context.read<LocalServices>(),
           userSession: context.read<UserSession>(),
-          helperRemote: context.read<CollectDataRemote>(),
+          helper: context.read<CollectData>(),
         ),
-
         child: MultiBlocProvider(
           providers: [
             BlocProvider(
               create: (context) =>
                   WorkspaceBloc(context.read<WorkspaceRepository>())
                     ..add(WorkspaceEventWatch())
-                    ..add(WorkspaceEventWatchMessage()),
+                    ..add(WorkspaceEventWatchUser())
+                    ..add(WorkspaceEventWatchMember()),
             ),
           ],
           child: WorkspacePage(),
@@ -108,10 +108,10 @@ final routes = {
     return RepositoryProvider<WorkspaceDetailRepository>(
       create: (context) => WorkspaceDetailRepositoryImp(
         userCache: context.read<UserCache>(),
-        remote: context.read<RemoteService>(),
+        remote: context.read<RemoteServices>(),
         local: WorkspaceDetailLocal(),
         userSession: context.read<UserSession>(),
-        helper: context.read<CollectDataRemote>(),
+        helper: context.read<CollectData>(),
         messageCollector: context.read<CollectorMessage>(),
       ),
       child: BlocProvider(
@@ -128,10 +128,10 @@ final routes = {
     devLog("Log Routes: ArgumentData: ProjectDetail: $data");
     return RepositoryProvider<ProjectDetailRepository>(
       create: (context) => ProjectDetailRepositoryImp(
-        remote: context.read<RemoteService>(),
+        remote: context.read<RemoteServices>(),
         local: ProjectDetailLocal(localService: context.read<LocalServices>()),
         userSession: context.read<UserSession>(),
-        helper: context.read<CollectDataRemote>(),
+        helper: context.read<CollectData>(),
         messageCollector: context.read<CollectorMessage>(),
       ),
       child: BlocProvider(
@@ -148,10 +148,10 @@ final routes = {
     return RepositoryProvider<HistoryTaskRepository>(
       create: (context) => HistoryTaskRepositoryImp(
         userCache: context.read<UserCache>(),
-        remote: context.read<RemoteService>(),
+        remote: context.read<RemoteServices>(),
         local: HistoryTaskLocal(),
         userSession: context.read<UserSession>(),
-        helper: context.read<CollectDataRemote>(),
+        helper: context.read<CollectData>(),
         messageCollector: context.read<CollectorMessage>(),
       ),
       child: BlocProvider(
@@ -168,10 +168,10 @@ final routes = {
 
     return RepositoryProvider<TaskDetailRepository>(
       create: (context) => TaskDetailRepositoryImp(
-        remote: context.read<RemoteService>(),
+        remote: context.read<RemoteServices>(),
         local: TaskDetailLocal(),
         userSession: context.read<UserSession>(),
-        helper: context.read<CollectDataRemote>(),
+        helper: context.read<CollectData>(),
         messageCollector: context.read<CollectorMessage>(),
         userCache: context.read<UserCache>(),
       ),
@@ -189,10 +189,10 @@ final routes = {
     return RepositoryProvider<ActivityRepository>(
       create: (context) => ActivityRepositoryImp(
         userCache: context.read<UserCache>(),
-        remote: context.read<RemoteService>(),
+        remote: context.read<RemoteServices>(),
         local: ActivityLocal(),
         userSession: context.read<UserSession>(),
-        helper: context.read<CollectDataRemote>(),
+        helper: context.read<CollectData>(),
         messageCollector: context.read<CollectorMessage>(),
       ),
       child: BlocProvider(

@@ -22,8 +22,9 @@ import 'package:task_manager/feature/shared_component/notification/data/remote/n
 import 'package:task_manager/feature/shared_component/notification/data/repository_imp/notification_repository_imp.dart';
 import 'package:task_manager/feature/shared_component/notification/domain/repository/notification_repository.dart';
 import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_bloc.dart';
-import 'package:task_manager/core/services/collector/collector_data_remote.dart';
+import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
+import 'package:task_manager/feature/shared_component/user/data/local/user_local.dart';
 import 'package:task_manager/feature/shared_component/user/data/remote/user_remote.dart';
 import 'package:task_manager/feature/shared_component/user/data/repository_imp/user_repository_imp.dart';
 import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
@@ -43,7 +44,7 @@ Future<void> main() async {
   runApp(
     MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(create: (context) => UserCache(user: const {})),
+        RepositoryProvider(create: (context) => UserCache()),
         RepositoryProvider(create: (context) => StreamManager()),
         RepositoryProvider(lazy: false, create: (context) => UserSession()),
         RepositoryProvider(
@@ -62,16 +63,20 @@ Future<void> main() async {
         RepositoryProvider(
           lazy: false,
           create: (context) =>
-              CollectDataRemote(connection: context.read<ConnectionService>()),
+              CollectData(connection: context.read<ConnectionService>()),
         ),
-
+        RepositoryProvider(lazy: false, create: (context) => LocalDatabase()),
         RepositoryProvider(
           lazy: false,
           create: (context) {
             final wrapper = context.read<ResponseWrapperLocal>();
             return LocalServices(
+              userLocal: UserLocal(
+                responseWrapper: wrapper,
+                localDatabase: context.read<LocalDatabase>(),
+              ),
               workspaceLocal: WorkspaceLocal(
-                localDatabase: LocalDatabase(),
+                localDatabase: context.read<LocalDatabase>(),
                 responseWrapper: wrapper,
               ),
             );
@@ -80,7 +85,7 @@ Future<void> main() async {
         RepositoryProvider(
           create: (context) {
             final wrapper = context.read<ResponseWrapperRemote>();
-            return RemoteService(
+            return RemoteServices(
               userRemote: UserRemote(
                 responseWrapper: wrapper,
                 supabaseClient: client,
@@ -109,20 +114,20 @@ Future<void> main() async {
         ),
         RepositoryProvider<NotificationRepository>(
           create: (context) => NotificationRepositoryImp(
-            remote: context.read<RemoteService>(),
+            remote: context.read<RemoteServices>(),
             local: context.read<LocalServices>(),
             userSession: context.read<UserSession>(),
-            helper: context.read<CollectDataRemote>(),
+            helper: context.read<CollectData>(),
             messageCollector: context.read<CollectorMessage>(),
           ),
         ),
         RepositoryProvider<UserRepository>(
           create: (context) => UserRepositoryImp(
             streamSubsc: context.read<StreamManager>(),
-            remote: context.read<RemoteService>(),
+            remote: context.read<RemoteServices>(),
             local: context.read<LocalServices>(),
             userSession: context.read<UserSession>(),
-            helper: context.read<CollectDataRemote>(),
+            helper: context.read<CollectData>(),
             messageCollector: context.read<CollectorMessage>(),
             userCache: context.read<UserCache>(),
           ),

@@ -5,15 +5,15 @@ import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/task_detail/data/local/task_detail_local.dart';
 import 'package:task_manager/feature/task_detail/domain/repository/task_detail_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/core/services/collector/collector_data_remote.dart';
+import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 
 class TaskDetailRepositoryImp implements TaskDetailRepository {
-  final RemoteService remote;
+  final RemoteServices remote;
   final TaskDetailLocal local;
   final UserSession userSession;
-  final CollectDataRemote helper;
+  final CollectData helper;
   final CollectorMessage messageCollector;
   final UserCache userCache;
   TaskDetailRepositoryImp({
@@ -28,19 +28,14 @@ class TaskDetailRepositoryImp implements TaskDetailRepository {
   Future<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> getComment({
     required String taskId,
   }) async {
-    final data = await helper.helperCollectData(
+    final data = await helper.collectDataRemote(
       remoteFunc: () async => remote.taskDetailRemote.getComment(
         companyId: userSession.getCompanyId(),
         taskId: taskId,
       ),
-      localFunc: ({dataToCache}) async => {},
+      localFunc: ({required dataToCache}) async => {},
     );
 
     return (data, messageCollector.getMessage(data));
-  }
-
-  @override
-  Set<ModelUser> getUser() {
-    return userCache.getUser();
   }
 }

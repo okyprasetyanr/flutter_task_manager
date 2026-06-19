@@ -313,9 +313,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   late final GeneratedColumn<String> photoUrl = GeneratedColumn<String>(
     'photo_url',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -389,8 +389,6 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
         _photoUrlMeta,
         photoUrl.isAcceptableOrUnknown(data['photo_url']!, _photoUrlMeta),
       );
-    } else if (isInserting) {
-      context.missing(_photoUrlMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(
@@ -432,7 +430,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
       photoUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}photo_url'],
-      )!,
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -454,14 +452,14 @@ class User extends DataClass implements Insertable<User> {
   final String id;
   final String name;
   final String email;
-  final String photoUrl;
+  final String? photoUrl;
   final DateTime createdAt;
   final String companyId;
   const User({
     required this.id,
     required this.name,
     required this.email,
-    required this.photoUrl,
+    this.photoUrl,
     required this.createdAt,
     required this.companyId,
   });
@@ -471,7 +469,9 @@ class User extends DataClass implements Insertable<User> {
     map['id'] = Variable<String>(id);
     map['name'] = Variable<String>(name);
     map['email'] = Variable<String>(email);
-    map['photo_url'] = Variable<String>(photoUrl);
+    if (!nullToAbsent || photoUrl != null) {
+      map['photo_url'] = Variable<String>(photoUrl);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['company_id'] = Variable<String>(companyId);
     return map;
@@ -482,7 +482,9 @@ class User extends DataClass implements Insertable<User> {
       id: Value(id),
       name: Value(name),
       email: Value(email),
-      photoUrl: Value(photoUrl),
+      photoUrl: photoUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(photoUrl),
       createdAt: Value(createdAt),
       companyId: Value(companyId),
     );
@@ -497,7 +499,7 @@ class User extends DataClass implements Insertable<User> {
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       email: serializer.fromJson<String>(json['email']),
-      photoUrl: serializer.fromJson<String>(json['photoUrl']),
+      photoUrl: serializer.fromJson<String?>(json['photoUrl']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       companyId: serializer.fromJson<String>(json['companyId']),
     );
@@ -509,7 +511,7 @@ class User extends DataClass implements Insertable<User> {
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
       'email': serializer.toJson<String>(email),
-      'photoUrl': serializer.toJson<String>(photoUrl),
+      'photoUrl': serializer.toJson<String?>(photoUrl),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'companyId': serializer.toJson<String>(companyId),
     };
@@ -519,14 +521,14 @@ class User extends DataClass implements Insertable<User> {
     String? id,
     String? name,
     String? email,
-    String? photoUrl,
+    Value<String?> photoUrl = const Value.absent(),
     DateTime? createdAt,
     String? companyId,
   }) => User(
     id: id ?? this.id,
     name: name ?? this.name,
     email: email ?? this.email,
-    photoUrl: photoUrl ?? this.photoUrl,
+    photoUrl: photoUrl.present ? photoUrl.value : this.photoUrl,
     createdAt: createdAt ?? this.createdAt,
     companyId: companyId ?? this.companyId,
   );
@@ -573,7 +575,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<String> id;
   final Value<String> name;
   final Value<String> email;
-  final Value<String> photoUrl;
+  final Value<String?> photoUrl;
   final Value<DateTime> createdAt;
   final Value<String> companyId;
   final Value<int> rowid;
@@ -590,14 +592,13 @@ class UsersCompanion extends UpdateCompanion<User> {
     required String id,
     required String name,
     required String email,
-    required String photoUrl,
+    this.photoUrl = const Value.absent(),
     required DateTime createdAt,
     required String companyId,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
        email = Value(email),
-       photoUrl = Value(photoUrl),
        createdAt = Value(createdAt),
        companyId = Value(companyId);
   static Insertable<User> custom({
@@ -624,7 +625,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     Value<String>? id,
     Value<String>? name,
     Value<String>? email,
-    Value<String>? photoUrl,
+    Value<String?>? photoUrl,
     Value<DateTime>? createdAt,
     Value<String>? companyId,
     Value<int>? rowid,
@@ -6493,7 +6494,7 @@ typedef $$UsersTableCreateCompanionBuilder =
       required String id,
       required String name,
       required String email,
-      required String photoUrl,
+      Value<String?> photoUrl,
       required DateTime createdAt,
       required String companyId,
       Value<int> rowid,
@@ -6503,7 +6504,7 @@ typedef $$UsersTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> name,
       Value<String> email,
-      Value<String> photoUrl,
+      Value<String?> photoUrl,
       Value<DateTime> createdAt,
       Value<String> companyId,
       Value<int> rowid,
@@ -7149,7 +7150,7 @@ class $$UsersTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> email = const Value.absent(),
-                Value<String> photoUrl = const Value.absent(),
+                Value<String?> photoUrl = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<String> companyId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -7167,7 +7168,7 @@ class $$UsersTableTableManager
                 required String id,
                 required String name,
                 required String email,
-                required String photoUrl,
+                Value<String?> photoUrl = const Value.absent(),
                 required DateTime createdAt,
                 required String companyId,
                 Value<int> rowid = const Value.absent(),

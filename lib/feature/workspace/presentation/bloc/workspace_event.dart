@@ -37,6 +37,10 @@ class WorkspaceEventWatchMessage extends WorkspaceEvent {}
 
 class WorkspaceEventWatchMember extends WorkspaceEvent {}
 
+class WorkspaceEventMessageMember extends WorkspaceEvent {}
+
+class WorkspaceEventWatchUser extends WorkspaceEvent {}
+
 class WorkspaceEventSelectedData extends WorkspaceEvent {
   final ModelWorkspaceMerge data;
   WorkspaceEventSelectedData({required this.data});
