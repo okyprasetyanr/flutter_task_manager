@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:task_manager/shared/enum.dart';
+import 'package:uuid/uuid.dart';
 
 class ModelWorkspaceMember extends Equatable {
   final String workspaceId;
@@ -33,6 +34,31 @@ class ModelWorkspaceMember extends Equatable {
       id: data[EnumWorkspaceMember.id.name],
       userId: data[EnumWorkspaceMember.userId.name],
       role: EnumWorkspaceRoleX.fromText(data[EnumWorkspaceMember.role.name]),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      EnumWorkspaceMember.workspaceId.name: workspaceId,
+      EnumWorkspaceMember.companyId.name: companyId,
+      EnumWorkspaceMember.id.name: id,
+      EnumWorkspaceMember.userId.name: userId,
+      EnumWorkspaceMember.role.name: role.name,
+    };
+  }
+
+  static ModelWorkspaceMember createWorkspaceMember({
+    required String workspaceId,
+    required String companyId,
+    required String userId,
+    required EnumWorkspaceRole role,
+  }) {
+    return ModelWorkspaceMember(
+      workspaceId: workspaceId,
+      id: "PRJM${Uuid().v4().substring(0, 6)}",
+      companyId: companyId,
+      userId: userId,
+      role: role,
     );
   }
 

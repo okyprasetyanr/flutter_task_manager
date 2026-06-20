@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_bloc.dart';
+import 'package:task_manager/feature/workspace/presentation/bloc/workspace_event.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/style/text_size.dart';
@@ -9,25 +11,19 @@ import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart
 import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
 import 'package:task_manager/shared/common_widget/text_field/custom_text_field.dart';
 
-class WorkspaceBotshetContent extends StatelessWidget {
-  final TextEditingController nameController;
-  final TextEditingController descriptionController;
-  final GlobalKey<FormState> keyForm;
+class WorkspaceBotshetContent extends StatefulWidget {
   final ScrollController scrollController;
-  final bool update;
-  final dynamic Function({required String name, required String description})
-  onPressed;
-  final dynamic Function()? onDelete;
-  const WorkspaceBotshetContent({
-    super.key,
-    required this.nameController,
-    required this.descriptionController,
-    required this.keyForm,
-    required this.scrollController,
-    required this.onPressed,
-    required this.update,
-    this.onDelete,
-  });
+  const WorkspaceBotshetContent({super.key, required this.scrollController});
+
+  @override
+  State<WorkspaceBotshetContent> createState() =>
+      _WorkspaceBotshetContentState();
+}
+
+class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
+  final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final _keyForm = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -40,95 +36,121 @@ class WorkspaceBotshetContent extends StatelessWidget {
       listener: (context, state) {
         Navigator.pop(context);
       },
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Form Create Workspace", style: titleTextStyle),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Form(
-                  key: keyForm,
-                  child: ListView(
-                    controller: scrollController,
-                    children: [
-                      const SizedBox(height: 15),
-                      CustomTextField(
-                        controller: nameController,
-                        label: "Name",
-                        validator: (value) =>
-                            value!.isEmpty ? "Name required!" : null,
-                      ),
-                      const SizedBox(height: 15),
-                      CustomTextField(
-                        controller: descriptionController,
-                        label: "Description",
-                        validator: (value) =>
-                            value!.isEmpty ? "Description required!" : null,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            BlocSelector<WorkspaceBloc, WorkspaceState, EnumStatusState>(
-              selector: (state) => state is WorkspaceStateLoaded
-                  ? state.status
-                  : EnumStatusState.none,
-              builder: (context, state) => Padding(
-                padding: const EdgeInsets.all(10),
-                child: state == EnumStatusState.synchronize
-                    ? CustomLoading()
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: BlocSelector<WorkspaceBloc, WorkspaceState, ModelWorkspaceMerge?>(
+        selector: (state) =>
+            state is WorkspaceStateLoaded ? state.selectedWorkspace : null,
+        builder: (context, data) {
+          if (data != null) {
+            nameController.text = data.dataWorkspace.name;
+            descriptionController.text = data.dataWorkspace.description;
+          }
+          return Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Form Workspace", style: titleTextStyle),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Form(
+                      key: _keyForm,
+                      child: ListView(
+                        controller: widget.scrollController,
                         children: [
-                          if (onDelete != null)
-                            Expanded(
-                              child: CustomButtonIcon(
-                                icon: Icon(
-                                  Icons.delete_rounded,
-                                  color: AppPropertyColor.white,
-                                ),
-                                backgroundColor: AppPropertyColor.red,
-                                label: Text("Delete", style: lv1TextStyleWhite),
-                                padding: true,
-                                onPressed: () {
-                                  onDelete!();
-                                },
-                              ),
-                            ),
-                          Expanded(
-                            child: CustomButtonIcon(
-                              icon: Icon(
-                                Icons.check_rounded,
-                                color: AppPropertyColor.white,
-                              ),
-                              backgroundColor: AppPropertyColor.primary,
-                              label: Text(
-                                update ? "Update" : "Add",
-                                style: lv1TextStyleWhite,
-                              ),
-                              padding: true,
-                              onPressed: () {
-                                if (!keyForm.currentState!.validate()) {
-                                  return;
-                                }
-                                onPressed(
-                                  name: nameController.text,
-                                  description: descriptionController.text,
-                                );
-                              },
-                            ),
+                          const SizedBox(height: 15),
+                          CustomTextField(
+                            controller: nameController,
+                            label: "Name",
+                            validator: (value) =>
+                                value!.isEmpty ? "Name required!" : null,
+                          ),
+                          const SizedBox(height: 15),
+                          CustomTextField(
+                            controller: descriptionController,
+                            label: "Description",
+                            validator: (value) =>
+                                value!.isEmpty ? "Description required!" : null,
                           ),
                         ],
                       ),
-              ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                BlocSelector<WorkspaceBloc, WorkspaceState, EnumStatusState>(
+                  selector: (state) => state is WorkspaceStateLoaded
+                      ? state.status
+                      : EnumStatusState.none,
+                  builder: (context, state) => Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: state == EnumStatusState.synchronize
+                        ? CustomLoading()
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              if (data != null)
+                                Expanded(
+                                  child: CustomButtonIcon(
+                                    icon: Icon(
+                                      Icons.delete_rounded,
+                                      color: AppPropertyColor.white,
+                                    ),
+                                    backgroundColor: AppPropertyColor.red,
+                                    label: Text(
+                                      "Delete",
+                                      style: lv1TextStyleWhite,
+                                    ),
+                                    padding: true,
+                                    onPressed: () => context
+                                        .read<WorkspaceBloc>()
+                                        .add(WorkspaceEventDeleteWorkspace()),
+                                  ),
+                                ),
+                              Expanded(
+                                child: CustomButtonIcon(
+                                  icon: Icon(
+                                    Icons.check_rounded,
+                                    color: AppPropertyColor.white,
+                                  ),
+                                  backgroundColor: AppPropertyColor.primary,
+                                  label: Text(
+                                    data != null ? "Update" : "Add",
+                                    style: lv1TextStyleWhite,
+                                  ),
+                                  padding: true,
+                                  onPressed: () {
+                                    if (!_keyForm.currentState!.validate()) {
+                                      return;
+                                    }
+                                    data != null
+                                        ? context.read<WorkspaceBloc>().add(
+                                            WorkspaceEventUpdateWorkspace(
+                                              name: nameController.text,
+                                              description:
+                                                  descriptionController.text,
+                                              contributor: {},
+                                            ),
+                                          )
+                                        : context.read<WorkspaceBloc>().add(
+                                            WorkspaceEventCreateWorkspace(
+                                              name: nameController.text,
+                                              description:
+                                                  descriptionController.text,
+                                              contributor: {},
+                                            ),
+                                          );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

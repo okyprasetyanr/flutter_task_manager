@@ -10,11 +10,11 @@ class WorkspaceDetailStateInitial extends WorkspaceDetailState {}
 
 class WorkspaceDetailStateLoaded extends WorkspaceDetailState
     with EquatableMixin {
-  final ModelWorkspaceMerge? dataWorkspace;
+  final ModelWorkspaceMerge? workspace;
   final Set<ModelUser> dataUser;
   final Set<ModelProjectMerge> dataProject;
   final EnumStatusState status;
-  final bool initMember;
+  final bool? initMember;
   final String? failed;
   final String? error;
   final String? noconnection;
@@ -22,12 +22,12 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
 
   WorkspaceDetailStateLoaded({
     this.selectedProject,
-    this.initMember = false,
+    this.initMember,
     this.failed,
     this.error,
     this.noconnection,
     this.status = EnumStatusState.none,
-    this.dataWorkspace,
+    this.workspace,
     this.dataProject = const {},
     this.dataUser = const {},
   });
@@ -38,19 +38,19 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
     String? failed,
     String? error,
     String? noconnection,
-    ModelWorkspaceMerge? dataWorkspace,
+    ModelWorkspaceMerge? workspace,
     Set<ModelUser>? dataUser,
     Set<ModelProjectMerge>? dataProject,
     EnumStatusState? status,
     bool? initMember,
   }) {
     return WorkspaceDetailStateLoaded(
-      selectedProject: selectedProject ?? this.selectedProject,
+      selectedProject: selectedProject,
       error: error,
       failed: failed,
       noconnection: noconnection,
       initMember: initMember ?? this.initMember,
-      dataWorkspace: dataWorkspace ?? this.dataWorkspace,
+      workspace: workspace ?? this.workspace,
       dataProject: dataProject ?? this.dataProject,
       status: status ?? this.status,
       dataUser: dataUser ?? this.dataUser,
@@ -61,7 +61,7 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
   List<Object?> get props => [
     selectedProject,
     initMember,
-    dataWorkspace,
+    workspace,
     dataProject,
     dataUser,
     status,

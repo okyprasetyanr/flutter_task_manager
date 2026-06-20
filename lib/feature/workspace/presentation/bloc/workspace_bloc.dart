@@ -26,6 +26,7 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     on<WorkspaceEventSelectedData>(_onSelectedData);
     on<WorkspaceEventUpdateWorkspace>(_onUpdate);
     on<WorkspaceEventDeleteWorkspace>(_onDelete);
+    on<WorkspaceEventResetSelected>(_onResetSelected);
   }
 
   Future<void> _onWatchUser(
@@ -222,6 +223,7 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     final data = await repo.createWorkspace(
       description: event.description,
       name: event.name,
+      contributor: event.contributor.map((e) => (e.$1.id, e.$2)).toSet(),
     );
     if (data != null) {
       emit(
@@ -240,15 +242,21 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
   ) async {
     final currentState = state as WorkspaceStateLoaded;
     final original = currentState.selectedWorkspace!;
-    final edited = original.dataWorkspace.copyWith(
-      name: event.name,
-      description: event.description,
+    final edited = original.copyWith(
+      dataWorkspace: original.dataWorkspace.copyWith(
+        name: event.name,
+        description: event.description,
+      ),
+      dataWorkspaceMember: event.contributor.isEmpty
+          ? original.dataWorkspaceMember
+          : event.contributor.map((e) => e.$1).toSet(),
     );
     if (original != edited) {
       add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
       final data = await repo.updateWorkspace(
-        original: currentState.selectedWorkspace!.dataWorkspace,
+        original: currentState.selectedWorkspace!,
         edited: edited,
+        contributor: event.contributor.map((e) => (e.$1.id, e.$2)).toSet(),
       );
       if (data != null) {
         emit(
@@ -287,5 +295,12 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
         ),
       );
     }
+  }
+
+  FutureOr<void> _onResetSelected(
+    WorkspaceEventResetSelected event,
+    Emitter<WorkspaceState> emit,
+  ) {
+    emit((state as WorkspaceStateLoaded).copyWith(selectedWorkspace: null));
   }
 }

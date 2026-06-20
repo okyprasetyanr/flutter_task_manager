@@ -10,7 +10,10 @@ import 'package:task_manager/core/stream_manager/stream_manager.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_member.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace/domain/repository/workspace_repository.dart';
+import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
@@ -58,9 +61,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
             remoteFunc: () async => event,
             localFunc: ({required dataToCache}) async {
               if (dataToCache.containsKey(EnumFetchApiStatus.success)) {
-                await local.workspaceLocal.saveWorkspaces(
-                  dataToCache[EnumFetchApiStatus.success] as List,
-                );
+                await local.workspaceLocal.saveWorkspaces(dataToCache as List);
               }
             },
           );
@@ -108,21 +109,42 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   Future<CollectorMessage?> createWorkspace({
     required String name,
     required String description,
+    required Set<(String userId, EnumWorkspaceRole role)> contributor,
   }) async {
-    final data = ModelWorkspace.createWorkspace(
-      name: name,
-      description: description,
-      companyId: userSession.getCompanyId(),
-      userId: userSession.getUserId(),
-    );
-    final response = await helper.collectDataRemote(
-      remoteFunc: () async =>
-          await remote.workspaceRemote.createWorkspace(data.toJson()),
+    final data = await helper.collectDataRemote(
+      remoteFunc: () async => await remote.workspaceRemote.createWorkspace(
+        ModelWorkspace.createWorkspace(
+          name: name,
+          description: description,
+          companyId: userSession.getCompanyId(),
+          userId: userSession.getUserId(),
+        ).toJson(),
+      ),
       localFunc: ({required dataToCache}) async => {},
     );
-    return response.containsKey(EnumFetchApiStatus.success)
+
+    if (data.containsKey(EnumFetchApiStatus.success)) {
+      await helper.collectDataRemote(
+        remoteFunc: () => remote.workspaceRemote.createWorkspaceMember(
+          contributor
+              .map(
+                (e) => ModelWorkspaceMember.createWorkspaceMember(
+                  workspaceId:
+                      data[EnumFetchApiStatus.success][EnumWorkspace.id.value],
+                  userId: e.$1,
+                  role: e.$2,
+                  companyId: userSession.getCompanyId(),
+                ).toJson(),
+              )
+              .toSet(),
+        ),
+        localFunc: ({required dataToCache}) async => {},
+      );
+    }
+
+    return data.containsKey(EnumFetchApiStatus.success)
         ? null
-        : messageCollector.getMessage(response);
+        : messageCollector.getMessage(data);
   }
 
   @override
@@ -141,20 +163,68 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
 
   @override
   Future<CollectorMessage?> updateWorkspace({
-    required ModelWorkspace original,
-    required ModelWorkspace edited,
+    required ModelWorkspaceMerge original,
+    required ModelWorkspaceMerge edited,
+    required Set<(String userId, EnumWorkspaceRole role)> contributor,
   }) async {
     final finalUpdated = ModelWorkspace.workspaceGetChangedData(
-      original: original.toJson(),
-      edited: edited.toJson(),
+      original: original.dataWorkspace.toJson(),
+      edited: edited.dataWorkspace.toJson(),
     );
-    final response = await helper.collectDataRemote(
+    final data = await helper.collectDataRemote(
       remoteFunc: () async =>
           await remote.workspaceRemote.updateWorkspace(finalUpdated),
       localFunc: ({required dataToCache}) async => {},
     );
-    return response.containsKey(EnumFetchApiStatus.success)
+
+    if (data.containsKey(EnumFetchApiStatus.success)) {
+      final originalIds = original.dataWorkspaceMember.map((e) => e.id).toSet();
+      final editedIds = edited.dataWorkspaceMember.map((e) => e.id).toSet();
+
+      final Set<String> usersToCreate = edited.dataWorkspaceMember
+          .where((user) => !originalIds.contains(user.id))
+          .map((e) => e.id)
+          .toSet();
+
+      final Set<String> usersToDelete = original.dataWorkspaceMember
+          .where((user) => !editedIds.contains(user.id))
+          .map((e) => e.id)
+          .toSet();
+
+      if (usersToCreate.isNotEmpty) {
+        await helper.collectDataRemote(
+          remoteFunc: () => remote.workspaceDetailRemote.createProjectMember(
+            usersToCreate
+                .map(
+                  (e) => ModelWorkspaceMember.createWorkspaceMember(
+                    workspaceId:
+                        data[EnumFetchApiStatus.success][EnumProject.id.value],
+                    companyId: userSession.getCompanyId(),
+                    userId: e,
+                    role: contributor
+                        .firstWhere((element) => element.$1 == e)
+                        .$2,
+                  ).toJson(),
+                )
+                .toSet(),
+          ),
+          localFunc: ({required dataToCache}) async => {},
+        );
+      }
+
+      if (usersToDelete.isNotEmpty) {
+        await helper.collectDataRemote(
+          remoteFunc: () => remote.workspaceRemote.deleteWorkspaceMember(
+            userId: usersToDelete.map((e) => e).toList(),
+            workspaceId: original.dataWorkspace.id,
+          ),
+          localFunc: ({required dataToCache}) async => {},
+        );
+      }
+    }
+
+    return data.containsKey(EnumFetchApiStatus.success)
         ? null
-        : messageCollector.getMessage(response);
+        : messageCollector.getMessage(data);
   }
 }

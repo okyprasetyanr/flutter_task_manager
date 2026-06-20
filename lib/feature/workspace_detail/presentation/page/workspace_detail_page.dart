@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/app_properties/app_properties.dart';
 import 'package:task_manager/base_layout/base_layout.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
+import 'package:task_manager/feature/shared_component/widget/floating_button_add/floating_button_add.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_botshet_content.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_header.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_list_project.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
@@ -54,6 +56,10 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
         ),
         WorkspaceDetailHeader(),
         Expanded(child: WorkspaceDetailListProject()),
+        FloatingButtonAdd<WorkspaceDetailBloc>(
+          content: (scrollController) =>
+              WorkspaceDetailBotshetContent(scrollController: scrollController),
+        ),
       ],
     );
   }
@@ -66,7 +72,7 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
     >(
       selector: (state) {
         return state is WorkspaceDetailStateLoaded
-            ? (state.dataWorkspace, state.dataUser)
+            ? (state.workspace, state.dataUser)
             : (null, const {});
       },
       builder: (context, state) {

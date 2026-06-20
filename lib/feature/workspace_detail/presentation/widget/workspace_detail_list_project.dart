@@ -7,8 +7,10 @@ import 'package:task_manager/feature/workspace_detail/domain/model/model_project
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_event.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_botshet_content.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
+import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
@@ -24,12 +26,12 @@ class WorkspaceDetailListProject extends StatelessWidget {
       listenWhen: (previous, current) =>
           previous is WorkspaceDetailStateLoaded &&
           current is WorkspaceDetailStateLoaded &&
-          previous.initMember == false &&
+          previous.initMember == null &&
           current.initMember == true,
       listener: (context, state) {
         if (state is WorkspaceDetailStateLoaded) {
           context.read<WorkspaceDetailBloc>().add(
-            WorkspaceDetailEventWatchMember(),
+            WorkspaceDetailEventWatchMessageMember(),
           );
         }
       },
@@ -96,6 +98,23 @@ class WorkspaceDetailListProject extends StatelessWidget {
                       replace: false,
                       arguments: {'dataTransfered': data},
                     ).navigate(),
+                  },
+                  onEdit: (data) {
+                    final bloc = context.read<WorkspaceDetailBloc>();
+                    bloc.add(WorkspaceDetailEventSelectedProject(data: data));
+                    return customBottomSheet(
+                      context: context,
+                      resetItemForm: () =>
+                          bloc.add(WorkspaceDetailEventResetSelected()),
+                      content: (scrollController) {
+                        return BlocProvider.value(
+                          value: bloc,
+                          child: WorkspaceDetailBotshetContent(
+                            scrollController: scrollController,
+                          ),
+                        );
+                      },
+                    );
                   },
                 ),
           ),

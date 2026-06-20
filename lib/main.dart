@@ -31,6 +31,7 @@ import 'package:task_manager/feature/shared_component/user/domain/repository/use
 import 'package:task_manager/feature/task_detail/data/remote/task_detail_remote.dart';
 import 'package:task_manager/feature/workspace/data/local/workspace_local.dart';
 import 'package:task_manager/feature/workspace/data/remote/workspace_remote.dart';
+import 'package:task_manager/feature/workspace_detail/data/local/workspace_detail_local.dart';
 import 'package:task_manager/feature/workspace_detail/data/remote/workspace_detail_remote.dart';
 import 'package:task_manager/core/services/local_database/local_database.dart';
 
@@ -71,6 +72,10 @@ Future<void> main() async {
           create: (context) {
             final wrapper = context.read<ResponseWrapperLocal>();
             return LocalServices(
+              workspaceDetailLocal: WorkspaceDetailLocal(
+                localDatabase: context.read<LocalDatabase>(),
+                responseWrapper: context.read<ResponseWrapperLocal>(),
+              ),
               userLocal: UserLocal(
                 responseWrapper: wrapper,
                 localDatabase: context.read<LocalDatabase>(),

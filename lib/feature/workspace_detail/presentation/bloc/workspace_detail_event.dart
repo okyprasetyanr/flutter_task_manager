@@ -13,13 +13,28 @@ class WorkspaceDetailEventWatch extends WorkspaceDetailEvent {
   WorkspaceDetailEventWatch({required this.data});
 }
 
+class WorkspaceDetailEventWatchMessage extends WorkspaceDetailEvent {
+  final String workspaceId;
+
+  WorkspaceDetailEventWatchMessage({required this.workspaceId});
+}
+
+class WorkspaceDetailEventWatchMember extends WorkspaceDetailEvent {
+  final String workspaceId;
+  WorkspaceDetailEventWatchMember({required this.workspaceId});
+}
+
+class WorkspaceDetailEventResetSelected extends WorkspaceDetailEvent {}
+
+class WorkspaceDetailEventWatchMessageMember extends WorkspaceDetailEvent {}
+
+class WorkspaceDetailEventWatchUser extends WorkspaceDetailEvent {}
+
 class WorkspaceDetailEventChangeStatus extends WorkspaceDetailEvent {
   final EnumStatusState status;
 
   WorkspaceDetailEventChangeStatus({required this.status});
 }
-
-class WorkspaceDetailEventWatchMember extends WorkspaceDetailEvent {}
 
 class WorkspaceDetailEventCreateProject extends WorkspaceDetailEvent {
   final String name;
@@ -44,7 +59,7 @@ class WorkspaceDetailEventUpdateProject extends WorkspaceDetailEvent {
   final DateTime start;
   final DateTime end;
   final DateTime createdAt;
-  final Set<ModelUser> contributor;
+  final Set<(ModelUser, String)> contributor;
   final String type;
   final EnumProjectStatus status;
 
@@ -65,8 +80,8 @@ class WorkspaceDetailEventDeleteProject extends WorkspaceDetailEvent {
   WorkspaceDetailEventDeleteProject({required this.idProject});
 }
 
-class WorkspaceDEtailEventSelectedProject extends WorkspaceDetailEvent {
+class WorkspaceDetailEventSelectedProject extends WorkspaceDetailEvent {
   final ModelProjectMerge data;
 
-  WorkspaceDEtailEventSelectedProject({required this.data});
+  WorkspaceDetailEventSelectedProject({required this.data});
 }

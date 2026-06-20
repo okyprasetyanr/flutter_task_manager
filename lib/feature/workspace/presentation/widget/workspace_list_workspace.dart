@@ -17,15 +17,7 @@ import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
 import 'package:task_manager/shared/common_widget/text/custom_text_empty.dart';
 
 class WorkspaceListWorkspace extends StatelessWidget {
-  final TextEditingController nameController;
-  final TextEditingController descriptionController;
-  final GlobalKey<FormState> keyForm;
-  const WorkspaceListWorkspace({
-    super.key,
-    required this.nameController,
-    required this.descriptionController,
-    required this.keyForm,
-  });
+  const WorkspaceListWorkspace({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -89,34 +81,16 @@ class WorkspaceListWorkspace extends StatelessWidget {
                   return customBottomSheet(
                     context: context,
                     resetItemForm: () {
-                      nameController.clear();
-                      descriptionController.clear();
+                      context.read<WorkspaceBloc>().add(
+                        WorkspaceEventResetSelected(),
+                      );
                     },
                     content: (scrollController) {
                       final bloc = context.read<WorkspaceBloc>();
-                      nameController.text = data.dataWorkspace.name;
-                      descriptionController.text =
-                          data.dataWorkspace.description;
                       return BlocProvider.value(
                         value: bloc,
                         child: WorkspaceBotshetContent(
-                          nameController: nameController,
-                          descriptionController: descriptionController,
-                          keyForm: keyForm,
                           scrollController: scrollController,
-                          update: true,
-                          onPressed: ({required description, required name}) =>
-                              {
-                                context.read<WorkspaceBloc>().add(
-                                  WorkspaceEventUpdateWorkspace(
-                                    name: name,
-                                    description: description,
-                                  ),
-                                ),
-                              },
-                          onDelete: () => context.read<WorkspaceBloc>().add(
-                            WorkspaceEventDeleteWorkspace(),
-                          ),
                         ),
                       );
                     },

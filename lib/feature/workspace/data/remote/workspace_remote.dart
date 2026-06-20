@@ -42,6 +42,18 @@ class WorkspaceRemote {
     );
   }
 
+  Future<Map<String, dynamic>> createWorkspaceMember(
+    Set<Map<String, dynamic>> data,
+  ) async {
+    return await responseWrapper.wrap(
+      getData: () async => supabaseClient
+          .from(EnumTable.workspaceMembers.value)
+          .insert(data)
+          .select()
+          .single(),
+    );
+  }
+
   Future<Map<String, dynamic>> updateWorkspace(
     Map<String, dynamic> data,
   ) async {
@@ -61,6 +73,21 @@ class WorkspaceRemote {
           .from(EnumTable.workspaces.value)
           .delete()
           .eq(EnumWorkspace.id.value, workspaceId)
+          .select()
+          .maybeSingle(),
+    );
+  }
+
+  Future<Map<String, dynamic>> deleteWorkspaceMember({
+    required List<String> userId,
+    required String workspaceId,
+  }) async {
+    return await responseWrapper.wrap(
+      getData: () async => supabaseClient
+          .from(EnumTable.workspaceMembers.value)
+          .delete()
+          .eq(EnumWorkspaceMember.workspaceId.value, workspaceId)
+          .inFilter(EnumWorkspaceMember.userId.value, userId)
           .select()
           .maybeSingle(),
     );

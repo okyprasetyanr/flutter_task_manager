@@ -32,7 +32,6 @@ import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_b
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_event.dart';
 import 'package:task_manager/feature/task_detail/presentation/page/task_detail_page.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
-import 'package:task_manager/feature/workspace_detail/data/local/workspace_detail_local.dart';
 import 'package:task_manager/feature/workspace_detail/data/repository_imp/workspace_detail_repository_imp.dart';
 import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
@@ -109,7 +108,7 @@ final routes = {
       create: (context) => WorkspaceDetailRepositoryImp(
         userCache: context.read<UserCache>(),
         remote: context.read<RemoteServices>(),
-        local: WorkspaceDetailLocal(),
+        local: context.read<LocalServices>(),
         userSession: context.read<UserSession>(),
         helper: context.read<CollectData>(),
         messageCollector: context.read<CollectorMessage>(),
@@ -117,7 +116,17 @@ final routes = {
       child: BlocProvider(
         create: (context) =>
             WorkspaceDetailBloc(context.read<WorkspaceDetailRepository>())
-              ..add(WorkspaceDetailEventWatch(data: data)),
+              ..add(WorkspaceDetailEventWatch(data: data))
+              ..add(
+                WorkspaceDetailEventWatchMember(
+                  workspaceId: data.dataWorkspace.id,
+                ),
+              )
+              ..add(
+                WorkspaceDetailEventWatchMessage(
+                  workspaceId: data.dataWorkspace.id,
+                ),
+              ),
         child: WorkspaceDetailPage(),
       ),
     );

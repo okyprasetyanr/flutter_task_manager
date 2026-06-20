@@ -41,7 +41,7 @@ class ModelWorkspace extends Equatable {
       description: data[EnumWorkspace.description.name],
       ownerId: data[EnumWorkspace.ownerId.name],
       createdAt: HelperDateConvert.toDateTime(
-        data[EnumWorkspace.createdAt.name],
+        DateTime.fromMillisecondsSinceEpoch(data[EnumWorkspace.createdAt.name]),
       ),
       companyId: data[EnumWorkspace.companyId.name],
     );

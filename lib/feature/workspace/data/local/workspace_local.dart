@@ -2,6 +2,7 @@
 
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_local.dart';
 import 'package:task_manager/core/services/local_database/local_database.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_member.dart';
 
 class WorkspaceLocal {
@@ -12,7 +13,7 @@ class WorkspaceLocal {
 
   Future<void> saveWorkspaces(List<dynamic> remoteResults) async {
     for (final json in remoteResults) {
-      final model = Workspace.fromJson(json);
+      final model = ModelWorkspace.fromJson(json);
 
       await localDatabase
           .into(localDatabase.workspaces)
@@ -58,8 +59,8 @@ class WorkspaceLocal {
 
     return responseWrapper.wrapStream(
       getStream: () {
-        return query.watch().map((List<Workspace> rows) {
-          return rows.map((row) => row.toJson()).toList();
+        return query.watch().map((List<Workspace> event) {
+          return event.map((row) => row.toJson()).toList();
         });
       },
     );
@@ -71,8 +72,8 @@ class WorkspaceLocal {
 
     return responseWrapper.wrapStream(
       getStream: () {
-        return query.watch().map((List<WorkspaceMember> rows) {
-          return rows.map((row) => row.toJson()).toList();
+        return query.watch().map((List<WorkspaceMember> event) {
+          return event.map((row) => row.toJson()).toList();
         });
       },
     );

@@ -45,6 +45,27 @@ class ModelProject extends Equatable {
     );
   }
 
+  factory ModelProject.fromDrift(Map<String, dynamic> data) {
+    return ModelProject(
+      createdAt: HelperDateConvert.toDateTime(
+        DateTime.fromMillisecondsSinceEpoch(data[EnumProject.createdAt.name]),
+      ),
+      workspaceId: data[EnumProject.workspaceId.name],
+      id: data[EnumProject.id.name],
+      name: data[EnumProject.name.name],
+      type: data[EnumProject.type.name],
+      status: EnumProjectStatusX.fromText(data[EnumProject.status.name]),
+      createdBy: data[EnumProject.createdBy.name],
+      totalContribut: data[EnumProject.totalContribut.name],
+      start: HelperDateConvert.toDateTime(
+        DateTime.fromMillisecondsSinceEpoch(data[EnumProject.start.name]),
+      ),
+      end: HelperDateConvert.toDateTime(
+        DateTime.fromMillisecondsSinceEpoch(data[EnumProject.end.name]),
+      ),
+    );
+  }
+
   ModelProject copyWith({
     String? id,
     String? name,

@@ -27,6 +27,16 @@ class ModelProjectMember extends Equatable {
     );
   }
 
+  factory ModelProjectMember.fromDrift(Map<String, dynamic> data) {
+    return ModelProjectMember(
+      id: data[EnumProjectMember.id.name],
+      workspaceId: data[EnumProjectMember.workspaceId.name],
+      projectId: data[EnumProjectMember.projectId.name],
+      userId: data[EnumProjectMember.userId.name],
+      role: data[EnumProjectMember.role.name],
+    );
+  }
+
   ModelProjectMember copyWith({
     String? projectId,
     String? workspaceId,
