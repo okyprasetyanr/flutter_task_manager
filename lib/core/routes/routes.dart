@@ -94,8 +94,7 @@ final routes = {
               create: (context) =>
                   WorkspaceBloc(context.read<WorkspaceRepository>())
                     ..add(WorkspaceEventWatch())
-                    ..add(WorkspaceEventWatchUser())
-                    ..add(WorkspaceEventWatchMember()),
+                    ..add(WorkspaceEventWatchUser()),
             ),
           ],
           child: WorkspacePage(),
@@ -116,17 +115,7 @@ final routes = {
       child: BlocProvider(
         create: (context) =>
             WorkspaceDetailBloc(context.read<WorkspaceDetailRepository>())
-              ..add(WorkspaceDetailEventWatch(data: data))
-              ..add(
-                WorkspaceDetailEventWatchMember(
-                  workspaceId: data.dataWorkspace.id,
-                ),
-              )
-              ..add(
-                WorkspaceDetailEventWatchMessage(
-                  workspaceId: data.dataWorkspace.id,
-                ),
-              ),
+              ..add(WorkspaceDetailEventWatch(data: data)),
         child: WorkspaceDetailPage(),
       ),
     );

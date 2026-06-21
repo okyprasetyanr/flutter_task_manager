@@ -31,7 +31,7 @@ class WorkspaceDetailListProject extends StatelessWidget {
       listener: (context, state) {
         if (state is WorkspaceDetailStateLoaded) {
           context.read<WorkspaceDetailBloc>().add(
-            WorkspaceDetailEventWatchMessageMember(),
+            WorkspaceDetailEventWatchMember(),
           );
         }
       },

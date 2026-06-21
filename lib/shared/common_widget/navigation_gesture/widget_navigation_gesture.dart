@@ -145,7 +145,7 @@ class _NavigationGestureState extends State<NavigationGesture> {
                 padding: const EdgeInsets.all(10),
                 child: Text(text, style: lv1TextStyleWhite),
               ),
-              Spacer(),
+              const Spacer(),
               if (widget.currentPage == toRoute)
                 Container(
                   margin: EdgeInsets.only(right: 10),

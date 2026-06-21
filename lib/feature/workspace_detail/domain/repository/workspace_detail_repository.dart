@@ -7,12 +7,14 @@ abstract class WorkspaceDetailRepository {
   Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchProject({
     required String workspaceId,
   });
-  Stream<CollectorMessage> watchMessage({required String workspaceId});
+  Future<void> initProjectRealtime({required String workspaceId});
   Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchMember({
     required String workspaceId,
   });
-  Stream<CollectorMessage> watchMessageMember({required String workspaceId});
+  Future<void> initMemberRealtime({required String workspaceId});
   Stream<Set<ModelUser>> watchUser();
+
+  void disposeWorkspaceRealtime();
 
   Future<CollectorMessage?> updateProject({
     required ModelProjectMerge original,

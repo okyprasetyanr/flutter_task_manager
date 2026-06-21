@@ -18,6 +18,7 @@ import 'package:task_manager/feature/activity/data/remote/activity_remote.dart';
 import 'package:task_manager/feature/history_task/data/remote/history_task_remote.dart';
 import 'package:task_manager/feature/login/data/remote/login_remote.dart';
 import 'package:task_manager/feature/project_detail/data/remote/project_detail_remote.dart';
+import 'package:task_manager/feature/shared_component/helper/sync_table.dart';
 import 'package:task_manager/feature/shared_component/notification/data/remote/notification_remote.dart';
 import 'package:task_manager/feature/shared_component/notification/data/repository_imp/notification_repository_imp.dart';
 import 'package:task_manager/feature/shared_component/notification/domain/repository/notification_repository.dart';
@@ -68,11 +69,16 @@ Future<void> main() async {
         ),
         RepositoryProvider(lazy: false, create: (context) => LocalDatabase()),
         RepositoryProvider(
+          create: (context) =>
+              SyncTable(localDatabase: context.read<LocalDatabase>()),
+        ),
+        RepositoryProvider(
           lazy: false,
           create: (context) {
             final wrapper = context.read<ResponseWrapperLocal>();
             return LocalServices(
               workspaceDetailLocal: WorkspaceDetailLocal(
+                syncTable: context.read<SyncTable>(),
                 localDatabase: context.read<LocalDatabase>(),
                 responseWrapper: context.read<ResponseWrapperLocal>(),
               ),
@@ -81,6 +87,7 @@ Future<void> main() async {
                 localDatabase: context.read<LocalDatabase>(),
               ),
               workspaceLocal: WorkspaceLocal(
+                syncTable: context.read<SyncTable>(),
                 localDatabase: context.read<LocalDatabase>(),
                 responseWrapper: wrapper,
               ),

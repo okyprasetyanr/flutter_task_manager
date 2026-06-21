@@ -2,6 +2,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
 import 'package:task_manager/shared/enum.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class WorkspaceRemote {
   final ResponseWrapperRemote responseWrapper;
@@ -28,6 +29,38 @@ class WorkspaceRemote {
           .stream(primaryKey: [EnumWorkspaceMember.id.value])
           .eq(EnumWorkspaceMember.companyId.value, companyId),
     );
+  }
+
+  Future<List<Map<String, dynamic>>> getAllWorkspaces({
+    required String companyId,
+  }) async {
+    try {
+      final response = await supabaseClient
+          .from(EnumTable.workspaces.value)
+          .select()
+          .eq(EnumWorkspace.companyId.value, companyId);
+
+      return List<Map<String, dynamic>>.from(response);
+    } catch (e) {
+      devLog("Log WorkspaceRemote: Error: $e");
+      rethrow;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getAllMembers({
+    required String companyId,
+  }) async {
+    try {
+      final response = await supabaseClient
+          .from(EnumTable.workspaceMembers.value)
+          .select()
+          .eq(EnumWorkspaceMember.companyId.value, companyId);
+
+      return List<Map<String, dynamic>>.from(response);
+    } catch (e) {
+      devLog("Log WorkspaceRemote: Error: $e");
+      rethrow;
+    }
   }
 
   Future<Map<String, dynamic>> createWorkspace(
@@ -90,6 +123,26 @@ class WorkspaceRemote {
           .inFilter(EnumWorkspaceMember.userId.value, userId)
           .select()
           .maybeSingle(),
+    );
+  }
+
+  void removeWorkspaceChannel(RealtimeChannel workspaceChannel) {
+    supabaseClient.removeChannel(workspaceChannel);
+  }
+
+  void removeMemberChannel(RealtimeChannel memberChannel) {
+    supabaseClient.removeChannel(memberChannel);
+  }
+
+  RealtimeChannel buildWorkspaceChannel(String companyId) {
+    return supabaseClient.channel(
+      'public:${EnumTable.workspaces.value}:$companyId',
+    );
+  }
+
+  RealtimeChannel buildMemberChannel(String companyId) {
+    return supabaseClient.channel(
+      'public:${EnumTable.workspaceMembers.value}:$companyId',
     );
   }
 }

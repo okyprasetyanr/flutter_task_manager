@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'package:task_manager/core/cache/user_cache.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
@@ -36,6 +38,9 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
     required this.userCache,
   });
 
+  RealtimeChannel? _workspaceChannel;
+  RealtimeChannel? _memberChannel;
+
   @override
   String getCompanyName() {
     return userSession.getCompanyName();
@@ -53,21 +58,127 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   }
 
   @override
-  Stream<CollectorMessage> messageWorkspace() {
-    return remote.workspaceRemote
-        .watchWorkspaces(companyId: userSession.getCompanyId())
-        .asyncMap((event) async {
-          final data = await helper.collectDataRemote(
-            remoteFunc: () async => event,
-            localFunc: ({required dataToCache}) async {
-              if (dataToCache.containsKey(EnumFetchApiStatus.success)) {
-                await local.workspaceLocal.saveWorkspaces(dataToCache as List);
-              }
-            },
-          );
+  Future<void> initWorkspaceRealtime() async {
+    final companyId = userSession.getCompanyId();
 
-          return messageCollector.getMessage(data);
+    try {
+      final List<Map<String, dynamic>> rawRemoteData = await remote
+          .workspaceRemote
+          .getAllWorkspaces(companyId: companyId);
+      await local.workspaceLocal.syncWorkspace(
+        remoteResults: rawRemoteData,
+        init: true,
+      );
+    } catch (e) {
+      devLog("Log WorkspaceRepositoryImp: error: $e");
+    }
+
+    if (_workspaceChannel != null) {
+      remote.workspaceRemote.removeWorkspaceChannel(_workspaceChannel!);
+    }
+    _workspaceChannel = remote.workspaceRemote.buildWorkspaceChannel(companyId);
+
+    _workspaceChannel!
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: EnumTable.workspaces.value,
+          filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq,
+            column: EnumWorkspace.companyId.value,
+            value: companyId,
+          ),
+          callback: (PostgresChangePayload payload) async {
+            try {
+              if (payload.eventType == PostgresChangeEvent.delete) {
+                final deleteId = payload.oldRecord['id'];
+
+                if (deleteId != null) {
+                  await local.workspaceLocal.deleteWorkspace(
+                    deleteId.toString(),
+                  );
+                }
+              } else {
+                final data = payload.newRecord;
+                await local.workspaceLocal.syncWorkspace(remoteResults: [data]);
+              }
+            } catch (e) {
+              devLog("Log WorkspaceRepositoryImp: error: $e");
+            }
+          },
+        )
+        .subscribe((state, error) {
+          if (error != null) {
+            devLog("Log WorkspaceRepositoryImp: error Supabase: $error");
+          }
         });
+  }
+
+  @override
+  Future<void> initMemberRealtime() async {
+    final companyId = userSession.getCompanyId();
+
+    try {
+      final List<Map<String, dynamic>> rawRemoteData = await remote
+          .workspaceRemote
+          .getAllMembers(companyId: companyId);
+      await local.workspaceLocal.syncMember(
+        remoteResults: rawRemoteData,
+        init: true,
+      );
+    } catch (e) {
+      devLog("Log WorkspaceRepositoryImp: error: $e");
+    }
+
+    if (_memberChannel != null) {
+      remote.workspaceRemote.removeMemberChannel(_memberChannel!);
+    }
+    _memberChannel = remote.workspaceRemote.buildMemberChannel(companyId);
+
+    _memberChannel!
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: EnumTable.workspaceMembers.value,
+          filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq,
+            column: EnumWorkspace.companyId.value,
+            value: companyId,
+          ),
+          callback: (PostgresChangePayload payload) async {
+            try {
+              if (payload.eventType == PostgresChangeEvent.delete) {
+                final deleteId = payload.oldRecord['id'];
+
+                if (deleteId != null) {
+                  await local.workspaceLocal.deleteMember(deleteId.toString());
+                }
+              } else {
+                final data = payload.newRecord;
+                await local.workspaceLocal.syncMember(remoteResults: [data]);
+              }
+            } catch (e) {
+              devLog("Log WorkspaceRepositoryImp: error: $e");
+            }
+          },
+        )
+        .subscribe((state, error) {
+          if (error != null) {
+            devLog("Log WorkspaceRepositoryImp: error Supabase: $error");
+          }
+        });
+  }
+
+  @override
+  void disposeWorkspaceRealtime() {
+    if (_workspaceChannel != null) {
+      remote.workspaceRemote.removeWorkspaceChannel(_workspaceChannel!);
+      _workspaceChannel = null;
+    }
+    if (_memberChannel != null) {
+      remote.workspaceRemote.removeMemberChannel(_memberChannel!);
+      _memberChannel = null;
+    }
   }
 
   @override
@@ -79,24 +190,6 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
           final collectorMessage = messageCollector.getMessage(data);
           devLog("Log WorkspaceRepositoryImp: data: $data");
           return (data, collectorMessage);
-        });
-  }
-
-  @override
-  Stream<CollectorMessage> messageMember() {
-    return remote.workspaceRemote
-        .watchMembers(companyId: userSession.getCompanyId())
-        .asyncMap((event) async {
-          final data = await helper.collectDataRemote(
-            remoteFunc: () async => event,
-            localFunc: ({required dataToCache}) async {
-              devLog(
-                "Log WorkspaceRepositoryImp: watchWorkspaceMember: ${dataToCache.toString()}",
-              );
-              await local.workspaceLocal.saveMember(dataToCache as List);
-            },
-          );
-          return messageCollector.getMessage(data);
         });
   }
 
@@ -141,7 +234,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
         localFunc: ({required dataToCache}) async => {},
       );
     }
-
+    devLog("Log WorkspaceRepositoryImp: createWorkspace: $data");
     return data.containsKey(EnumFetchApiStatus.success)
         ? null
         : messageCollector.getMessage(data);
@@ -227,4 +320,43 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
         ? null
         : messageCollector.getMessage(data);
   }
+
+  // @override
+  // Stream<CollectorMessage> watchMessage() {
+  //   return remote.workspaceRemote
+  //       .watchWorkspaces(companyId: userSession.getCompanyId())
+  //       .asyncMap((event) async {
+  //         final data = await helper.collectDataRemote(
+  //           remoteFunc: () async => event,
+  //           localFunc: ({required dataToCache}) async {
+  //             devLog(
+  //               "Log WorkspaceRepositoryImp: messageWorkspace: data: ${dataToCache.toString()}",
+  //             );
+
+  //             await local.workspaceLocal.syncWorkspace(
+  //               remoteResults: [dataToCache],
+  //             );
+  //           },
+  //         );
+  //         return messageCollector.getMessage(data);
+  //       });
+  // }
+
+  // @override
+  // Stream<CollectorMessage> watchMessageMember() {
+  //   return remote.workspaceRemote
+  //       .watchMembers(companyId: userSession.getCompanyId())
+  //       .asyncMap((event) async {
+  //         final data = await helper.collectDataRemote(
+  //           remoteFunc: () async => event,
+  //           localFunc: ({required dataToCache}) async {
+  //             devLog(
+  //               "Log WorkspaceRepositoryImp: watchWorkspaceMember: ${dataToCache.toString()}",
+  //             );
+  //             await local.workspaceLocal.syncMember(dataToCache);
+  //           },
+  //         );
+  //         return messageCollector.getMessage(data);
+  //       });
+  // }
 }

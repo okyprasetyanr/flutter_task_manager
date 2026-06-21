@@ -6,10 +6,12 @@ import 'package:task_manager/core/services/collector/collector_message.dart';
 
 abstract class WorkspaceRepository {
   Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchWorkspace();
-  Stream<CollectorMessage> messageWorkspace();
+  // Stream<CollectorMessage> watchMessage();
+  Future<void> initWorkspaceRealtime();
   Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchMember();
-  Stream<CollectorMessage> messageMember();
-
+  // Stream<CollectorMessage> watchMessageMember();
+  Future<void> initMemberRealtime();
+  void disposeWorkspaceRealtime();
   String getCompanyName();
 
   Stream<Set<ModelUser>> getUser();

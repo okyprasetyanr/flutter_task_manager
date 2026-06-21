@@ -24,7 +24,7 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   final _keyForm = GlobalKey<FormState>();
-
+  bool _initialized = false;
   @override
   Widget build(BuildContext context) {
     return BlocListener<WorkspaceBloc, WorkspaceState>(
@@ -40,7 +40,8 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
         selector: (state) =>
             state is WorkspaceStateLoaded ? state.selectedWorkspace : null,
         builder: (context, data) {
-          if (data != null) {
+          if (!_initialized && data != null) {
+            _initialized = true;
             nameController.text = data.dataWorkspace.name;
             descriptionController.text = data.dataWorkspace.description;
           }

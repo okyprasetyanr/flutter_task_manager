@@ -17,8 +17,6 @@ class WorkspaceDetailBloc
 
   WorkspaceDetailBloc(this.repo) : super(WorkspaceDetailStateInitial()) {
     on<WorkspaceDetailEventWatch>(_onWatch);
-    on<WorkspaceDetailEventWatchMessage>(_onWatchMessage);
-    on<WorkspaceDetailEventWatchMessageMember>(_onWatchMessageMember);
     on<WorkspaceDetailEventWatchMember>(_onWatchMember);
     on<WorkspaceDetailEventChangeStatus>(_onChangeStatus);
     on<WorkspaceDetailEventCreateProject>(_onCreateProject);
@@ -47,6 +45,8 @@ class WorkspaceDetailBloc
     WorkspaceDetailEventWatch event,
     Emitter<WorkspaceDetailState> emit,
   ) async {
+    add(WorkspaceDetailEventChangeStatus(status: EnumStatusState.loading));
+    await repo.initProjectRealtime(workspaceId: event.data!.dataWorkspace.id);
     final currentState = state is WorkspaceDetailStateLoaded
         ? state as WorkspaceDetailStateLoaded
         : WorkspaceDetailStateLoaded();
@@ -69,6 +69,8 @@ class WorkspaceDetailBloc
                   );
                 }).toSet()
               : const {},
+          selectedProject: currentState.selectedProject,
+          initMember: currentState.initMember ?? true,
           dataUser: workspace.dataWorkspaceMember,
           error: data.$2.error,
           failed: data.$2.failed,
@@ -83,46 +85,21 @@ class WorkspaceDetailBloc
     );
   }
 
-  Future<void> _onWatchMessage(
-    WorkspaceDetailEventWatchMessage event,
-    Emitter<WorkspaceDetailState> emit,
-  ) async {
-    add(WorkspaceDetailEventChangeStatus(status: EnumStatusState.loading));
-    await emit.forEach(
-      repo.watchMessage(workspaceId: event.workspaceId),
-      onData: (data) {
-        final currentState = state is WorkspaceDetailStateLoaded
-            ? state as WorkspaceDetailStateLoaded
-            : WorkspaceDetailStateLoaded();
-
-        return currentState.copyWith(
-          initMember: currentState.initMember ?? true,
-          error: data.error,
-          failed: data.failed,
-          noconnection: data.noconnection,
-        );
-      },
-      onError: (error, stackTrace) {
-        final currentState = state is WorkspaceDetailStateLoaded
-            ? state as WorkspaceDetailStateLoaded
-            : WorkspaceDetailStateLoaded();
-        devLog("Log WorkspaceDetailBloc: onErrorMessage: ${error.toString()}");
-        return currentState.copyWith(
-          status: EnumStatusState.none,
-          error: error.toString(),
-        );
-      },
-    );
-  }
-
   Future<void> _onWatchMember(
     WorkspaceDetailEventWatchMember event,
     Emitter<WorkspaceDetailState> emit,
   ) async {
+    add(WorkspaceDetailEventChangeStatus(status: EnumStatusState.synchronize));
+    final currentState = state is WorkspaceDetailStateLoaded
+        ? state as WorkspaceDetailStateLoaded
+        : WorkspaceDetailStateLoaded();
+    await repo.initMemberRealtime(
+      workspaceId: currentState.workspace!.dataWorkspace.id,
+    );
     await emit.forEach(
-      repo.watchMember(workspaceId: event.workspaceId),
+      repo.watchMember(workspaceId: currentState.workspace!.dataWorkspace.id),
       onData: (data) {
-        final currentState = state is WorkspaceDetailStateLoaded
+        final current = state is WorkspaceDetailStateLoaded
             ? state as WorkspaceDetailStateLoaded
             : WorkspaceDetailStateLoaded();
         Set<ModelProjectMember> finalData =
@@ -134,10 +111,10 @@ class WorkspaceDetailBloc
         devLog(
           "Log WorkspaceDetailBloc: watchMember: data: ${data.toString()}",
         );
-        return currentState.copyWith(
-          dataProject: currentState.dataProject.map((project) {
+        return current.copyWith(
+          dataProject: current.dataProject.map((project) {
             return project.copyWith(
-              dataProjectMember: currentState.dataUser.where((user) {
+              dataProjectMember: current.dataUser.where((user) {
                 return finalData.any(
                   (projectMember) =>
                       projectMember.projectId == project.dataProject.id &&
@@ -146,6 +123,7 @@ class WorkspaceDetailBloc
               }).toSet(),
             );
           }).toSet(),
+          selectedProject: currentState.selectedProject,
           status: EnumStatusState.none,
           error: data.$2.error,
           failed: data.$2.failed,
@@ -153,47 +131,10 @@ class WorkspaceDetailBloc
         );
       },
       onError: (error, stackTrace) {
-        final currentState = state is WorkspaceDetailStateLoaded
+        final current = state is WorkspaceDetailStateLoaded
             ? state as WorkspaceDetailStateLoaded
             : WorkspaceDetailStateLoaded();
-        return currentState.copyWith(
-          status: EnumStatusState.none,
-          error: error.toString(),
-        );
-      },
-    );
-  }
-
-  Future<void> _onWatchMessageMember(
-    WorkspaceDetailEventWatchMessageMember event,
-    Emitter<WorkspaceDetailState> emit,
-  ) async {
-    add(WorkspaceDetailEventChangeStatus(status: EnumStatusState.synchronize));
-    await emit.forEach(
-      repo.watchMessageMember(
-        workspaceId:
-            (state as WorkspaceDetailStateLoaded).workspace!.dataWorkspace.id,
-      ),
-      onData: (data) {
-        final currentState = state is WorkspaceDetailStateLoaded
-            ? state as WorkspaceDetailStateLoaded
-            : WorkspaceDetailStateLoaded();
-        devLog(
-          "Log WorkspaceDetailBloc: watchMember2: data: ${data.toString()}",
-        );
-        return currentState.copyWith(
-          initMember: false,
-          error: data.error,
-          failed: data.failed,
-          noconnection: data.noconnection,
-        );
-      },
-      onError: (error, stackTrace) {
-        final currentState = state is WorkspaceDetailStateLoaded
-            ? state as WorkspaceDetailStateLoaded
-            : WorkspaceDetailStateLoaded();
-        devLog("Log WorkspaceDetailBloc: onErrorMessage: ${error.toString()}");
-        return currentState.copyWith(
+        return current.copyWith(
           status: EnumStatusState.none,
           error: error.toString(),
         );
@@ -243,7 +184,6 @@ class WorkspaceDetailBloc
     final original = currentState.selectedProject!;
     final edited = original.copyWith(
       dataProject: original.dataProject.copyWith(
-        name: event.name,
         end: event.end,
         start: event.start,
         type: event.type,
@@ -281,14 +221,12 @@ class WorkspaceDetailBloc
     Emitter<WorkspaceDetailState> emit,
   ) async {
     add(WorkspaceDetailEventChangeStatus(status: EnumStatusState.synchronize));
-    final data = await repo.deleteProject(event.idProject);
+    final currentState = state as WorkspaceDetailStateLoaded;
+    final data = await repo.deleteProject(
+      currentState.selectedProject!.dataProject.id,
+    );
     if (data != null) {
-      emit(
-        (state as WorkspaceDetailStateLoaded).copyWith(
-          error: data.error,
-          failed: data.failed,
-        ),
-      );
+      emit(currentState.copyWith(error: data.error, failed: data.failed));
     }
   }
 
@@ -297,5 +235,12 @@ class WorkspaceDetailBloc
     Emitter<WorkspaceDetailState> emit,
   ) {
     emit((state as WorkspaceDetailStateLoaded).copyWith(selectedProject: null));
+  }
+
+  @override
+  Future<void> close() {
+    repo.disposeWorkspaceRealtime();
+    devLog("Log WorkspaceDetail: cancel: checked");
+    return super.close();
   }
 }

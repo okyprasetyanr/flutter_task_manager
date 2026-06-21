@@ -30,7 +30,7 @@ class WorkspaceListWorkspace extends StatelessWidget {
       listener: (context, state) {
         if (state is WorkspaceStateLoaded) {
           devLog("Log WorkspaceListWorkspace: check");
-          context.read<WorkspaceBloc>().add(WorkspaceEventMessageMember());
+          context.read<WorkspaceBloc>().add(WorkspaceEventWatchMember());
         }
       },
       child:

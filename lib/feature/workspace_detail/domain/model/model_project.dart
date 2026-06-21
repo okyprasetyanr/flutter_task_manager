@@ -96,9 +96,9 @@ class ModelProject extends Equatable {
     return {
       EnumProject.id.value: id,
       EnumProject.name.value: name,
-      EnumProject.start.value: start,
-      EnumProject.end.value: end,
-      EnumProject.status.value: status,
+      EnumProject.start.value: HelperDateConvert.toJsonISO(start),
+      EnumProject.end.value: HelperDateConvert.toJsonISO(end),
+      EnumProject.status.value: status.text,
       EnumProject.createdBy.value: createdBy,
       EnumProject.totalContribut.value: totalContribut,
       EnumProject.type.value: type,

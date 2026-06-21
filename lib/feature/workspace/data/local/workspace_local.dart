@@ -1,56 +1,68 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'package:task_manager/core/services/response_wrapper/response_wrapper_local.dart';
 import 'package:task_manager/core/services/local_database/local_database.dart';
+import 'package:task_manager/core/services/response_wrapper/response_wrapper_local.dart';
+import 'package:task_manager/feature/shared_component/helper/sync_table.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_member.dart';
+import 'package:task_manager/shared/enum.dart';
 
 class WorkspaceLocal {
   final LocalDatabase localDatabase;
   final ResponseWrapperLocal responseWrapper;
+  final SyncTable syncTable;
 
-  WorkspaceLocal({required this.localDatabase, required this.responseWrapper});
+  WorkspaceLocal({
+    required this.localDatabase,
+    required this.responseWrapper,
+    required this.syncTable,
+  });
 
-  Future<void> saveWorkspaces(List<dynamic> remoteResults) async {
-    for (final json in remoteResults) {
-      final model = ModelWorkspace.fromJson(json);
-
-      await localDatabase
-          .into(localDatabase.workspaces)
-          .insertOnConflictUpdate(
-            Workspace(
-              id: model.id,
-              name: model.name,
-              description: model.description,
-              ownerId: model.ownerId,
-              createdAt: model.createdAt,
-              companyId: model.companyId,
-            ),
-          );
-    }
+  Future<void> syncWorkspace({
+    required List<dynamic> remoteResults,
+    bool init = false,
+  }) async {
+    await syncTable.syncTable<ModelWorkspace, Workspace>(
+      init: init,
+      remoteModels: remoteResults
+          .map((e) => ModelWorkspace.fromJson(e))
+          .toList(),
+      getRemoteId: (model) => model.id,
+      getLocalId: (row) => row.id,
+      tableName: localDatabase.workspaces,
+      idColumn: localDatabase.workspaces.id,
+      modelData: (ModelWorkspace model) => Workspace(
+        id: model.id,
+        name: model.name,
+        description: model.description,
+        ownerId: model.ownerId,
+        createdAt: model.createdAt,
+        companyId: model.companyId,
+      ),
+    );
   }
 
-  Future<void> saveMember(List<dynamic> remoteResults) async {
-    for (final json in remoteResults) {
-      final model = ModelWorkspaceMember.fromJson(json);
-
-      await localDatabase
-          .into(localDatabase.workspaceMembers)
-          .insertOnConflictUpdate(
-            WorkspaceMember(
-              workspaceId: model.workspaceId,
-              userId: model.userId,
-              role: model.role.name,
-              companyId: model.companyId,
-              id: model.id,
-            ),
-          );
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> getLocalWorkspaces() async {
-    final query = await localDatabase.select(localDatabase.workspaces).get();
-    return query.map((row) => row.toJson()).toList();
+  Future<void> syncMember({
+    required List<Map<String, dynamic>> remoteResults,
+    bool init = false,
+  }) async {
+    await syncTable.syncTable<ModelWorkspaceMember, WorkspaceMember>(
+      init: init,
+      remoteModels: remoteResults
+          .map((e) => ModelWorkspaceMember.fromJson(e))
+          .toList(),
+      getRemoteId: (model) => model.id,
+      getLocalId: (row) => row.id,
+      tableName: localDatabase.workspaceMembers,
+      idColumn: localDatabase.workspaceMembers.id,
+      modelData: (ModelWorkspaceMember model) => WorkspaceMember(
+        workspaceId: model.workspaceId,
+        userId: model.userId,
+        role: model.role.text,
+        companyId: model.companyId,
+        id: model.id,
+      ),
+    );
   }
 
   Stream<Map<String, dynamic>> watchWorkspace({required String companyId}) {
@@ -76,6 +88,22 @@ class WorkspaceLocal {
           return event.map((row) => row.toJson()).toList();
         });
       },
+    );
+  }
+
+  Future<void> deleteWorkspace(String id) async {
+    await syncTable.deleteData(
+      id: id,
+      tableName: localDatabase.workspaces,
+      idColumn: localDatabase.workspaces.id,
+    );
+  }
+
+  Future<void> deleteMember(String id) async {
+    await syncTable.deleteData(
+      id: id,
+      tableName: localDatabase.workspaceMembers,
+      idColumn: localDatabase.workspaceMembers.id,
     );
   }
 }

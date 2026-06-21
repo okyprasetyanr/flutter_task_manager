@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
 import 'package:task_manager/shared/enum.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class WorkspaceDetailRemote {
   final ResponseWrapperRemote responseWrapper;
@@ -23,9 +24,7 @@ class WorkspaceDetailRemote {
     );
   }
 
-  Stream<Map<String, dynamic>> watchProjectMember({
-    required String workspaceId,
-  }) {
+  Stream<Map<String, dynamic>> watchMember({required String workspaceId}) {
     return responseWrapper.wrapStream(
       getStream: () => supabaseClient
           .from(EnumTable.projectMembers.value)
@@ -34,9 +33,44 @@ class WorkspaceDetailRemote {
     );
   }
 
+  Future<List<Map<String, dynamic>>> getAllProjects({
+    required String workspaceId,
+  }) async {
+    try {
+      final response = await supabaseClient
+          .from(EnumTable.projects.value)
+          .select()
+          .eq(EnumProject.workspaceId.value, workspaceId);
+
+      return List<Map<String, dynamic>>.from(response);
+    } catch (e) {
+      devLog("Log ProjectRemote: Error: $e");
+      rethrow;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getAllMembers({
+    required String workspaceId,
+  }) async {
+    try {
+      final response = await supabaseClient
+          .from(EnumTable.projectMembers.value)
+          .select()
+          .eq(EnumProjectMember.workspaceId.value, workspaceId);
+
+      return List<Map<String, dynamic>>.from(response);
+    } catch (e) {
+      devLog("Log ProjectRemote: Error: $e");
+      rethrow;
+    }
+  }
+
   Future<Map<String, dynamic>> createProject({
     required Map<String, dynamic> data,
-  }) {
+  }) async {
+    devLog(
+      "Log WorkspaceDetailRemote: createProject: data: ${data.toString()}",
+    );
     return responseWrapper.wrap(
       getData: () => supabaseClient
           .from(EnumTable.projects.value)
@@ -92,6 +126,26 @@ class WorkspaceDetailRemote {
           .inFilter(EnumProjectMember.userId.value, userId)
           .select()
           .maybeSingle(),
+    );
+  }
+
+  void removeProjectChannel(RealtimeChannel projectChannel) {
+    supabaseClient.removeChannel(projectChannel);
+  }
+
+  void removeMemberChannel(RealtimeChannel memberChannel) {
+    supabaseClient.removeChannel(memberChannel);
+  }
+
+  RealtimeChannel buildProjectChannel(String workspaceId) {
+    return supabaseClient.channel(
+      'public:${EnumTable.projects.value}:$workspaceId',
+    );
+  }
+
+  RealtimeChannel buildMemberChannel(String workspaceId) {
+    return supabaseClient.channel(
+      'public:${EnumTable.projectMembers.value}:$workspaceId',
     );
   }
 }

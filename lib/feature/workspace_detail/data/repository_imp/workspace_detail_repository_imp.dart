@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_manager/core/cache/user_cache.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
@@ -32,6 +33,139 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     required this.userCache,
   });
 
+  RealtimeChannel? _projectChannel;
+  RealtimeChannel? _memberChannel;
+
+  @override
+  Future<void> initProjectRealtime({required String workspaceId}) async {
+    try {
+      final List<Map<String, dynamic>> rawRemoteData = await remote
+          .workspaceDetailRemote
+          .getAllProjects(workspaceId: workspaceId);
+      await local.workspaceDetailLocal.syncProject(
+        remoteResults: rawRemoteData,
+        init: true,
+      );
+    } catch (e) {
+      devLog("Log WorkspaceRepositoryImp: error: $e");
+    }
+
+    if (_projectChannel != null) {
+      remote.workspaceDetailRemote.removeProjectChannel(_projectChannel!);
+    }
+    _projectChannel = remote.workspaceDetailRemote.buildProjectChannel(
+      workspaceId,
+    );
+
+    _projectChannel!
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: EnumTable.projects.value,
+          filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq,
+            column: EnumProject.workspaceId.value,
+            value: workspaceId,
+          ),
+          callback: (PostgresChangePayload payload) async {
+            try {
+              if (payload.eventType == PostgresChangeEvent.delete) {
+                final deleteId = payload.oldRecord['id'];
+                devLog("Log WorkspaceDetailRepositoryImp: delete: $deleteId");
+                if (deleteId != null) {
+                  await local.workspaceDetailLocal.deleteProject(
+                    deleteId.toString(),
+                  );
+                }
+              } else {
+                final data = payload.newRecord;
+                await local.workspaceDetailLocal.syncProject(
+                  remoteResults: [data],
+                );
+              }
+            } catch (e) {
+              devLog("Log WorkspaceDetailRepositoryImp: error: $e");
+            }
+          },
+        )
+        .subscribe((state, error) {
+          if (error != null) {
+            devLog("Log WorkspaceDetailRepositoryImp: error Supabase: $error");
+          }
+        });
+  }
+
+  @override
+  Future<void> initMemberRealtime({required String workspaceId}) async {
+    try {
+      final List<Map<String, dynamic>> rawRemoteData = await remote
+          .workspaceDetailRemote
+          .getAllMembers(workspaceId: workspaceId);
+      await local.workspaceDetailLocal.syncMember(
+        remoteResults: rawRemoteData,
+        init: true,
+      );
+    } catch (e) {
+      devLog("Log WorkspaceRepositoryImp: error: $e");
+    }
+
+    if (_memberChannel != null) {
+      remote.workspaceDetailRemote.removeMemberChannel(_memberChannel!);
+    }
+    _memberChannel = remote.workspaceDetailRemote.buildMemberChannel(
+      workspaceId,
+    );
+
+    _memberChannel!
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: EnumTable.projectMembers.value,
+          filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq,
+            column: EnumProjectMember.workspaceId.value,
+            value: workspaceId,
+          ),
+          callback: (PostgresChangePayload payload) async {
+            try {
+              if (payload.eventType == PostgresChangeEvent.delete) {
+                final deleteId = payload.oldRecord['id'];
+
+                if (deleteId != null) {
+                  await local.workspaceDetailLocal.deleteMember(
+                    deleteId.toString(),
+                  );
+                }
+              } else {
+                final data = payload.newRecord;
+                await local.workspaceDetailLocal.syncMember(
+                  remoteResults: [data],
+                );
+              }
+            } catch (e) {
+              devLog("Log WorkspaceDetailRepositoryImp: error: $e");
+            }
+          },
+        )
+        .subscribe((state, error) {
+          if (error != null) {
+            devLog("Log WorkspaceDetailRepositoryImp: error Supabase: $error");
+          }
+        });
+  }
+
+  @override
+  void disposeWorkspaceRealtime() {
+    if (_projectChannel != null) {
+      remote.workspaceDetailRemote.removeProjectChannel(_projectChannel!);
+      _projectChannel = null;
+    }
+    if (_memberChannel != null) {
+      remote.workspaceDetailRemote.removeMemberChannel(_memberChannel!);
+      _memberChannel = null;
+    }
+  }
+
   @override
   Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchProject({
     required String workspaceId,
@@ -45,24 +179,6 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   }
 
   @override
-  Stream<CollectorMessage> watchMessage({required String workspaceId}) {
-    return remote.workspaceDetailRemote
-        .watchProject(workspaceId: workspaceId)
-        .asyncMap((event) async {
-          final data = await helper.collectDataRemote(
-            remoteFunc: () async => event,
-            localFunc: ({required dataToCache}) async {
-              devLog(
-                "Log WorkspaceDetailRepoositoryImp: watchMessage: data: ${dataToCache.toString()}",
-              );
-              local.workspaceDetailLocal.saveProject(dataToCache as List);
-            },
-          );
-          return messageCollector.getMessage(data);
-        });
-  }
-
-  @override
   Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchMember({
     required String workspaceId,
   }) {
@@ -71,24 +187,6 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
         .asyncMap((event) {
           final data = helper.collectDataLocal(fetchResult: event);
           return (data, messageCollector.getMessage(data));
-        });
-  }
-
-  @override
-  Stream<CollectorMessage> watchMessageMember({required String workspaceId}) {
-    return remote.workspaceDetailRemote
-        .watchProjectMember(workspaceId: workspaceId)
-        .asyncMap((event) async {
-          final data = await helper.collectDataRemote(
-            remoteFunc: () async => event,
-            localFunc: ({required dataToCache}) async {
-              devLog(
-                "Log WorkspaceDetailRepoositoryImp: watchMessageMember: data: ${dataToCache.toString()}",
-              );
-              local.workspaceDetailLocal.saveMember(dataToCache as List);
-            },
-          );
-          return messageCollector.getMessage(data);
         });
   }
 
@@ -121,6 +219,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
         ).toJson(),
       ),
       localFunc: ({required dataToCache}) async => {},
+      pageName: "Workspace Detail",
     );
 
     if (data.containsKey(EnumFetchApiStatus.success)) {
@@ -139,9 +238,10 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
               .toSet(),
         ),
         localFunc: ({required dataToCache}) async => {},
+        pageName: "Workspace Detail M",
       );
     }
-
+    devLog("Log WorkspaceRepositoryImp: createProject: data: $data");
     return data.containsKey(EnumFetchApiStatus.success)
         ? null
         : messageCollector.getMessage(data);
