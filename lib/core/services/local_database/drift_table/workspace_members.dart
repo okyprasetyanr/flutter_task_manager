@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:task_manager/shared/drift_table/companies.dart';
-import 'package:task_manager/shared/drift_table/users.dart';
-import 'package:task_manager/shared/drift_table/workspaces.dart';
+import 'package:task_manager/core/services/local_database/drift_table/companies.dart';
+import 'package:task_manager/core/services/local_database/drift_table/users.dart';
+import 'package:task_manager/core/services/local_database/drift_table/workspaces.dart';
 
 class WorkspaceMembers extends Table {
   TextColumn get workspaceId =>

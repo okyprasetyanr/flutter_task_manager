@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:task_manager/shared/drift_table/users.dart';
-import 'package:task_manager/shared/drift_table/workspaces.dart';
+import 'package:task_manager/core/services/local_database/drift_table/users.dart';
+import 'package:task_manager/core/services/local_database/drift_table/workspaces.dart';
 
 class ProjectMembers extends Table {
   TextColumn get projectId => text()();

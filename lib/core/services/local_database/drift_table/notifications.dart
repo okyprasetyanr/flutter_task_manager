@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import 'package:task_manager/shared/drift_table/users.dart';
+import 'package:task_manager/core/services/local_database/drift_table/users.dart';
 
 class Notifications extends Table {
   TextColumn get id => text()();

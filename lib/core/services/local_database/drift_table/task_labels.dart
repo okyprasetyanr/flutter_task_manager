@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:task_manager/shared/drift_table/labels.dart';
-import 'package:task_manager/shared/drift_table/tasks.dart';
+import 'package:task_manager/core/services/local_database/drift_table/labels.dart';
+import 'package:task_manager/core/services/local_database/drift_table/tasks.dart';
 
 class TaskLabels extends Table {
   TextColumn get taskId =>
