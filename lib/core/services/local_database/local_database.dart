@@ -18,6 +18,7 @@ import 'package:task_manager/core/services/local_database/drift_table/tasks.dart
 import 'package:task_manager/core/services/local_database/drift_table/users.dart';
 import 'package:task_manager/core/services/local_database/drift_table/workspace_members.dart';
 import 'package:task_manager/core/services/local_database/drift_table/workspaces.dart';
+import 'package:task_manager/shared/enum.dart';
 
 part 'local_database.g.dart';
 
@@ -39,11 +40,30 @@ part 'local_database.g.dart';
     Tasks,
   ],
 )
+final version = 2;
+
 class LocalDatabase extends _$LocalDatabase {
   LocalDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => version;
+}
+
+@override
+MigrationStrategy get migration {
+  return MigrationStrategy(
+    onCreate: (Migrator m) async {
+      await m.createAll();
+    },
+    onUpgrade: (Migrator m, int from, int to) async {
+      if (from < version) {
+        for (final table in EnumTable.values) {
+          await m.deleteTable(table.name);
+        }
+        await m.createAll();
+      }
+    },
+  );
 }
 
 LazyDatabase _openConnection() {

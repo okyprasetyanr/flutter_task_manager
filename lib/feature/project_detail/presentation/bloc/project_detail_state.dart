@@ -1,19 +1,19 @@
 import 'package:equatable/equatable.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_task_merge.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
+import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_label.dart';
-import 'package:task_manager/feature/workspace_detail/domain/model/model_project.dart';
-import 'package:task_manager/shared/model/model_task.dart';
 
 class ProjectDetailState {}
 
 class ProjectDetailStateInitial extends ProjectDetailState {}
 
 class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
-  final ModelProject? dataProject;
-  final Set<ModelUser> dataProjectMember;
-  final Set<ModelTask> dataTask;
-  final Set<ModelLabel> dataLabelTask;
+  final ModelProjectMerge? dataProject;
+  final Set<ModelTaskMerge> dataTask;
+  final Set<ModelLabel> dataLabel;
+  final Set<ModelUser> dataUser;
   final EnumStatusState status;
   final String? error;
   final String? failed;
@@ -21,9 +21,9 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
 
   ProjectDetailStateLoaded({
     this.dataProject,
-    this.dataProjectMember = const {},
     this.dataTask = const {},
-    this.dataLabelTask = const {},
+    this.dataLabel = const {},
+    this.dataUser = const {},
     this.status = EnumStatusState.none,
     this.error,
     this.failed,
@@ -31,19 +31,19 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
   });
 
   ProjectDetailStateLoaded copyWith({
-    ModelProject? dataProject,
-    Set<ModelUser>? dataProjectMember,
-    Set<ModelTask>? dataTask,
-    Set<ModelLabel>? dataLabelTask,
+    ModelProjectMerge? dataProject,
+    Set<ModelTaskMerge>? dataTask,
+    Set<ModelLabel>? dataLabel,
     EnumStatusState? status,
     String? error,
     String? failed,
     String? noconnection,
+    Set<ModelUser>? dataUser,
   }) {
     return ProjectDetailStateLoaded(
-      dataLabelTask: dataLabelTask ?? this.dataLabelTask,
+      dataUser: dataUser ?? this.dataUser,
+      dataLabel: dataLabel ?? this.dataLabel,
       dataProject: dataProject ?? this.dataProject,
-      dataProjectMember: dataProjectMember ?? this.dataProjectMember,
       dataTask: dataTask ?? this.dataTask,
       error: error,
       failed: failed,
@@ -54,10 +54,10 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
 
   @override
   List<Object?> get props => [
+    dataUser,
     dataProject,
-    dataProjectMember,
     dataTask,
-    dataLabelTask,
+    dataLabel,
     status,
     error,
     failed,

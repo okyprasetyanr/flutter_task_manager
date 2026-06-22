@@ -14,8 +14,9 @@ class ProjectDetailHeader extends StatelessWidget {
     return CustomRowHeader(
       widgetLeft: Text('Project Detail', style: titleTextStyle),
       widgetRight: BlocSelector<ProjectDetailBloc, ProjectDetailState, String?>(
-        selector: (state) =>
-            state is ProjectDetailStateLoaded ? state.dataProject?.name : null,
+        selector: (state) => state is ProjectDetailStateLoaded
+            ? state.dataProject?.dataProject.name
+            : null,
         builder: (context, state) => state != null
             ? Text(
                 "Project $state",

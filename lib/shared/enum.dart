@@ -104,7 +104,8 @@ enum EnumSubTask {
   id('id'),
   taskId('task_id'),
   title('title'),
-  isDone('is_done');
+  isDone('is_done'),
+  projectId('project_id');
 
   final String value;
   const EnumSubTask(this.value);
@@ -113,15 +114,18 @@ enum EnumSubTask {
 enum EnumLabel {
   id('id'),
   name('name'),
-  color('color');
+  color('color'),
+  companyId('company_id');
 
   final String value;
   const EnumLabel(this.value);
 }
 
 enum EnumTaskLabel {
+  id('id'),
   taskId('task_id'),
-  labelId('label_id');
+  labelId('label_id'),
+  projectId('project_id');
 
   final String value;
   const EnumTaskLabel(this.value);

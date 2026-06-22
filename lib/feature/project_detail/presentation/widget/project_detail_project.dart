@@ -21,7 +21,7 @@ class ProjectDetailProject extends StatelessWidget {
       (ModelProject?, EnumStatusState)
     >(
       selector: (state) => state is ProjectDetailStateLoaded
-          ? (state.dataProject, state.status)
+          ? (state.dataProject?.dataProject, state.status)
           : (null, EnumStatusState.loading),
       builder: (context, state) {
         if (state.$1 == null && state.$2 == EnumStatusState.loading) {

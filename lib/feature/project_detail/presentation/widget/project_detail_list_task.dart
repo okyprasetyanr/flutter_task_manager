@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/app_properties/app_properties.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/routes/routes_navigator.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_task_merge.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_list_sub_task.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
-import 'package:task_manager/shared/model/model_task.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 
@@ -31,7 +31,7 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
           BlocSelector<
             ProjectDetailBloc,
             ProjectDetailState,
-            (Set<ModelTask>, EnumStatusState)
+            (Set<ModelTaskMerge>, EnumStatusState)
           >(
             selector: (state) => state is ProjectDetailStateLoaded
                 ? (state.dataTask, state.status)
@@ -44,19 +44,23 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(data.title, style: lv05TextStyle),
-                      Text(data.priority.text, style: lv05TextStyle),
+                      Text(data.dataTask.title, style: lv05TextStyle),
+                      Text(data.dataTask.priority.text, style: lv05TextStyle),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        HelperDateConvert.toDisplayUI(date: data.createdAt),
+                        HelperDateConvert.toDisplayUI(
+                          date: data.dataTask.createdAt,
+                        ),
                         style: lv05TextStyle,
                       ),
                       Text(
-                        HelperDateConvert.toDisplayUI(date: data.dueDate),
+                        HelperDateConvert.toDisplayUI(
+                          date: data.dataTask.dueDate,
+                        ),
                         style: lv05TextStyle,
                       ),
                     ],
@@ -68,16 +72,21 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
                         children: [
                           Text("Updated: ", style: lv05TextStyle),
                           Text(
-                            HelperDateConvert.toDisplayUI(date: data.updatedAt),
+                            HelperDateConvert.toDisplayUI(
+                              date: data.dataTask.updatedAt,
+                            ),
                             style: lv05TextStyle,
                           ),
                         ],
                       ),
 
-                      Text(data.status.text, style: lv05TextStyle),
+                      Text(data.dataTask.status.text, style: lv05TextStyle),
                     ],
                   ),
-                  ProjectDetailListSubTask(data: data.subTask, status: status),
+                  ProjectDetailListSubTask(
+                    data: data.dataSubTask,
+                    status: status,
+                  ),
                 ],
                 onPressed: (data) => {
                   RoutesNavigator(

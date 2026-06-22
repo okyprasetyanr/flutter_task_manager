@@ -32,6 +32,8 @@ class SyncTable {
           final remoteIds = remoteModels.map(getRemoteId).toSet();
           final deletedIds = localIds.difference(remoteIds);
 
+          devLog("Log SyncTable: data: $remoteModels");
+
           if (deletedIds.isNotEmpty) {
             await (localDatabase.delete(
               tableName,

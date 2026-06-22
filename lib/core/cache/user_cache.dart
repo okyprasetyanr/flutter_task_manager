@@ -6,14 +6,14 @@ class UserCache {
   final _controller = BehaviorSubject<Set<ModelUser>>.seeded({});
 
   Stream<Set<ModelUser>> get stream {
-    devLog("STREAM VALUE: ${_controller.value.length}");
+    devLog("Log UserCache: stream: data: ${_controller.value.length}");
     return _controller.stream;
   }
 
   Set<ModelUser> get users => _controller.value;
 
   void setUsers(Set<ModelUser> data) {
-    devLog("SET USERS: ${data.length}");
+    devLog("Log UserCache: setUser: data: ${data.length}");
     _controller.add(data);
   }
 

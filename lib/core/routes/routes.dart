@@ -16,7 +16,6 @@ import 'package:task_manager/feature/history_task/domain/repository/history_task
 import 'package:task_manager/feature/history_task/presentation/bloc/history_task_bloc.dart';
 import 'package:task_manager/feature/history_task/presentation/bloc/history_task_event.dart';
 import 'package:task_manager/feature/history_task/presentation/page/history_task_page.dart';
-import 'package:task_manager/feature/project_detail/data/local/project_detail_local.dart';
 import 'package:task_manager/feature/project_detail/data/repository_imp/project_detail_repository_imp.dart';
 import 'package:task_manager/feature/project_detail/domain/repository/project_detail_repository.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
@@ -31,6 +30,7 @@ import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_e
 import 'package:task_manager/feature/task_detail/presentation/page/task_detail_page.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace_detail/data/repository_imp/workspace_detail_repository_imp.dart';
+import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_event.dart';
@@ -49,7 +49,6 @@ import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
-import 'package:task_manager/feature/workspace_detail/domain/model/model_project.dart';
 import 'package:task_manager/shared/model/model_task.dart';
 
 final statusInit = EnumStatusState.loading;
@@ -118,12 +117,13 @@ final routes = {
   },
   '/${RoutesEnum.projectDetail}': (context) {
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
-    final data = args!['dataTransfered'] as ModelProject;
+    final data = args!['dataTransfered'] as ModelProjectMerge;
     devLog("Log Routes: ArgumentData: ProjectDetail: $data");
     return RepositoryProvider<ProjectDetailRepository>(
       create: (context) => ProjectDetailRepositoryImp(
+        userRepo: context.read<UserRepository>(),
         remote: context.read<RemoteServices>(),
-        local: ProjectDetailLocal(localService: context.read<LocalServices>()),
+        local: context.read<LocalServices>(),
         userSession: context.read<UserSession>(),
         helper: context.read<CollectData>(),
         messageCollector: context.read<CollectorMessage>(),

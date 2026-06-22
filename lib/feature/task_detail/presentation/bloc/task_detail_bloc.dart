@@ -25,20 +25,16 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
         : TaskDetailStateLoaded();
     add(TaskDetailEventChangeStatus(status: EnumStatusState.loading));
     final dataTask = event.dataTask ?? currentState.dataTask!;
-    final dataSubTask = dataTask.subTask;
-    final dataLabel = dataTask.label;
     final data = await repo.getComment(taskId: dataTask.id);
     // final dataUser = repo.getUser();
     emit(
       currentState.copyWith(
-        dataLabel: dataLabel,
         dataComment: data.$1.containsKey(EnumFetchApiStatus.success)
             ? (data.$1[EnumFetchApiStatus.success] as List)
                   .map((e) => ModelComment.fromJson(e))
                   .toSet()
             : const {},
         // dataUser: dataUser,
-        dataSubTask: dataSubTask,
         dataTask: dataTask,
         status: EnumStatusState.none,
         error: data.$2.error,

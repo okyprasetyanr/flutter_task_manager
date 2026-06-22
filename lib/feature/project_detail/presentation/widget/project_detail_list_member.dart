@@ -23,7 +23,10 @@ class ProjectDetailListMember extends StatelessWidget {
             (Set<ModelUser>, EnumStatusState)
           >(
             selector: (state) => state is ProjectDetailStateLoaded
-                ? (state.dataProjectMember, state.status)
+                ? (
+                    state.dataProject?.dataProjectMember ?? const {},
+                    state.status,
+                  )
                 : (const {}, EnumStatusState.loading),
             builder: (context, state) {
               return CustomListViewBuilderV<ModelUser>(

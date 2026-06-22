@@ -19,6 +19,7 @@ import 'package:task_manager/feature/activity/data/remote/activity_remote.dart';
 import 'package:task_manager/feature/history_task/data/local/history_task_local.dart';
 import 'package:task_manager/feature/history_task/data/remote/history_task_remote.dart';
 import 'package:task_manager/feature/login/data/remote/login_remote.dart';
+import 'package:task_manager/feature/project_detail/data/local/project_detail_local.dart';
 import 'package:task_manager/feature/project_detail/data/remote/project_detail_remote.dart';
 import 'package:task_manager/feature/shared_component/helper/sync_table.dart';
 import 'package:task_manager/feature/shared_component/notification/data/remote/notification_remote.dart';
@@ -81,6 +82,11 @@ Future<void> main() async {
             final syncTable = context.read<SyncTable>();
             final wrapper = context.read<ResponseWrapperLocal>();
             return LocalServices(
+              projectDetailLocal: ProjectDetailLocal(
+                localDatabase: local,
+                syncTable: syncTable,
+                responseWrapper: wrapper,
+              ),
               activityLocal: ActivityLocal(
                 localDatabase: local,
                 responseWrapper: wrapper,
@@ -127,6 +133,7 @@ Future<void> main() async {
               ),
               loginRemote: LoginRemote(responseWrapper: wrapper),
               projectDetailRemote: ProjectDetailRemote(
+                supabaseClient: client,
                 responseWrapper: wrapper,
               ),
               historyTaskRemote: HistoryTaskRemote(

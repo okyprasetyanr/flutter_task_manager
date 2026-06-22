@@ -12,7 +12,7 @@ abstract class WorkspaceDetailRepository {
 
   Future<void> initMemberRealtime({required String workspaceId});
 
-  void disposeWorkspaceRealtime();
+  void disposeRealtime();
 
   Future<CollectorMessage?> updateProject({
     required ModelProjectMerge original,

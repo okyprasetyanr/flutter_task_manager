@@ -159,7 +159,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   }
 
   @override
-  void disposeWorkspaceRealtime() {
+  void disposeRealtime() {
     if (_projectChannel != null) {
       remote.workspaceDetailRemote.removeProjectChannel(_projectChannel!);
       _projectChannel = null;

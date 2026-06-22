@@ -158,7 +158,7 @@ class WorkspaceDetailBloc
 
   @override
   Future<void> close() {
-    repo.disposeWorkspaceRealtime();
+    repo.disposeRealtime();
     devLog("Log WorkspaceDetail: cancel: checked");
     return super.close();
   }

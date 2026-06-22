@@ -1,7 +1,13 @@
-import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/core/services/collector/collector_message.dart';
+import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
+import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 
 abstract class ProjectDetailRepository {
-  Future<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>
-  getProjectDetail({required String projectId});
+  Stream<ProjectDetailStateLoaded> watchDashboard({
+    required ModelProjectMerge project,
+  });
+  Future<void> initTaskRealtime({required String projectId});
+  Future<void> initTaskLabelRealtime({required String projectId});
+  Future<void> initSubTaskRealtime({required String projectId});
+  Future<void> initLabelRealtime();
+  void disposeRealtime();
 }

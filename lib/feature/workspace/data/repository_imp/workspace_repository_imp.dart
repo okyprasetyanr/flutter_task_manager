@@ -162,7 +162,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   }
 
   @override
-  void disposeWorkspaceRealtime() {
+  void disposeRealtime() {
     if (_workspaceChannel != null) {
       remote.workspaceRemote.removeWorkspaceChannel(_workspaceChannel!);
       _workspaceChannel = null;

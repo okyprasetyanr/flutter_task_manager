@@ -10,7 +10,7 @@ abstract class WorkspaceRepository {
 
   Future<void> initMemberRealtime();
 
-  void disposeWorkspaceRealtime();
+  void disposeRealtime();
 
   String getCompanyName();
 

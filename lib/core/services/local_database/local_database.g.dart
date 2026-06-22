@@ -2489,8 +2489,22 @@ class $LabelsTable extends Labels with TableInfo<$LabelsTable, Label> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _companyIdMeta = const VerificationMeta(
+    'companyId',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, name, color];
+  late final GeneratedColumn<String> companyId = GeneratedColumn<String>(
+    'company_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES companies (id) ON DELETE CASCADE',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, color, companyId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -2524,6 +2538,14 @@ class $LabelsTable extends Labels with TableInfo<$LabelsTable, Label> {
     } else if (isInserting) {
       context.missing(_colorMeta);
     }
+    if (data.containsKey('company_id')) {
+      context.handle(
+        _companyIdMeta,
+        companyId.isAcceptableOrUnknown(data['company_id']!, _companyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_companyIdMeta);
+    }
     return context;
   }
 
@@ -2545,6 +2567,10 @@ class $LabelsTable extends Labels with TableInfo<$LabelsTable, Label> {
         DriftSqlType.string,
         data['${effectivePrefix}color'],
       )!,
+      companyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}company_id'],
+      )!,
     );
   }
 
@@ -2558,13 +2584,20 @@ class Label extends DataClass implements Insertable<Label> {
   final String id;
   final String name;
   final String color;
-  const Label({required this.id, required this.name, required this.color});
+  final String companyId;
+  const Label({
+    required this.id,
+    required this.name,
+    required this.color,
+    required this.companyId,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['name'] = Variable<String>(name);
     map['color'] = Variable<String>(color);
+    map['company_id'] = Variable<String>(companyId);
     return map;
   }
 
@@ -2573,6 +2606,7 @@ class Label extends DataClass implements Insertable<Label> {
       id: Value(id),
       name: Value(name),
       color: Value(color),
+      companyId: Value(companyId),
     );
   }
 
@@ -2585,6 +2619,7 @@ class Label extends DataClass implements Insertable<Label> {
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       color: serializer.fromJson<String>(json['color']),
+      companyId: serializer.fromJson<String>(json['companyId']),
     );
   }
   @override
@@ -2594,19 +2629,27 @@ class Label extends DataClass implements Insertable<Label> {
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
       'color': serializer.toJson<String>(color),
+      'companyId': serializer.toJson<String>(companyId),
     };
   }
 
-  Label copyWith({String? id, String? name, String? color}) => Label(
+  Label copyWith({
+    String? id,
+    String? name,
+    String? color,
+    String? companyId,
+  }) => Label(
     id: id ?? this.id,
     name: name ?? this.name,
     color: color ?? this.color,
+    companyId: companyId ?? this.companyId,
   );
   Label copyWithCompanion(LabelsCompanion data) {
     return Label(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       color: data.color.present ? data.color.value : this.color,
+      companyId: data.companyId.present ? data.companyId.value : this.companyId,
     );
   }
 
@@ -2615,51 +2658,59 @@ class Label extends DataClass implements Insertable<Label> {
     return (StringBuffer('Label(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('color: $color')
+          ..write('color: $color, ')
+          ..write('companyId: $companyId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, color);
+  int get hashCode => Object.hash(id, name, color, companyId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Label &&
           other.id == this.id &&
           other.name == this.name &&
-          other.color == this.color);
+          other.color == this.color &&
+          other.companyId == this.companyId);
 }
 
 class LabelsCompanion extends UpdateCompanion<Label> {
   final Value<String> id;
   final Value<String> name;
   final Value<String> color;
+  final Value<String> companyId;
   final Value<int> rowid;
   const LabelsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.color = const Value.absent(),
+    this.companyId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   LabelsCompanion.insert({
     required String id,
     required String name,
     required String color,
+    required String companyId,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
-       color = Value(color);
+       color = Value(color),
+       companyId = Value(companyId);
   static Insertable<Label> custom({
     Expression<String>? id,
     Expression<String>? name,
     Expression<String>? color,
+    Expression<String>? companyId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (color != null) 'color': color,
+      if (companyId != null) 'company_id': companyId,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2668,12 +2719,14 @@ class LabelsCompanion extends UpdateCompanion<Label> {
     Value<String>? id,
     Value<String>? name,
     Value<String>? color,
+    Value<String>? companyId,
     Value<int>? rowid,
   }) {
     return LabelsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       color: color ?? this.color,
+      companyId: companyId ?? this.companyId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2690,6 +2743,9 @@ class LabelsCompanion extends UpdateCompanion<Label> {
     if (color.present) {
       map['color'] = Variable<String>(color.value);
     }
+    if (companyId.present) {
+      map['company_id'] = Variable<String>(companyId.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -2702,6 +2758,7 @@ class LabelsCompanion extends UpdateCompanion<Label> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('color: $color, ')
+          ..write('companyId: $companyId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -4907,8 +4964,19 @@ class $SubTasksTable extends SubTasks with TableInfo<$SubTasksTable, SubTask> {
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _projectIdMeta = const VerificationMeta(
+    'projectId',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, taskId, title, isDone];
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+    'project_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, taskId, title, isDone, projectId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -4948,6 +5016,14 @@ class $SubTasksTable extends SubTasks with TableInfo<$SubTasksTable, SubTask> {
         isDone.isAcceptableOrUnknown(data['is_done']!, _isDoneMeta),
       );
     }
+    if (data.containsKey('project_id')) {
+      context.handle(
+        _projectIdMeta,
+        projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_projectIdMeta);
+    }
     return context;
   }
 
@@ -4973,6 +5049,10 @@ class $SubTasksTable extends SubTasks with TableInfo<$SubTasksTable, SubTask> {
         DriftSqlType.bool,
         data['${effectivePrefix}is_done'],
       )!,
+      projectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}project_id'],
+      )!,
     );
   }
 
@@ -4987,11 +5067,13 @@ class SubTask extends DataClass implements Insertable<SubTask> {
   final String taskId;
   final String title;
   final bool isDone;
+  final String projectId;
   const SubTask({
     required this.id,
     required this.taskId,
     required this.title,
     required this.isDone,
+    required this.projectId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -5000,6 +5082,7 @@ class SubTask extends DataClass implements Insertable<SubTask> {
     map['task_id'] = Variable<String>(taskId);
     map['title'] = Variable<String>(title);
     map['is_done'] = Variable<bool>(isDone);
+    map['project_id'] = Variable<String>(projectId);
     return map;
   }
 
@@ -5009,6 +5092,7 @@ class SubTask extends DataClass implements Insertable<SubTask> {
       taskId: Value(taskId),
       title: Value(title),
       isDone: Value(isDone),
+      projectId: Value(projectId),
     );
   }
 
@@ -5022,6 +5106,7 @@ class SubTask extends DataClass implements Insertable<SubTask> {
       taskId: serializer.fromJson<String>(json['taskId']),
       title: serializer.fromJson<String>(json['title']),
       isDone: serializer.fromJson<bool>(json['isDone']),
+      projectId: serializer.fromJson<String>(json['projectId']),
     );
   }
   @override
@@ -5032,22 +5117,30 @@ class SubTask extends DataClass implements Insertable<SubTask> {
       'taskId': serializer.toJson<String>(taskId),
       'title': serializer.toJson<String>(title),
       'isDone': serializer.toJson<bool>(isDone),
+      'projectId': serializer.toJson<String>(projectId),
     };
   }
 
-  SubTask copyWith({String? id, String? taskId, String? title, bool? isDone}) =>
-      SubTask(
-        id: id ?? this.id,
-        taskId: taskId ?? this.taskId,
-        title: title ?? this.title,
-        isDone: isDone ?? this.isDone,
-      );
+  SubTask copyWith({
+    String? id,
+    String? taskId,
+    String? title,
+    bool? isDone,
+    String? projectId,
+  }) => SubTask(
+    id: id ?? this.id,
+    taskId: taskId ?? this.taskId,
+    title: title ?? this.title,
+    isDone: isDone ?? this.isDone,
+    projectId: projectId ?? this.projectId,
+  );
   SubTask copyWithCompanion(SubTasksCompanion data) {
     return SubTask(
       id: data.id.present ? data.id.value : this.id,
       taskId: data.taskId.present ? data.taskId.value : this.taskId,
       title: data.title.present ? data.title.value : this.title,
       isDone: data.isDone.present ? data.isDone.value : this.isDone,
+      projectId: data.projectId.present ? data.projectId.value : this.projectId,
     );
   }
 
@@ -5057,13 +5150,14 @@ class SubTask extends DataClass implements Insertable<SubTask> {
           ..write('id: $id, ')
           ..write('taskId: $taskId, ')
           ..write('title: $title, ')
-          ..write('isDone: $isDone')
+          ..write('isDone: $isDone, ')
+          ..write('projectId: $projectId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, taskId, title, isDone);
+  int get hashCode => Object.hash(id, taskId, title, isDone, projectId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -5071,7 +5165,8 @@ class SubTask extends DataClass implements Insertable<SubTask> {
           other.id == this.id &&
           other.taskId == this.taskId &&
           other.title == this.title &&
-          other.isDone == this.isDone);
+          other.isDone == this.isDone &&
+          other.projectId == this.projectId);
 }
 
 class SubTasksCompanion extends UpdateCompanion<SubTask> {
@@ -5079,12 +5174,14 @@ class SubTasksCompanion extends UpdateCompanion<SubTask> {
   final Value<String> taskId;
   final Value<String> title;
   final Value<bool> isDone;
+  final Value<String> projectId;
   final Value<int> rowid;
   const SubTasksCompanion({
     this.id = const Value.absent(),
     this.taskId = const Value.absent(),
     this.title = const Value.absent(),
     this.isDone = const Value.absent(),
+    this.projectId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   SubTasksCompanion.insert({
@@ -5092,15 +5189,18 @@ class SubTasksCompanion extends UpdateCompanion<SubTask> {
     required String taskId,
     required String title,
     this.isDone = const Value.absent(),
+    required String projectId,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        taskId = Value(taskId),
-       title = Value(title);
+       title = Value(title),
+       projectId = Value(projectId);
   static Insertable<SubTask> custom({
     Expression<String>? id,
     Expression<String>? taskId,
     Expression<String>? title,
     Expression<bool>? isDone,
+    Expression<String>? projectId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -5108,6 +5208,7 @@ class SubTasksCompanion extends UpdateCompanion<SubTask> {
       if (taskId != null) 'task_id': taskId,
       if (title != null) 'title': title,
       if (isDone != null) 'is_done': isDone,
+      if (projectId != null) 'project_id': projectId,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -5117,6 +5218,7 @@ class SubTasksCompanion extends UpdateCompanion<SubTask> {
     Value<String>? taskId,
     Value<String>? title,
     Value<bool>? isDone,
+    Value<String>? projectId,
     Value<int>? rowid,
   }) {
     return SubTasksCompanion(
@@ -5124,6 +5226,7 @@ class SubTasksCompanion extends UpdateCompanion<SubTask> {
       taskId: taskId ?? this.taskId,
       title: title ?? this.title,
       isDone: isDone ?? this.isDone,
+      projectId: projectId ?? this.projectId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5143,6 +5246,9 @@ class SubTasksCompanion extends UpdateCompanion<SubTask> {
     if (isDone.present) {
       map['is_done'] = Variable<bool>(isDone.value);
     }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -5156,6 +5262,7 @@ class SubTasksCompanion extends UpdateCompanion<SubTask> {
           ..write('taskId: $taskId, ')
           ..write('title: $title, ')
           ..write('isDone: $isDone, ')
+          ..write('projectId: $projectId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -5690,6 +5797,15 @@ class $TaskLabelsTable extends TaskLabels
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $TaskLabelsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _taskIdMeta = const VerificationMeta('taskId');
   @override
   late final GeneratedColumn<String> taskId = GeneratedColumn<String>(
@@ -5716,8 +5832,19 @@ class $TaskLabelsTable extends TaskLabels
       'REFERENCES labels (id) ON DELETE SET NULL',
     ),
   );
+  static const VerificationMeta _projectIdMeta = const VerificationMeta(
+    'projectId',
+  );
   @override
-  List<GeneratedColumn> get $columns => [taskId, labelId];
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+    'project_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, taskId, labelId, projectId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -5730,6 +5857,11 @@ class $TaskLabelsTable extends TaskLabels
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
     if (data.containsKey('task_id')) {
       context.handle(
         _taskIdMeta,
@@ -5746,15 +5878,27 @@ class $TaskLabelsTable extends TaskLabels
     } else if (isInserting) {
       context.missing(_labelIdMeta);
     }
+    if (data.containsKey('project_id')) {
+      context.handle(
+        _projectIdMeta,
+        projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_projectIdMeta);
+    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {taskId, labelId};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   TaskLabel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return TaskLabel(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
       taskId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}task_id'],
@@ -5762,6 +5906,10 @@ class $TaskLabelsTable extends TaskLabels
       labelId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}label_id'],
+      )!,
+      projectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}project_id'],
       )!,
     );
   }
@@ -5773,19 +5921,33 @@ class $TaskLabelsTable extends TaskLabels
 }
 
 class TaskLabel extends DataClass implements Insertable<TaskLabel> {
+  final String id;
   final String taskId;
   final String labelId;
-  const TaskLabel({required this.taskId, required this.labelId});
+  final String projectId;
+  const TaskLabel({
+    required this.id,
+    required this.taskId,
+    required this.labelId,
+    required this.projectId,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
     map['task_id'] = Variable<String>(taskId);
     map['label_id'] = Variable<String>(labelId);
+    map['project_id'] = Variable<String>(projectId);
     return map;
   }
 
   TaskLabelsCompanion toCompanion(bool nullToAbsent) {
-    return TaskLabelsCompanion(taskId: Value(taskId), labelId: Value(labelId));
+    return TaskLabelsCompanion(
+      id: Value(id),
+      taskId: Value(taskId),
+      labelId: Value(labelId),
+      projectId: Value(projectId),
+    );
   }
 
   factory TaskLabel.fromJson(
@@ -5794,84 +5956,117 @@ class TaskLabel extends DataClass implements Insertable<TaskLabel> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TaskLabel(
+      id: serializer.fromJson<String>(json['id']),
       taskId: serializer.fromJson<String>(json['taskId']),
       labelId: serializer.fromJson<String>(json['labelId']),
+      projectId: serializer.fromJson<String>(json['projectId']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
       'taskId': serializer.toJson<String>(taskId),
       'labelId': serializer.toJson<String>(labelId),
+      'projectId': serializer.toJson<String>(projectId),
     };
   }
 
-  TaskLabel copyWith({String? taskId, String? labelId}) => TaskLabel(
+  TaskLabel copyWith({
+    String? id,
+    String? taskId,
+    String? labelId,
+    String? projectId,
+  }) => TaskLabel(
+    id: id ?? this.id,
     taskId: taskId ?? this.taskId,
     labelId: labelId ?? this.labelId,
+    projectId: projectId ?? this.projectId,
   );
   TaskLabel copyWithCompanion(TaskLabelsCompanion data) {
     return TaskLabel(
+      id: data.id.present ? data.id.value : this.id,
       taskId: data.taskId.present ? data.taskId.value : this.taskId,
       labelId: data.labelId.present ? data.labelId.value : this.labelId,
+      projectId: data.projectId.present ? data.projectId.value : this.projectId,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('TaskLabel(')
+          ..write('id: $id, ')
           ..write('taskId: $taskId, ')
-          ..write('labelId: $labelId')
+          ..write('labelId: $labelId, ')
+          ..write('projectId: $projectId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(taskId, labelId);
+  int get hashCode => Object.hash(id, taskId, labelId, projectId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is TaskLabel &&
+          other.id == this.id &&
           other.taskId == this.taskId &&
-          other.labelId == this.labelId);
+          other.labelId == this.labelId &&
+          other.projectId == this.projectId);
 }
 
 class TaskLabelsCompanion extends UpdateCompanion<TaskLabel> {
+  final Value<String> id;
   final Value<String> taskId;
   final Value<String> labelId;
+  final Value<String> projectId;
   final Value<int> rowid;
   const TaskLabelsCompanion({
+    this.id = const Value.absent(),
     this.taskId = const Value.absent(),
     this.labelId = const Value.absent(),
+    this.projectId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TaskLabelsCompanion.insert({
+    required String id,
     required String taskId,
     required String labelId,
+    required String projectId,
     this.rowid = const Value.absent(),
-  }) : taskId = Value(taskId),
-       labelId = Value(labelId);
+  }) : id = Value(id),
+       taskId = Value(taskId),
+       labelId = Value(labelId),
+       projectId = Value(projectId);
   static Insertable<TaskLabel> custom({
+    Expression<String>? id,
     Expression<String>? taskId,
     Expression<String>? labelId,
+    Expression<String>? projectId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (taskId != null) 'task_id': taskId,
       if (labelId != null) 'label_id': labelId,
+      if (projectId != null) 'project_id': projectId,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   TaskLabelsCompanion copyWith({
+    Value<String>? id,
     Value<String>? taskId,
     Value<String>? labelId,
+    Value<String>? projectId,
     Value<int>? rowid,
   }) {
     return TaskLabelsCompanion(
+      id: id ?? this.id,
       taskId: taskId ?? this.taskId,
       labelId: labelId ?? this.labelId,
+      projectId: projectId ?? this.projectId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5879,11 +6074,17 @@ class TaskLabelsCompanion extends UpdateCompanion<TaskLabel> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
     if (taskId.present) {
       map['task_id'] = Variable<String>(taskId.value);
     }
     if (labelId.present) {
       map['label_id'] = Variable<String>(labelId.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -5894,8 +6095,10 @@ class TaskLabelsCompanion extends UpdateCompanion<TaskLabel> {
   @override
   String toString() {
     return (StringBuffer('TaskLabelsCompanion(')
+          ..write('id: $id, ')
           ..write('taskId: $taskId, ')
           ..write('labelId: $labelId, ')
+          ..write('projectId: $projectId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -6012,6 +6215,13 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('workspace_members', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'companies',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('labels', kind: UpdateKind.delete)],
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
@@ -6181,6 +6391,25 @@ final class $$CompaniesTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$LabelsTable, List<Label>> _labelsRefsTable(
+    _$LocalDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.labels,
+    aliasName: $_aliasNameGenerator(db.companies.id, db.labels.companyId),
+  );
+
+  $$LabelsTableProcessedTableManager get labelsRefs {
+    final manager = $$LabelsTableTableManager(
+      $_db,
+      $_db.labels,
+    ).filter((f) => f.companyId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_labelsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$CompaniesTableFilterComposer
@@ -6248,6 +6477,31 @@ class $$CompaniesTableFilterComposer
           }) => $$WorkspaceMembersTableFilterComposer(
             $db: $db,
             $table: $db.workspaceMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> labelsRefs(
+    Expression<bool> Function($$LabelsTableFilterComposer f) f,
+  ) {
+    final $$LabelsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.labels,
+      getReferencedColumn: (t) => t.companyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LabelsTableFilterComposer(
+            $db: $db,
+            $table: $db.labels,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6354,6 +6608,31 @@ class $$CompaniesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> labelsRefs<T extends Object>(
+    Expression<T> Function($$LabelsTableAnnotationComposer a) f,
+  ) {
+    final $$LabelsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.labels,
+      getReferencedColumn: (t) => t.companyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LabelsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.labels,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CompaniesTableTableManager
@@ -6372,6 +6651,7 @@ class $$CompaniesTableTableManager
           PrefetchHooks Function({
             bool userMembersRefs,
             bool workspaceMembersRefs,
+            bool labelsRefs,
           })
         > {
   $$CompaniesTableTableManager(_$LocalDatabase db, $CompaniesTable table)
@@ -6418,12 +6698,17 @@ class $$CompaniesTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({userMembersRefs = false, workspaceMembersRefs = false}) {
+              ({
+                userMembersRefs = false,
+                workspaceMembersRefs = false,
+                labelsRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (userMembersRefs) db.userMembers,
                     if (workspaceMembersRefs) db.workspaceMembers,
+                    if (labelsRefs) db.labels,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -6470,6 +6755,27 @@ class $$CompaniesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (labelsRefs)
+                        await $_getPrefetchedData<
+                          Company,
+                          $CompaniesTable,
+                          Label
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CompaniesTableReferences
+                              ._labelsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CompaniesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).labelsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.companyId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -6490,7 +6796,11 @@ typedef $$CompaniesTableProcessedTableManager =
       $$CompaniesTableUpdateCompanionBuilder,
       (Company, $$CompaniesTableReferences),
       Company,
-      PrefetchHooks Function({bool userMembersRefs, bool workspaceMembersRefs})
+      PrefetchHooks Function({
+        bool userMembersRefs,
+        bool workspaceMembersRefs,
+        bool labelsRefs,
+      })
     >;
 typedef $$UserMembersTableCreateCompanionBuilder =
     UserMembersCompanion Function({
@@ -9777,6 +10087,7 @@ typedef $$LabelsTableCreateCompanionBuilder =
       required String id,
       required String name,
       required String color,
+      required String companyId,
       Value<int> rowid,
     });
 typedef $$LabelsTableUpdateCompanionBuilder =
@@ -9784,12 +10095,30 @@ typedef $$LabelsTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> name,
       Value<String> color,
+      Value<String> companyId,
       Value<int> rowid,
     });
 
 final class $$LabelsTableReferences
     extends BaseReferences<_$LocalDatabase, $LabelsTable, Label> {
   $$LabelsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $CompaniesTable _companyIdTable(_$LocalDatabase db) => db.companies
+      .createAlias($_aliasNameGenerator(db.labels.companyId, db.companies.id));
+
+  $$CompaniesTableProcessedTableManager get companyId {
+    final $_column = $_itemColumn<String>('company_id')!;
+
+    final manager = $$CompaniesTableTableManager(
+      $_db,
+      $_db.companies,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_companyIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
 
   static MultiTypedResultKey<$TaskLabelsTable, List<TaskLabel>>
   _taskLabelsRefsTable(_$LocalDatabase db) => MultiTypedResultKey.fromTable(
@@ -9833,6 +10162,29 @@ class $$LabelsTableFilterComposer
     column: $table.color,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$CompaniesTableFilterComposer get companyId {
+    final $$CompaniesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.companyId,
+      referencedTable: $db.companies,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CompaniesTableFilterComposer(
+            $db: $db,
+            $table: $db.companies,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   Expression<bool> taskLabelsRefs(
     Expression<bool> Function($$TaskLabelsTableFilterComposer f) f,
@@ -9883,6 +10235,29 @@ class $$LabelsTableOrderingComposer
     column: $table.color,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$CompaniesTableOrderingComposer get companyId {
+    final $$CompaniesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.companyId,
+      referencedTable: $db.companies,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CompaniesTableOrderingComposer(
+            $db: $db,
+            $table: $db.companies,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$LabelsTableAnnotationComposer
@@ -9902,6 +10277,29 @@ class $$LabelsTableAnnotationComposer
 
   GeneratedColumn<String> get color =>
       $composableBuilder(column: $table.color, builder: (column) => column);
+
+  $$CompaniesTableAnnotationComposer get companyId {
+    final $$CompaniesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.companyId,
+      referencedTable: $db.companies,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CompaniesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.companies,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   Expression<T> taskLabelsRefs<T extends Object>(
     Expression<T> Function($$TaskLabelsTableAnnotationComposer a) f,
@@ -9942,7 +10340,7 @@ class $$LabelsTableTableManager
           $$LabelsTableUpdateCompanionBuilder,
           (Label, $$LabelsTableReferences),
           Label,
-          PrefetchHooks Function({bool taskLabelsRefs})
+          PrefetchHooks Function({bool companyId, bool taskLabelsRefs})
         > {
   $$LabelsTableTableManager(_$LocalDatabase db, $LabelsTable table)
     : super(
@@ -9960,11 +10358,13 @@ class $$LabelsTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> color = const Value.absent(),
+                Value<String> companyId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LabelsCompanion(
                 id: id,
                 name: name,
                 color: color,
+                companyId: companyId,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -9972,11 +10372,13 @@ class $$LabelsTableTableManager
                 required String id,
                 required String name,
                 required String color,
+                required String companyId,
                 Value<int> rowid = const Value.absent(),
               }) => LabelsCompanion.insert(
                 id: id,
                 name: name,
                 color: color,
+                companyId: companyId,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -9985,11 +10387,42 @@ class $$LabelsTableTableManager
                     (e.readTable(table), $$LabelsTableReferences(db, table, e)),
               )
               .toList(),
-          prefetchHooksCallback: ({taskLabelsRefs = false}) {
+          prefetchHooksCallback: ({companyId = false, taskLabelsRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [if (taskLabelsRefs) db.taskLabels],
-              addJoins: null,
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (companyId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.companyId,
+                                referencedTable: $$LabelsTableReferences
+                                    ._companyIdTable(db),
+                                referencedColumn: $$LabelsTableReferences
+                                    ._companyIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (taskLabelsRefs)
@@ -10023,7 +10456,7 @@ typedef $$LabelsTableProcessedTableManager =
       $$LabelsTableUpdateCompanionBuilder,
       (Label, $$LabelsTableReferences),
       Label,
-      PrefetchHooks Function({bool taskLabelsRefs})
+      PrefetchHooks Function({bool companyId, bool taskLabelsRefs})
     >;
 typedef $$TasksTableCreateCompanionBuilder =
     TasksCompanion Function({
@@ -12303,6 +12736,7 @@ typedef $$SubTasksTableCreateCompanionBuilder =
       required String taskId,
       required String title,
       Value<bool> isDone,
+      required String projectId,
       Value<int> rowid,
     });
 typedef $$SubTasksTableUpdateCompanionBuilder =
@@ -12311,6 +12745,7 @@ typedef $$SubTasksTableUpdateCompanionBuilder =
       Value<String> taskId,
       Value<String> title,
       Value<bool> isDone,
+      Value<String> projectId,
       Value<int> rowid,
     });
 
@@ -12358,6 +12793,11 @@ class $$SubTasksTableFilterComposer
 
   ColumnFilters<bool> get isDone => $composableBuilder(
     column: $table.isDone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get projectId => $composableBuilder(
+    column: $table.projectId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -12409,6 +12849,11 @@ class $$SubTasksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get projectId => $composableBuilder(
+    column: $table.projectId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$TasksTableOrderingComposer get taskId {
     final $$TasksTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -12450,6 +12895,9 @@ class $$SubTasksTableAnnotationComposer
 
   GeneratedColumn<bool> get isDone =>
       $composableBuilder(column: $table.isDone, builder: (column) => column);
+
+  GeneratedColumn<String> get projectId =>
+      $composableBuilder(column: $table.projectId, builder: (column) => column);
 
   $$TasksTableAnnotationComposer get taskId {
     final $$TasksTableAnnotationComposer composer = $composerBuilder(
@@ -12507,12 +12955,14 @@ class $$SubTasksTableTableManager
                 Value<String> taskId = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<bool> isDone = const Value.absent(),
+                Value<String> projectId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SubTasksCompanion(
                 id: id,
                 taskId: taskId,
                 title: title,
                 isDone: isDone,
+                projectId: projectId,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -12521,12 +12971,14 @@ class $$SubTasksTableTableManager
                 required String taskId,
                 required String title,
                 Value<bool> isDone = const Value.absent(),
+                required String projectId,
                 Value<int> rowid = const Value.absent(),
               }) => SubTasksCompanion.insert(
                 id: id,
                 taskId: taskId,
                 title: title,
                 isDone: isDone,
+                projectId: projectId,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -13166,14 +13618,18 @@ typedef $$TaskHistoriesTableProcessedTableManager =
     >;
 typedef $$TaskLabelsTableCreateCompanionBuilder =
     TaskLabelsCompanion Function({
+      required String id,
       required String taskId,
       required String labelId,
+      required String projectId,
       Value<int> rowid,
     });
 typedef $$TaskLabelsTableUpdateCompanionBuilder =
     TaskLabelsCompanion Function({
+      Value<String> id,
       Value<String> taskId,
       Value<String> labelId,
+      Value<String> projectId,
       Value<int> rowid,
     });
 
@@ -13226,6 +13682,16 @@ class $$TaskLabelsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get projectId => $composableBuilder(
+    column: $table.projectId,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$TasksTableFilterComposer get taskId {
     final $$TasksTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -13282,6 +13748,16 @@ class $$TaskLabelsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get projectId => $composableBuilder(
+    column: $table.projectId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$TasksTableOrderingComposer get taskId {
     final $$TasksTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -13338,6 +13814,12 @@ class $$TaskLabelsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get projectId =>
+      $composableBuilder(column: $table.projectId, builder: (column) => column);
+
   $$TasksTableAnnotationComposer get taskId {
     final $$TasksTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -13413,22 +13895,30 @@ class $$TaskLabelsTableTableManager
               $$TaskLabelsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<String> id = const Value.absent(),
                 Value<String> taskId = const Value.absent(),
                 Value<String> labelId = const Value.absent(),
+                Value<String> projectId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TaskLabelsCompanion(
+                id: id,
                 taskId: taskId,
                 labelId: labelId,
+                projectId: projectId,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
+                required String id,
                 required String taskId,
                 required String labelId,
+                required String projectId,
                 Value<int> rowid = const Value.absent(),
               }) => TaskLabelsCompanion.insert(
+                id: id,
                 taskId: taskId,
                 labelId: labelId,
+                projectId: projectId,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
