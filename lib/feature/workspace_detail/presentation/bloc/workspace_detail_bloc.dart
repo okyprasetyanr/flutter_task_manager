@@ -1,15 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_event.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
-import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
-import 'package:task_manager/feature/workspace_detail/domain/model/model_project.dart';
-import 'package:task_manager/feature/workspace_detail/domain/model/model_project_member.dart';
 
 class WorkspaceDetailBloc
     extends Bloc<WorkspaceDetailEvent, WorkspaceDetailState> {
@@ -17,7 +13,6 @@ class WorkspaceDetailBloc
 
   WorkspaceDetailBloc(this.repo) : super(WorkspaceDetailStateInitial()) {
     on<WorkspaceDetailEventWatch>(_onWatch);
-    on<WorkspaceDetailEventWatchMember>(_onWatchMember);
     on<WorkspaceDetailEventChangeStatus>(_onChangeStatus);
     on<WorkspaceDetailEventCreateProject>(_onCreateProject);
     on<WorkspaceDetailEventUpdateProject>(_onUpdateProject);
@@ -46,99 +41,23 @@ class WorkspaceDetailBloc
     Emitter<WorkspaceDetailState> emit,
   ) async {
     add(WorkspaceDetailEventChangeStatus(status: EnumStatusState.loading));
-    await repo.initProjectRealtime(workspaceId: event.data!.dataWorkspace.id);
-    final currentState = state is WorkspaceDetailStateLoaded
-        ? state as WorkspaceDetailStateLoaded
-        : WorkspaceDetailStateLoaded();
     final workspace = event.data!;
+    await repo.initProjectRealtime(workspaceId: event.data!.dataWorkspace.id);
+    await repo.initMemberRealtime(workspaceId: event.data!.dataWorkspace.id);
     await emit.forEach(
-      repo.watchProject(workspaceId: workspace.dataWorkspace.id),
+      repo.watchDashboard(workspace: workspace),
       onData: (data) {
-        return currentState.copyWith(
-          workspace: workspace,
-          dataProject: data.$1.containsKey(EnumFetchApiStatus.success)
-              ? (data.$1[EnumFetchApiStatus.success] as List).map((e) {
-                  devLog(
-                    "Log WorkspaceDetailBloc: onWatch: data: ${ModelProject.fromDrift(e)}",
-                  );
-                  return ModelProjectMerge(
-                    dataProject: ModelProject.fromDrift(e),
-                    dataProjectMember:
-                        currentState.selectedProject?.dataProjectMember ??
-                        const {},
-                  );
-                }).toSet()
-              : const {},
-          selectedProject: currentState.selectedProject,
-          initMember: currentState.initMember ?? true,
-          dataUser: workspace.dataWorkspaceMember,
-          error: data.$2.error,
-          failed: data.$2.failed,
-          noconnection: data.$2.noconnection,
-          status: EnumStatusState.none,
-        );
+        return data;
       },
-      onError: (error, stackTrace) => currentState.copyWith(
-        status: EnumStatusState.none,
-        error: error.toString(),
-      ),
-    );
-  }
-
-  Future<void> _onWatchMember(
-    WorkspaceDetailEventWatchMember event,
-    Emitter<WorkspaceDetailState> emit,
-  ) async {
-    add(WorkspaceDetailEventChangeStatus(status: EnumStatusState.synchronize));
-    final currentState = state is WorkspaceDetailStateLoaded
-        ? state as WorkspaceDetailStateLoaded
-        : WorkspaceDetailStateLoaded();
-    await repo.initMemberRealtime(
-      workspaceId: currentState.workspace!.dataWorkspace.id,
-    );
-    await emit.forEach(
-      repo.watchMember(workspaceId: currentState.workspace!.dataWorkspace.id),
-      onData: (data) {
-        final current = state is WorkspaceDetailStateLoaded
-            ? state as WorkspaceDetailStateLoaded
-            : WorkspaceDetailStateLoaded();
-        Set<ModelProjectMember> finalData =
-            data.$1.containsKey(EnumFetchApiStatus.success)
-            ? (data.$1[EnumFetchApiStatus.success] as List)
-                  .map((e) => ModelProjectMember.fromDrift(e))
-                  .toSet()
-            : const {};
-        devLog(
-          "Log WorkspaceDetailBloc: watchMember: data: ${data.toString()}",
-        );
-        return current.copyWith(
-          dataProject: current.dataProject.map((project) {
-            return project.copyWith(
-              dataProjectMember: current.dataUser.where((user) {
-                return finalData.any(
-                  (projectMember) =>
-                      projectMember.projectId == project.dataProject.id &&
-                      projectMember.userId == user.id,
-                );
-              }).toSet(),
-            );
-          }).toSet(),
-          selectedProject: currentState.selectedProject,
-          status: EnumStatusState.none,
-          error: data.$2.error,
-          failed: data.$2.failed,
-          noconnection: data.$2.noconnection,
-        );
-      },
-      onError: (error, stackTrace) {
-        final current = state is WorkspaceDetailStateLoaded
-            ? state as WorkspaceDetailStateLoaded
-            : WorkspaceDetailStateLoaded();
-        return current.copyWith(
-          status: EnumStatusState.none,
-          error: error.toString(),
-        );
-      },
+      onError: (error, stackTrace) =>
+          (state is WorkspaceDetailStateLoaded
+                  ? state as WorkspaceDetailStateLoaded
+                  : WorkspaceDetailStateLoaded())
+              .copyWith(
+                workspaceName: event.data!.dataWorkspace.name,
+                status: EnumStatusState.none,
+                error: error.toString(),
+              ),
     );
   }
 

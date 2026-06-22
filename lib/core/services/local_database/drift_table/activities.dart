@@ -8,7 +8,7 @@ class Activities extends Table {
   TextColumn get taskId =>
       text().references(Tasks, #id, onDelete: KeyAction.setNull)();
   TextColumn get userId =>
-      text().references(Users, #id, onDelete: KeyAction.setNull)();
+      text().references(UserMembers, #id, onDelete: KeyAction.setNull)();
   TextColumn get action => text()();
   TextColumn get oldValue => text()();
   TextColumn get newValue => text()();

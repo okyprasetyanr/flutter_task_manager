@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
-import 'package:task_manager/shared/model/model_task_history.dart';
+import 'package:task_manager/feature/history_task/domain/model/model_task_history.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
-import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 
 class HistoryTaskState {}
 
@@ -11,7 +11,7 @@ class HistoryTaskStateInitial extends HistoryTaskState {}
 class HistoryTaskStateLoaded extends HistoryTaskState with EquatableMixin {
   final Set<ModelHistoryTask> dataHistoryTask;
   final EnumStatusState status;
-  final ModelWorkspace? dataWorkspace;
+  final ModelWorkspaceMerge? dataWorkspace;
   final Set<ModelUser>? dataUser;
   final String? failed;
   final String? error;
@@ -34,7 +34,7 @@ class HistoryTaskStateLoaded extends HistoryTaskState with EquatableMixin {
     String? failed,
     String? error,
     String? noconnection,
-    ModelWorkspace? dataWorkspace,
+    ModelWorkspaceMerge? workspace,
   }) {
     return HistoryTaskStateLoaded(
       dataUser: dataUser ?? this.dataUser,
@@ -43,7 +43,7 @@ class HistoryTaskStateLoaded extends HistoryTaskState with EquatableMixin {
       failed: failed ?? this.failed,
       noconnection: noconnection ?? this.noconnection,
       status: status ?? this.status,
-      dataWorkspace: dataWorkspace ?? this.dataWorkspace,
+      dataWorkspace: workspace ?? this.dataWorkspace,
     );
   }
 

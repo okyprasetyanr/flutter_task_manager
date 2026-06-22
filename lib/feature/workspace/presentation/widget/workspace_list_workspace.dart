@@ -10,7 +10,6 @@ import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state
 import 'package:task_manager/feature/workspace/presentation/widget/workspace_botshet_content.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
-import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
@@ -21,84 +20,70 @@ class WorkspaceListWorkspace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<WorkspaceBloc, WorkspaceState>(
-      listenWhen: (previous, current) =>
-          previous is WorkspaceStateLoaded &&
-          current is WorkspaceStateLoaded &&
-          previous.initMember == null &&
-          current.initMember == true,
-      listener: (context, state) {
-        if (state is WorkspaceStateLoaded) {
-          devLog("Log WorkspaceListWorkspace: check");
-          context.read<WorkspaceBloc>().add(WorkspaceEventWatchMember());
-        }
+    return BlocSelector<
+      WorkspaceBloc,
+      WorkspaceState,
+      (Set<ModelWorkspaceMerge>, EnumStatusState)
+    >(
+      selector: (state) => state is WorkspaceStateLoaded
+          ? (state.dataWorkspace, state.status)
+          : (const {}, EnumStatusState.loading),
+      builder: (context, state) {
+        return CustomListViewBuilderV<ModelWorkspaceMerge>(
+          data: state.$1.toList(),
+          status: state.$2,
+          content: (data, status) => [
+            Text(data.dataWorkspace.name, style: lv05TextStyle),
+            const SizedBox(height: 4),
+            Text(
+              data.dataWorkspace.description,
+              style: lv05TextStyle.copyWith(color: Colors.grey),
+            ),
+            SizedBox(
+              height: 30,
+              child:
+                  data.dataWorkspaceMember.isEmpty &&
+                      status == EnumStatusState.synchronize
+                  ? const CustomLoading()
+                  : data.dataWorkspaceMember.isEmpty &&
+                        status == EnumStatusState.none
+                  ? const CustomTextEmpty()
+                  : SharedWidgetMemberList(
+                      data: data.dataWorkspaceMember,
+                      status: status,
+                    ),
+            ),
+          ],
+          onPressed: (data) => RoutesNavigator(
+            context: context,
+            routeName: RoutesEnum.workspaceDetail,
+            replace: false,
+            arguments: {'dataTransfered': data},
+          ).navigate(),
+          onEdit: (data) {
+            context.read<WorkspaceBloc>().add(
+              WorkspaceEventSelectedData(data: data),
+            );
+            return customBottomSheet(
+              context: context,
+              resetItemForm: () {
+                context.read<WorkspaceBloc>().add(
+                  WorkspaceEventResetSelected(),
+                );
+              },
+              content: (scrollController) {
+                final bloc = context.read<WorkspaceBloc>();
+                return BlocProvider.value(
+                  value: bloc,
+                  child: WorkspaceBotshetContent(
+                    scrollController: scrollController,
+                  ),
+                );
+              },
+            );
+          },
+        );
       },
-      child:
-          BlocSelector<
-            WorkspaceBloc,
-            WorkspaceState,
-            (Set<ModelWorkspaceMerge>, EnumStatusState)
-          >(
-            selector: (state) => state is WorkspaceStateLoaded
-                ? (state.dataWorkspace, state.status)
-                : (const {}, EnumStatusState.loading),
-            builder: (context, state) {
-              return CustomListViewBuilderV<ModelWorkspaceMerge>(
-                data: state.$1.toList(),
-                status: state.$2,
-                content: (data, status) => [
-                  Text(data.dataWorkspace.name, style: lv05TextStyle),
-                  const SizedBox(height: 4),
-                  Text(
-                    data.dataWorkspace.description,
-                    style: lv05TextStyle.copyWith(color: Colors.grey),
-                  ),
-                  SizedBox(
-                    height: 30,
-                    child:
-                        data.dataWorkspaceMember.isEmpty &&
-                            status == EnumStatusState.synchronize
-                        ? const CustomLoading()
-                        : data.dataWorkspaceMember.isEmpty &&
-                              status == EnumStatusState.none
-                        ? const CustomTextEmpty()
-                        : SharedWidgetMemberList(
-                            data: data.dataWorkspaceMember,
-                            status: status,
-                          ),
-                  ),
-                ],
-                onPressed: (data) => RoutesNavigator(
-                  context: context,
-                  routeName: RoutesEnum.workspaceDetail,
-                  replace: false,
-                  arguments: {'dataTransfered': data},
-                ).navigate(),
-                onEdit: (data) {
-                  context.read<WorkspaceBloc>().add(
-                    WorkspaceEventSelectedData(data: data),
-                  );
-                  return customBottomSheet(
-                    context: context,
-                    resetItemForm: () {
-                      context.read<WorkspaceBloc>().add(
-                        WorkspaceEventResetSelected(),
-                      );
-                    },
-                    content: (scrollController) {
-                      final bloc = context.read<WorkspaceBloc>();
-                      return BlocProvider.value(
-                        value: bloc,
-                        child: WorkspaceBotshetContent(
-                          scrollController: scrollController,
-                        ),
-                      );
-                    },
-                  );
-                },
-              );
-            },
-          ),
     );
   }
 }

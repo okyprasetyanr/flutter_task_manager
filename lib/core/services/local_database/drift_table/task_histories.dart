@@ -12,7 +12,7 @@ class TaskHistories extends Table {
   TextColumn get oldValue => text()();
   TextColumn get newValue => text()();
   TextColumn get changedBy =>
-      text().references(Users, #id, onDelete: KeyAction.setNull)();
+      text().references(UserMembers, #id, onDelete: KeyAction.setNull)();
   DateTimeColumn get changedAt => dateTime()();
 
   @override

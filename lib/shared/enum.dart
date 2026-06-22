@@ -1,7 +1,7 @@
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
-import 'package:task_manager/shared/model/model_activity.dart';
+import 'package:task_manager/feature/activity/domain/model/model_activity.dart';
 import 'package:task_manager/shared/model/model_display_history.dart';
-import 'package:task_manager/shared/model/model_task_history.dart';
+import 'package:task_manager/feature/history_task/domain/model/model_task_history.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 
 enum EnumWorkspace {
@@ -205,7 +205,7 @@ enum EnumTaskStatus {
 
 extension EnumTaskStatusX on EnumTaskStatus {
   static EnumTaskStatus fromServer(String value) => EnumTaskStatus.values
-      .firstWhere((e) => e.value == value, orElse: () => EnumTaskStatus.todo);
+      .firstWhere((e) => e.text == value, orElse: () => EnumTaskStatus.todo);
 
   String get text {
     switch (this) {
@@ -240,7 +240,7 @@ enum EnumTaskPriority {
 extension EnumTaskPriorityX on EnumTaskPriority {
   static EnumTaskPriority fromServer(String value) =>
       EnumTaskPriority.values.firstWhere(
-        (e) => e.value == value,
+        (e) => e.text == value,
         orElse: () => EnumTaskPriority.medium,
       );
 
@@ -415,7 +415,7 @@ enum EnumHistoryField {
   storyPoint,
   dueDate;
 
-  String get label {
+  String get text {
     switch (this) {
       case EnumHistoryField.status:
         return 'Status';
@@ -424,7 +424,7 @@ enum EnumHistoryField {
         return 'Priority';
 
       case EnumHistoryField.assigneeId:
-        return 'Assignee';
+        return 'AssigneeId';
 
       case EnumHistoryField.storyPoint:
         return 'Story Point';
@@ -435,7 +435,7 @@ enum EnumHistoryField {
   }
 
   static EnumHistoryField fromString(String value) {
-    return EnumHistoryField.values.firstWhere((e) => e.name == value);
+    return EnumHistoryField.values.firstWhere((e) => e.text == value);
   }
 }
 
@@ -509,11 +509,11 @@ enum EnumActivityAction {
 extension EnumActivityActionX on EnumActivityAction {
   static EnumActivityAction fromServer(String value) =>
       EnumActivityAction.values.firstWhere(
-        (e) => e.value == value,
+        (e) => e.text == value,
         orElse: () => EnumActivityAction.unknown,
       );
 
-  String get label {
+  String get text {
     switch (this) {
       case EnumActivityAction.createTask:
         return 'Create Task';
@@ -576,7 +576,7 @@ extension EnumActivityActionX on EnumActivityAction {
 
   static EnumActivityAction fromText(String value) =>
       EnumActivityAction.values.firstWhere(
-        (e) => e.label == value,
+        (e) => e.text == value,
         orElse: () => EnumActivityAction.unknown,
       );
 }

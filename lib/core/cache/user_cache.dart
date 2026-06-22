@@ -1,19 +1,20 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:async';
+import 'package:rxdart/rxdart.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class UserCache {
-  Set<ModelUser> _users = {};
+  final _controller = BehaviorSubject<Set<ModelUser>>.seeded({});
 
-  final _controller = StreamController<Set<ModelUser>>.broadcast();
+  Stream<Set<ModelUser>> get stream {
+    devLog("STREAM VALUE: ${_controller.value.length}");
+    return _controller.stream;
+  }
 
-  Stream<Set<ModelUser>> get stream => _controller.stream;
-
-  Set<ModelUser> get users => _users;
+  Set<ModelUser> get users => _controller.value;
 
   void setUsers(Set<ModelUser> data) {
-    _users = data;
-    _controller.add(_users);
+    devLog("SET USERS: ${data.length}");
+    _controller.add(data);
   }
 
   void dispose() {

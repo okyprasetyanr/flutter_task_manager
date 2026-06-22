@@ -274,11 +274,12 @@ class CompaniesCompanion extends UpdateCompanion<Company> {
   }
 }
 
-class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+class $UserMembersTable extends UserMembers
+    with TableInfo<$UserMembersTable, UserMember> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $UsersTable(this.attachedDatabase, [this._alias]);
+  $UserMembersTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -355,10 +356,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'users';
+  static const String $name = 'user_members';
   @override
   VerificationContext validateIntegrity(
-    Insertable<User> instance, {
+    Insertable<UserMember> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -412,9 +413,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+  UserMember map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return User(
+    return UserMember(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
@@ -443,19 +444,19 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   }
 
   @override
-  $UsersTable createAlias(String alias) {
-    return $UsersTable(attachedDatabase, alias);
+  $UserMembersTable createAlias(String alias) {
+    return $UserMembersTable(attachedDatabase, alias);
   }
 }
 
-class User extends DataClass implements Insertable<User> {
+class UserMember extends DataClass implements Insertable<UserMember> {
   final String id;
   final String name;
   final String email;
   final String? photoUrl;
   final DateTime createdAt;
   final String companyId;
-  const User({
+  const UserMember({
     required this.id,
     required this.name,
     required this.email,
@@ -477,8 +478,8 @@ class User extends DataClass implements Insertable<User> {
     return map;
   }
 
-  UsersCompanion toCompanion(bool nullToAbsent) {
-    return UsersCompanion(
+  UserMembersCompanion toCompanion(bool nullToAbsent) {
+    return UserMembersCompanion(
       id: Value(id),
       name: Value(name),
       email: Value(email),
@@ -490,12 +491,12 @@ class User extends DataClass implements Insertable<User> {
     );
   }
 
-  factory User.fromJson(
+  factory UserMember.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return User(
+    return UserMember(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       email: serializer.fromJson<String>(json['email']),
@@ -517,14 +518,14 @@ class User extends DataClass implements Insertable<User> {
     };
   }
 
-  User copyWith({
+  UserMember copyWith({
     String? id,
     String? name,
     String? email,
     Value<String?> photoUrl = const Value.absent(),
     DateTime? createdAt,
     String? companyId,
-  }) => User(
+  }) => UserMember(
     id: id ?? this.id,
     name: name ?? this.name,
     email: email ?? this.email,
@@ -532,8 +533,8 @@ class User extends DataClass implements Insertable<User> {
     createdAt: createdAt ?? this.createdAt,
     companyId: companyId ?? this.companyId,
   );
-  User copyWithCompanion(UsersCompanion data) {
-    return User(
+  UserMember copyWithCompanion(UserMembersCompanion data) {
+    return UserMember(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       email: data.email.present ? data.email.value : this.email,
@@ -545,7 +546,7 @@ class User extends DataClass implements Insertable<User> {
 
   @override
   String toString() {
-    return (StringBuffer('User(')
+    return (StringBuffer('UserMember(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('email: $email, ')
@@ -562,7 +563,7 @@ class User extends DataClass implements Insertable<User> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is User &&
+      (other is UserMember &&
           other.id == this.id &&
           other.name == this.name &&
           other.email == this.email &&
@@ -571,7 +572,7 @@ class User extends DataClass implements Insertable<User> {
           other.companyId == this.companyId);
 }
 
-class UsersCompanion extends UpdateCompanion<User> {
+class UserMembersCompanion extends UpdateCompanion<UserMember> {
   final Value<String> id;
   final Value<String> name;
   final Value<String> email;
@@ -579,7 +580,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<DateTime> createdAt;
   final Value<String> companyId;
   final Value<int> rowid;
-  const UsersCompanion({
+  const UserMembersCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.email = const Value.absent(),
@@ -588,7 +589,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.companyId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  UsersCompanion.insert({
+  UserMembersCompanion.insert({
     required String id,
     required String name,
     required String email,
@@ -601,7 +602,7 @@ class UsersCompanion extends UpdateCompanion<User> {
        email = Value(email),
        createdAt = Value(createdAt),
        companyId = Value(companyId);
-  static Insertable<User> custom({
+  static Insertable<UserMember> custom({
     Expression<String>? id,
     Expression<String>? name,
     Expression<String>? email,
@@ -621,7 +622,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     });
   }
 
-  UsersCompanion copyWith({
+  UserMembersCompanion copyWith({
     Value<String>? id,
     Value<String>? name,
     Value<String>? email,
@@ -630,7 +631,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     Value<String>? companyId,
     Value<int>? rowid,
   }) {
-    return UsersCompanion(
+    return UserMembersCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       email: email ?? this.email,
@@ -670,7 +671,7 @@ class UsersCompanion extends UpdateCompanion<User> {
 
   @override
   String toString() {
-    return (StringBuffer('UsersCompanion(')
+    return (StringBuffer('UserMembersCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('email: $email, ')
@@ -1154,7 +1155,7 @@ class $ProjectsTable extends Projects with TableInfo<$ProjectsTable, Project> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES users (id) ON DELETE SET NULL',
+      'REFERENCES user_members (id) ON DELETE SET NULL',
     ),
   );
   static const VerificationMeta _totalContributMeta = const VerificationMeta(
@@ -1755,7 +1756,7 @@ class $ProjectMembersTable extends ProjectMembers
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES users (id) ON DELETE CASCADE',
+      'REFERENCES user_members (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _roleMeta = const VerificationMeta('role');
@@ -2113,7 +2114,7 @@ class $WorkspaceMembersTable extends WorkspaceMembers
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES users (id) ON DELETE CASCADE',
+      'REFERENCES user_members (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _roleMeta = const VerificationMeta('role');
@@ -2808,7 +2809,7 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES users (id) ON DELETE SET NULL',
+      'REFERENCES user_members (id) ON DELETE SET NULL',
     ),
   );
   static const VerificationMeta _assigneeIdMeta = const VerificationMeta(
@@ -2822,7 +2823,7 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES users (id) ON DELETE SET NULL',
+      'REFERENCES user_members (id) ON DELETE SET NULL',
     ),
   );
   static const VerificationMeta _startDateMeta = const VerificationMeta(
@@ -3558,7 +3559,7 @@ class $ActivitiesTable extends Activities
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES users (id) ON DELETE SET NULL',
+      'REFERENCES user_members (id) ON DELETE SET NULL',
     ),
   );
   static const VerificationMeta _actionMeta = const VerificationMeta('action');
@@ -4477,7 +4478,7 @@ class $NotificationsTable extends Notifications
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES users (id) ON DELETE CASCADE',
+      'REFERENCES user_members (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
@@ -5244,7 +5245,7 @@ class $TaskHistoriesTable extends TaskHistories
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES users (id) ON DELETE SET NULL',
+      'REFERENCES user_members (id) ON DELETE SET NULL',
     ),
   );
   static const VerificationMeta _changedAtMeta = const VerificationMeta(
@@ -5905,7 +5906,7 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
   _$LocalDatabase(QueryExecutor e) : super(e);
   $LocalDatabaseManager get managers => $LocalDatabaseManager(this);
   late final $CompaniesTable companies = $CompaniesTable(this);
-  late final $UsersTable users = $UsersTable(this);
+  late final $UserMembersTable userMembers = $UserMembersTable(this);
   late final $WorkspacesTable workspaces = $WorkspacesTable(this);
   late final $ProjectsTable projects = $ProjectsTable(this);
   late final $ProjectMembersTable projectMembers = $ProjectMembersTable(this);
@@ -5926,7 +5927,7 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     companies,
-    users,
+    userMembers,
     workspaces,
     projects,
     projectMembers,
@@ -5947,7 +5948,7 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
         'companies',
         limitUpdateKind: UpdateKind.delete,
       ),
-      result: [TableUpdate('users', kind: UpdateKind.delete)],
+      result: [TableUpdate('user_members', kind: UpdateKind.delete)],
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
@@ -5965,7 +5966,7 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
-        'users',
+        'user_members',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('projects', kind: UpdateKind.update)],
@@ -5986,7 +5987,7 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
-        'users',
+        'user_members',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('project_members', kind: UpdateKind.delete)],
@@ -6000,7 +6001,7 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
-        'users',
+        'user_members',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('workspace_members', kind: UpdateKind.delete)],
@@ -6021,14 +6022,14 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
-        'users',
+        'user_members',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('tasks', kind: UpdateKind.update)],
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
-        'users',
+        'user_members',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('tasks', kind: UpdateKind.update)],
@@ -6042,7 +6043,7 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
-        'users',
+        'user_members',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('activities', kind: UpdateKind.update)],
@@ -6070,7 +6071,7 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
-        'users',
+        'user_members',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('notifications', kind: UpdateKind.delete)],
@@ -6098,7 +6099,7 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
-        'users',
+        'user_members',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('task_histories', kind: UpdateKind.update)],
@@ -6139,20 +6140,19 @@ final class $$CompaniesTableReferences
     extends BaseReferences<_$LocalDatabase, $CompaniesTable, Company> {
   $$CompaniesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$UsersTable, List<User>> _usersRefsTable(
-    _$LocalDatabase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.users,
-    aliasName: $_aliasNameGenerator(db.companies.id, db.users.companyId),
+  static MultiTypedResultKey<$UserMembersTable, List<UserMember>>
+  _userMembersRefsTable(_$LocalDatabase db) => MultiTypedResultKey.fromTable(
+    db.userMembers,
+    aliasName: $_aliasNameGenerator(db.companies.id, db.userMembers.companyId),
   );
 
-  $$UsersTableProcessedTableManager get usersRefs {
-    final manager = $$UsersTableTableManager(
+  $$UserMembersTableProcessedTableManager get userMembersRefs {
+    final manager = $$UserMembersTableTableManager(
       $_db,
-      $_db.users,
+      $_db.userMembers,
     ).filter((f) => f.companyId.id.sqlEquals($_itemColumn<String>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_usersRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_userMembersRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -6207,22 +6207,22 @@ class $$CompaniesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> usersRefs(
-    Expression<bool> Function($$UsersTableFilterComposer f) f,
+  Expression<bool> userMembersRefs(
+    Expression<bool> Function($$UserMembersTableFilterComposer f) f,
   ) {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+    final $$UserMembersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.companyId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserMembersTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6305,22 +6305,22 @@ class $$CompaniesTableAnnotationComposer
     builder: (column) => column,
   );
 
-  Expression<T> usersRefs<T extends Object>(
-    Expression<T> Function($$UsersTableAnnotationComposer a) f,
+  Expression<T> userMembersRefs<T extends Object>(
+    Expression<T> Function($$UserMembersTableAnnotationComposer a) f,
   ) {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+    final $$UserMembersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.companyId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserMembersTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6369,7 +6369,10 @@ class $$CompaniesTableTableManager
           $$CompaniesTableUpdateCompanionBuilder,
           (Company, $$CompaniesTableReferences),
           Company,
-          PrefetchHooks Function({bool usersRefs, bool workspaceMembersRefs})
+          PrefetchHooks Function({
+            bool userMembersRefs,
+            bool workspaceMembersRefs,
+          })
         > {
   $$CompaniesTableTableManager(_$LocalDatabase db, $CompaniesTable table)
     : super(
@@ -6415,31 +6418,31 @@ class $$CompaniesTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({usersRefs = false, workspaceMembersRefs = false}) {
+              ({userMembersRefs = false, workspaceMembersRefs = false}) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (usersRefs) db.users,
+                    if (userMembersRefs) db.userMembers,
                     if (workspaceMembersRefs) db.workspaceMembers,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (usersRefs)
+                      if (userMembersRefs)
                         await $_getPrefetchedData<
                           Company,
                           $CompaniesTable,
-                          User
+                          UserMember
                         >(
                           currentTable: table,
                           referencedTable: $$CompaniesTableReferences
-                              ._usersRefsTable(db),
+                              ._userMembersRefsTable(db),
                           managerFromTypedResult: (p0) =>
                               $$CompaniesTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).usersRefs,
+                              ).userMembersRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.companyId == item.id,
@@ -6487,10 +6490,10 @@ typedef $$CompaniesTableProcessedTableManager =
       $$CompaniesTableUpdateCompanionBuilder,
       (Company, $$CompaniesTableReferences),
       Company,
-      PrefetchHooks Function({bool usersRefs, bool workspaceMembersRefs})
+      PrefetchHooks Function({bool userMembersRefs, bool workspaceMembersRefs})
     >;
-typedef $$UsersTableCreateCompanionBuilder =
-    UsersCompanion Function({
+typedef $$UserMembersTableCreateCompanionBuilder =
+    UserMembersCompanion Function({
       required String id,
       required String name,
       required String email,
@@ -6499,8 +6502,8 @@ typedef $$UsersTableCreateCompanionBuilder =
       required String companyId,
       Value<int> rowid,
     });
-typedef $$UsersTableUpdateCompanionBuilder =
-    UsersCompanion Function({
+typedef $$UserMembersTableUpdateCompanionBuilder =
+    UserMembersCompanion Function({
       Value<String> id,
       Value<String> name,
       Value<String> email,
@@ -6510,12 +6513,14 @@ typedef $$UsersTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$UsersTableReferences
-    extends BaseReferences<_$LocalDatabase, $UsersTable, User> {
-  $$UsersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$UserMembersTableReferences
+    extends BaseReferences<_$LocalDatabase, $UserMembersTable, UserMember> {
+  $$UserMembersTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $CompaniesTable _companyIdTable(_$LocalDatabase db) => db.companies
-      .createAlias($_aliasNameGenerator(db.users.companyId, db.companies.id));
+  static $CompaniesTable _companyIdTable(_$LocalDatabase db) =>
+      db.companies.createAlias(
+        $_aliasNameGenerator(db.userMembers.companyId, db.companies.id),
+      );
 
   $$CompaniesTableProcessedTableManager get companyId {
     final $_column = $_itemColumn<String>('company_id')!;
@@ -6535,7 +6540,7 @@ final class $$UsersTableReferences
     _$LocalDatabase db,
   ) => MultiTypedResultKey.fromTable(
     db.projects,
-    aliasName: $_aliasNameGenerator(db.users.id, db.projects.createdBy),
+    aliasName: $_aliasNameGenerator(db.userMembers.id, db.projects.createdBy),
   );
 
   $$ProjectsTableProcessedTableManager get projectsRefs {
@@ -6553,7 +6558,10 @@ final class $$UsersTableReferences
   static MultiTypedResultKey<$ProjectMembersTable, List<ProjectMember>>
   _projectMembersRefsTable(_$LocalDatabase db) => MultiTypedResultKey.fromTable(
     db.projectMembers,
-    aliasName: $_aliasNameGenerator(db.users.id, db.projectMembers.userId),
+    aliasName: $_aliasNameGenerator(
+      db.userMembers.id,
+      db.projectMembers.userId,
+    ),
   );
 
   $$ProjectMembersTableProcessedTableManager get projectMembersRefs {
@@ -6573,7 +6581,7 @@ final class $$UsersTableReferences
       MultiTypedResultKey.fromTable(
         db.workspaceMembers,
         aliasName: $_aliasNameGenerator(
-          db.users.id,
+          db.userMembers.id,
           db.workspaceMembers.userId,
         ),
       );
@@ -6595,7 +6603,7 @@ final class $$UsersTableReferences
   static MultiTypedResultKey<$ActivitiesTable, List<Activity>>
   _activitiesRefsTable(_$LocalDatabase db) => MultiTypedResultKey.fromTable(
     db.activities,
-    aliasName: $_aliasNameGenerator(db.users.id, db.activities.userId),
+    aliasName: $_aliasNameGenerator(db.userMembers.id, db.activities.userId),
   );
 
   $$ActivitiesTableProcessedTableManager get activitiesRefs {
@@ -6613,7 +6621,7 @@ final class $$UsersTableReferences
   static MultiTypedResultKey<$NotificationsTable, List<Notification>>
   _notificationsRefsTable(_$LocalDatabase db) => MultiTypedResultKey.fromTable(
     db.notifications,
-    aliasName: $_aliasNameGenerator(db.users.id, db.notifications.userId),
+    aliasName: $_aliasNameGenerator(db.userMembers.id, db.notifications.userId),
   );
 
   $$NotificationsTableProcessedTableManager get notificationsRefs {
@@ -6631,7 +6639,10 @@ final class $$UsersTableReferences
   static MultiTypedResultKey<$TaskHistoriesTable, List<TaskHistory>>
   _taskHistoriesRefsTable(_$LocalDatabase db) => MultiTypedResultKey.fromTable(
     db.taskHistories,
-    aliasName: $_aliasNameGenerator(db.users.id, db.taskHistories.changedBy),
+    aliasName: $_aliasNameGenerator(
+      db.userMembers.id,
+      db.taskHistories.changedBy,
+    ),
   );
 
   $$TaskHistoriesTableProcessedTableManager get taskHistoriesRefs {
@@ -6647,9 +6658,9 @@ final class $$UsersTableReferences
   }
 }
 
-class $$UsersTableFilterComposer
-    extends Composer<_$LocalDatabase, $UsersTable> {
-  $$UsersTableFilterComposer({
+class $$UserMembersTableFilterComposer
+    extends Composer<_$LocalDatabase, $UserMembersTable> {
+  $$UserMembersTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6855,9 +6866,9 @@ class $$UsersTableFilterComposer
   }
 }
 
-class $$UsersTableOrderingComposer
-    extends Composer<_$LocalDatabase, $UsersTable> {
-  $$UsersTableOrderingComposer({
+class $$UserMembersTableOrderingComposer
+    extends Composer<_$LocalDatabase, $UserMembersTable> {
+  $$UserMembersTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6913,9 +6924,9 @@ class $$UsersTableOrderingComposer
   }
 }
 
-class $$UsersTableAnnotationComposer
-    extends Composer<_$LocalDatabase, $UsersTable> {
-  $$UsersTableAnnotationComposer({
+class $$UserMembersTableAnnotationComposer
+    extends Composer<_$LocalDatabase, $UserMembersTable> {
+  $$UserMembersTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7111,19 +7122,19 @@ class $$UsersTableAnnotationComposer
   }
 }
 
-class $$UsersTableTableManager
+class $$UserMembersTableTableManager
     extends
         RootTableManager<
           _$LocalDatabase,
-          $UsersTable,
-          User,
-          $$UsersTableFilterComposer,
-          $$UsersTableOrderingComposer,
-          $$UsersTableAnnotationComposer,
-          $$UsersTableCreateCompanionBuilder,
-          $$UsersTableUpdateCompanionBuilder,
-          (User, $$UsersTableReferences),
-          User,
+          $UserMembersTable,
+          UserMember,
+          $$UserMembersTableFilterComposer,
+          $$UserMembersTableOrderingComposer,
+          $$UserMembersTableAnnotationComposer,
+          $$UserMembersTableCreateCompanionBuilder,
+          $$UserMembersTableUpdateCompanionBuilder,
+          (UserMember, $$UserMembersTableReferences),
+          UserMember,
           PrefetchHooks Function({
             bool companyId,
             bool projectsRefs,
@@ -7134,17 +7145,17 @@ class $$UsersTableTableManager
             bool taskHistoriesRefs,
           })
         > {
-  $$UsersTableTableManager(_$LocalDatabase db, $UsersTable table)
+  $$UserMembersTableTableManager(_$LocalDatabase db, $UserMembersTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$UsersTableFilterComposer($db: db, $table: table),
+              $$UserMembersTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$UsersTableOrderingComposer($db: db, $table: table),
+              $$UserMembersTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$UsersTableAnnotationComposer($db: db, $table: table),
+              $$UserMembersTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
@@ -7154,7 +7165,7 @@ class $$UsersTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<String> companyId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => UsersCompanion(
+              }) => UserMembersCompanion(
                 id: id,
                 name: name,
                 email: email,
@@ -7172,7 +7183,7 @@ class $$UsersTableTableManager
                 required DateTime createdAt,
                 required String companyId,
                 Value<int> rowid = const Value.absent(),
-              }) => UsersCompanion.insert(
+              }) => UserMembersCompanion.insert(
                 id: id,
                 name: name,
                 email: email,
@@ -7183,8 +7194,10 @@ class $$UsersTableTableManager
               ),
           withReferenceMapper: (p0) => p0
               .map(
-                (e) =>
-                    (e.readTable(table), $$UsersTableReferences(db, table, e)),
+                (e) => (
+                  e.readTable(table),
+                  $$UserMembersTableReferences(db, table, e),
+                ),
               )
               .toList(),
           prefetchHooksCallback:
@@ -7228,11 +7241,13 @@ class $$UsersTableTableManager
                               state.withJoin(
                                     currentTable: table,
                                     currentColumn: table.companyId,
-                                    referencedTable: $$UsersTableReferences
-                                        ._companyIdTable(db),
-                                    referencedColumn: $$UsersTableReferences
-                                        ._companyIdTable(db)
-                                        .id,
+                                    referencedTable:
+                                        $$UserMembersTableReferences
+                                            ._companyIdTable(db),
+                                    referencedColumn:
+                                        $$UserMembersTableReferences
+                                            ._companyIdTable(db)
+                                            .id,
                                   )
                                   as T;
                         }
@@ -7242,12 +7257,16 @@ class $$UsersTableTableManager
                   getPrefetchedDataCallback: (items) async {
                     return [
                       if (projectsRefs)
-                        await $_getPrefetchedData<User, $UsersTable, Project>(
+                        await $_getPrefetchedData<
+                          UserMember,
+                          $UserMembersTable,
+                          Project
+                        >(
                           currentTable: table,
-                          referencedTable: $$UsersTableReferences
+                          referencedTable: $$UserMembersTableReferences
                               ._projectsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$UsersTableReferences(
+                              $$UserMembersTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -7260,15 +7279,15 @@ class $$UsersTableTableManager
                         ),
                       if (projectMembersRefs)
                         await $_getPrefetchedData<
-                          User,
-                          $UsersTable,
+                          UserMember,
+                          $UserMembersTable,
                           ProjectMember
                         >(
                           currentTable: table,
-                          referencedTable: $$UsersTableReferences
+                          referencedTable: $$UserMembersTableReferences
                               ._projectMembersRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$UsersTableReferences(
+                              $$UserMembersTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -7281,15 +7300,15 @@ class $$UsersTableTableManager
                         ),
                       if (workspaceMembersRefs)
                         await $_getPrefetchedData<
-                          User,
-                          $UsersTable,
+                          UserMember,
+                          $UserMembersTable,
                           WorkspaceMember
                         >(
                           currentTable: table,
-                          referencedTable: $$UsersTableReferences
+                          referencedTable: $$UserMembersTableReferences
                               ._workspaceMembersRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$UsersTableReferences(
+                              $$UserMembersTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -7301,12 +7320,16 @@ class $$UsersTableTableManager
                           typedResults: items,
                         ),
                       if (activitiesRefs)
-                        await $_getPrefetchedData<User, $UsersTable, Activity>(
+                        await $_getPrefetchedData<
+                          UserMember,
+                          $UserMembersTable,
+                          Activity
+                        >(
                           currentTable: table,
-                          referencedTable: $$UsersTableReferences
+                          referencedTable: $$UserMembersTableReferences
                               ._activitiesRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$UsersTableReferences(
+                              $$UserMembersTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -7319,15 +7342,15 @@ class $$UsersTableTableManager
                         ),
                       if (notificationsRefs)
                         await $_getPrefetchedData<
-                          User,
-                          $UsersTable,
+                          UserMember,
+                          $UserMembersTable,
                           Notification
                         >(
                           currentTable: table,
-                          referencedTable: $$UsersTableReferences
+                          referencedTable: $$UserMembersTableReferences
                               ._notificationsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$UsersTableReferences(
+                              $$UserMembersTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -7340,15 +7363,15 @@ class $$UsersTableTableManager
                         ),
                       if (taskHistoriesRefs)
                         await $_getPrefetchedData<
-                          User,
-                          $UsersTable,
+                          UserMember,
+                          $UserMembersTable,
                           TaskHistory
                         >(
                           currentTable: table,
-                          referencedTable: $$UsersTableReferences
+                          referencedTable: $$UserMembersTableReferences
                               ._taskHistoriesRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$UsersTableReferences(
+                              $$UserMembersTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -7367,18 +7390,18 @@ class $$UsersTableTableManager
       );
 }
 
-typedef $$UsersTableProcessedTableManager =
+typedef $$UserMembersTableProcessedTableManager =
     ProcessedTableManager<
       _$LocalDatabase,
-      $UsersTable,
-      User,
-      $$UsersTableFilterComposer,
-      $$UsersTableOrderingComposer,
-      $$UsersTableAnnotationComposer,
-      $$UsersTableCreateCompanionBuilder,
-      $$UsersTableUpdateCompanionBuilder,
-      (User, $$UsersTableReferences),
-      User,
+      $UserMembersTable,
+      UserMember,
+      $$UserMembersTableFilterComposer,
+      $$UserMembersTableOrderingComposer,
+      $$UserMembersTableAnnotationComposer,
+      $$UserMembersTableCreateCompanionBuilder,
+      $$UserMembersTableUpdateCompanionBuilder,
+      (UserMember, $$UserMembersTableReferences),
+      UserMember,
       PrefetchHooks Function({
         bool companyId,
         bool projectsRefs,
@@ -8249,15 +8272,17 @@ final class $$ProjectsTableReferences
     extends BaseReferences<_$LocalDatabase, $ProjectsTable, Project> {
   $$ProjectsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $UsersTable _createdByTable(_$LocalDatabase db) => db.users
-      .createAlias($_aliasNameGenerator(db.projects.createdBy, db.users.id));
+  static $UserMembersTable _createdByTable(_$LocalDatabase db) =>
+      db.userMembers.createAlias(
+        $_aliasNameGenerator(db.projects.createdBy, db.userMembers.id),
+      );
 
-  $$UsersTableProcessedTableManager get createdBy {
+  $$UserMembersTableProcessedTableManager get createdBy {
     final $_column = $_itemColumn<String>('created_by')!;
 
-    final manager = $$UsersTableTableManager(
+    final manager = $$UserMembersTableTableManager(
       $_db,
-      $_db.users,
+      $_db.userMembers,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_createdByTable($_db));
     if (item == null) return manager;
@@ -8354,20 +8379,20 @@ class $$ProjectsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$UsersTableFilterComposer get createdBy {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+  $$UserMembersTableFilterComposer get createdBy {
+    final $$UserMembersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.createdBy,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserMembersTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8475,20 +8500,20 @@ class $$ProjectsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$UsersTableOrderingComposer get createdBy {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
+  $$UserMembersTableOrderingComposer get createdBy {
+    final $$UserMembersTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.createdBy,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableOrderingComposer(
+          }) => $$UserMembersTableOrderingComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8557,20 +8582,20 @@ class $$ProjectsTableAnnotationComposer
   GeneratedColumn<DateTime> get end =>
       $composableBuilder(column: $table.end, builder: (column) => column);
 
-  $$UsersTableAnnotationComposer get createdBy {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+  $$UserMembersTableAnnotationComposer get createdBy {
+    final $$UserMembersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.createdBy,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserMembersTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8861,16 +8886,17 @@ final class $$ProjectMembersTableReferences
     );
   }
 
-  static $UsersTable _userIdTable(_$LocalDatabase db) => db.users.createAlias(
-    $_aliasNameGenerator(db.projectMembers.userId, db.users.id),
-  );
+  static $UserMembersTable _userIdTable(_$LocalDatabase db) =>
+      db.userMembers.createAlias(
+        $_aliasNameGenerator(db.projectMembers.userId, db.userMembers.id),
+      );
 
-  $$UsersTableProcessedTableManager get userId {
+  $$UserMembersTableProcessedTableManager get userId {
     final $_column = $_itemColumn<String>('user_id')!;
 
-    final manager = $$UsersTableTableManager(
+    final manager = $$UserMembersTableTableManager(
       $_db,
-      $_db.users,
+      $_db.userMembers,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_userIdTable($_db));
     if (item == null) return manager;
@@ -8927,20 +8953,20 @@ class $$ProjectMembersTableFilterComposer
     return composer;
   }
 
-  $$UsersTableFilterComposer get userId {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+  $$UserMembersTableFilterComposer get userId {
+    final $$UserMembersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserMembersTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8998,20 +9024,20 @@ class $$ProjectMembersTableOrderingComposer
     return composer;
   }
 
-  $$UsersTableOrderingComposer get userId {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
+  $$UserMembersTableOrderingComposer get userId {
+    final $$UserMembersTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableOrderingComposer(
+          }) => $$UserMembersTableOrderingComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9063,20 +9089,20 @@ class $$ProjectMembersTableAnnotationComposer
     return composer;
   }
 
-  $$UsersTableAnnotationComposer get userId {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+  $$UserMembersTableAnnotationComposer get userId {
+    final $$UserMembersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserMembersTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9280,16 +9306,17 @@ final class $$WorkspaceMembersTableReferences
     );
   }
 
-  static $UsersTable _userIdTable(_$LocalDatabase db) => db.users.createAlias(
-    $_aliasNameGenerator(db.workspaceMembers.userId, db.users.id),
-  );
+  static $UserMembersTable _userIdTable(_$LocalDatabase db) =>
+      db.userMembers.createAlias(
+        $_aliasNameGenerator(db.workspaceMembers.userId, db.userMembers.id),
+      );
 
-  $$UsersTableProcessedTableManager get userId {
+  $$UserMembersTableProcessedTableManager get userId {
     final $_column = $_itemColumn<String>('user_id')!;
 
-    final manager = $$UsersTableTableManager(
+    final manager = $$UserMembersTableTableManager(
       $_db,
-      $_db.users,
+      $_db.userMembers,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_userIdTable($_db));
     if (item == null) return manager;
@@ -9360,20 +9387,20 @@ class $$WorkspaceMembersTableFilterComposer
     return composer;
   }
 
-  $$UsersTableFilterComposer get userId {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+  $$UserMembersTableFilterComposer get userId {
+    final $$UserMembersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserMembersTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9449,20 +9476,20 @@ class $$WorkspaceMembersTableOrderingComposer
     return composer;
   }
 
-  $$UsersTableOrderingComposer get userId {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
+  $$UserMembersTableOrderingComposer get userId {
+    final $$UserMembersTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableOrderingComposer(
+          }) => $$UserMembersTableOrderingComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9534,20 +9561,20 @@ class $$WorkspaceMembersTableAnnotationComposer
     return composer;
   }
 
-  $$UsersTableAnnotationComposer get userId {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+  $$UserMembersTableAnnotationComposer get userId {
+    final $$UserMembersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserMembersTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10056,15 +10083,17 @@ final class $$TasksTableReferences
     );
   }
 
-  static $UsersTable _reporterIdTable(_$LocalDatabase db) => db.users
-      .createAlias($_aliasNameGenerator(db.tasks.reporterId, db.users.id));
+  static $UserMembersTable _reporterIdTable(_$LocalDatabase db) =>
+      db.userMembers.createAlias(
+        $_aliasNameGenerator(db.tasks.reporterId, db.userMembers.id),
+      );
 
-  $$UsersTableProcessedTableManager get reporterId {
+  $$UserMembersTableProcessedTableManager get reporterId {
     final $_column = $_itemColumn<String>('reporter_id')!;
 
-    final manager = $$UsersTableTableManager(
+    final manager = $$UserMembersTableTableManager(
       $_db,
-      $_db.users,
+      $_db.userMembers,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_reporterIdTable($_db));
     if (item == null) return manager;
@@ -10073,15 +10102,17 @@ final class $$TasksTableReferences
     );
   }
 
-  static $UsersTable _assigneeIdTable(_$LocalDatabase db) => db.users
-      .createAlias($_aliasNameGenerator(db.tasks.assigneeId, db.users.id));
+  static $UserMembersTable _assigneeIdTable(_$LocalDatabase db) =>
+      db.userMembers.createAlias(
+        $_aliasNameGenerator(db.tasks.assigneeId, db.userMembers.id),
+      );
 
-  $$UsersTableProcessedTableManager get assigneeId {
+  $$UserMembersTableProcessedTableManager get assigneeId {
     final $_column = $_itemColumn<String>('assignee_id')!;
 
-    final manager = $$UsersTableTableManager(
+    final manager = $$UserMembersTableTableManager(
       $_db,
-      $_db.users,
+      $_db.userMembers,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_assigneeIdTable($_db));
     if (item == null) return manager;
@@ -10233,20 +10264,20 @@ class $$TasksTableFilterComposer
     return composer;
   }
 
-  $$UsersTableFilterComposer get reporterId {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+  $$UserMembersTableFilterComposer get reporterId {
+    final $$UserMembersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.reporterId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserMembersTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10256,20 +10287,20 @@ class $$TasksTableFilterComposer
     return composer;
   }
 
-  $$UsersTableFilterComposer get assigneeId {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+  $$UserMembersTableFilterComposer get assigneeId {
+    final $$UserMembersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.assigneeId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserMembersTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10442,20 +10473,20 @@ class $$TasksTableOrderingComposer
     return composer;
   }
 
-  $$UsersTableOrderingComposer get reporterId {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
+  $$UserMembersTableOrderingComposer get reporterId {
+    final $$UserMembersTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.reporterId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableOrderingComposer(
+          }) => $$UserMembersTableOrderingComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10465,20 +10496,20 @@ class $$TasksTableOrderingComposer
     return composer;
   }
 
-  $$UsersTableOrderingComposer get assigneeId {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
+  $$UserMembersTableOrderingComposer get assigneeId {
+    final $$UserMembersTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.assigneeId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableOrderingComposer(
+          }) => $$UserMembersTableOrderingComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10558,20 +10589,20 @@ class $$TasksTableAnnotationComposer
     return composer;
   }
 
-  $$UsersTableAnnotationComposer get reporterId {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+  $$UserMembersTableAnnotationComposer get reporterId {
+    final $$UserMembersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.reporterId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserMembersTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10581,20 +10612,20 @@ class $$TasksTableAnnotationComposer
     return composer;
   }
 
-  $$UsersTableAnnotationComposer get assigneeId {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+  $$UserMembersTableAnnotationComposer get assigneeId {
+    final $$UserMembersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.assigneeId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserMembersTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10990,16 +11021,17 @@ final class $$ActivitiesTableReferences
     );
   }
 
-  static $UsersTable _userIdTable(_$LocalDatabase db) => db.users.createAlias(
-    $_aliasNameGenerator(db.activities.userId, db.users.id),
-  );
+  static $UserMembersTable _userIdTable(_$LocalDatabase db) =>
+      db.userMembers.createAlias(
+        $_aliasNameGenerator(db.activities.userId, db.userMembers.id),
+      );
 
-  $$UsersTableProcessedTableManager get userId {
+  $$UserMembersTableProcessedTableManager get userId {
     final $_column = $_itemColumn<String>('user_id')!;
 
-    final manager = $$UsersTableTableManager(
+    final manager = $$UserMembersTableTableManager(
       $_db,
-      $_db.users,
+      $_db.userMembers,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_userIdTable($_db));
     if (item == null) return manager;
@@ -11085,20 +11117,20 @@ class $$ActivitiesTableFilterComposer
     return composer;
   }
 
-  $$UsersTableFilterComposer get userId {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+  $$UserMembersTableFilterComposer get userId {
+    final $$UserMembersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserMembersTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11189,20 +11221,20 @@ class $$ActivitiesTableOrderingComposer
     return composer;
   }
 
-  $$UsersTableOrderingComposer get userId {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
+  $$UserMembersTableOrderingComposer get userId {
+    final $$UserMembersTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableOrderingComposer(
+          }) => $$UserMembersTableOrderingComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11283,20 +11315,20 @@ class $$ActivitiesTableAnnotationComposer
     return composer;
   }
 
-  $$UsersTableAnnotationComposer get userId {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+  $$UserMembersTableAnnotationComposer get userId {
+    final $$UserMembersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserMembersTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11950,16 +11982,17 @@ final class $$NotificationsTableReferences
     super.$_typedResult,
   );
 
-  static $UsersTable _userIdTable(_$LocalDatabase db) => db.users.createAlias(
-    $_aliasNameGenerator(db.notifications.userId, db.users.id),
-  );
+  static $UserMembersTable _userIdTable(_$LocalDatabase db) =>
+      db.userMembers.createAlias(
+        $_aliasNameGenerator(db.notifications.userId, db.userMembers.id),
+      );
 
-  $$UsersTableProcessedTableManager get userId {
+  $$UserMembersTableProcessedTableManager get userId {
     final $_column = $_itemColumn<String>('user_id')!;
 
-    final manager = $$UsersTableTableManager(
+    final manager = $$UserMembersTableTableManager(
       $_db,
-      $_db.users,
+      $_db.userMembers,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_userIdTable($_db));
     if (item == null) return manager;
@@ -12003,20 +12036,20 @@ class $$NotificationsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$UsersTableFilterComposer get userId {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+  $$UserMembersTableFilterComposer get userId {
+    final $$UserMembersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserMembersTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12061,20 +12094,20 @@ class $$NotificationsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$UsersTableOrderingComposer get userId {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
+  $$UserMembersTableOrderingComposer get userId {
+    final $$UserMembersTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableOrderingComposer(
+          }) => $$UserMembersTableOrderingComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12109,20 +12142,20 @@ class $$NotificationsTableAnnotationComposer
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  $$UsersTableAnnotationComposer get userId {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+  $$UserMembersTableAnnotationComposer get userId {
+    final $$UserMembersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserMembersTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12633,17 +12666,17 @@ final class $$TaskHistoriesTableReferences
     );
   }
 
-  static $UsersTable _changedByTable(_$LocalDatabase db) =>
-      db.users.createAlias(
-        $_aliasNameGenerator(db.taskHistories.changedBy, db.users.id),
+  static $UserMembersTable _changedByTable(_$LocalDatabase db) =>
+      db.userMembers.createAlias(
+        $_aliasNameGenerator(db.taskHistories.changedBy, db.userMembers.id),
       );
 
-  $$UsersTableProcessedTableManager get changedBy {
+  $$UserMembersTableProcessedTableManager get changedBy {
     final $_column = $_itemColumn<String>('changed_by')!;
 
-    final manager = $$UsersTableTableManager(
+    final manager = $$UserMembersTableTableManager(
       $_db,
-      $_db.users,
+      $_db.userMembers,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_changedByTable($_db));
     if (item == null) return manager;
@@ -12733,20 +12766,20 @@ class $$TaskHistoriesTableFilterComposer
     return composer;
   }
 
-  $$UsersTableFilterComposer get changedBy {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+  $$UserMembersTableFilterComposer get changedBy {
+    final $$UserMembersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.changedBy,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserMembersTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12837,20 +12870,20 @@ class $$TaskHistoriesTableOrderingComposer
     return composer;
   }
 
-  $$UsersTableOrderingComposer get changedBy {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
+  $$UserMembersTableOrderingComposer get changedBy {
+    final $$UserMembersTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.changedBy,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableOrderingComposer(
+          }) => $$UserMembersTableOrderingComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12931,20 +12964,20 @@ class $$TaskHistoriesTableAnnotationComposer
     return composer;
   }
 
-  $$UsersTableAnnotationComposer get changedBy {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+  $$UserMembersTableAnnotationComposer get changedBy {
+    final $$UserMembersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.changedBy,
-      referencedTable: $db.users,
+      referencedTable: $db.userMembers,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserMembersTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.userMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -13484,8 +13517,8 @@ class $LocalDatabaseManager {
   $LocalDatabaseManager(this._db);
   $$CompaniesTableTableManager get companies =>
       $$CompaniesTableTableManager(_db, _db.companies);
-  $$UsersTableTableManager get users =>
-      $$UsersTableTableManager(_db, _db.users);
+  $$UserMembersTableTableManager get userMembers =>
+      $$UserMembersTableTableManager(_db, _db.userMembers);
   $$WorkspacesTableTableManager get workspaces =>
       $$WorkspacesTableTableManager(_db, _db.workspaces);
   $$ProjectsTableTableManager get projects =>

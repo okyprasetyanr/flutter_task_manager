@@ -1,8 +1,12 @@
-import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/core/services/collector/collector_message.dart';
+import 'package:task_manager/feature/activity/presentation/bloc/activity_state.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 
 abstract class ActivityRepository {
-  Future<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> getActivity({
-    required String workspaceId,
+  Stream<ActivityStateLoaded> watchDashboard({
+    required ModelWorkspaceMerge workspace,
   });
+
+  void disposeActivityRealtime();
+
+  Future<void> initActivityRealTime({required String workspaceId});
 }

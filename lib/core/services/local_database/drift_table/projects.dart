@@ -8,7 +8,7 @@ class Projects extends Table {
   TextColumn get type => text()();
   TextColumn get status => text()();
   TextColumn get createdBy =>
-      text().references(Users, #id, onDelete: KeyAction.setNull)();
+      text().references(UserMembers, #id, onDelete: KeyAction.setNull)();
   IntColumn get totalContribut => integer()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get start => dateTime()();

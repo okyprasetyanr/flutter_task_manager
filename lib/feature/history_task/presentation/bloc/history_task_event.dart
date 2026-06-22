@@ -1,13 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
-import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 
 class HistoryTaskEvent {}
 
-class HistoryTaskEventGetData extends HistoryTaskEvent {
-  final ModelWorkspace? data;
+class HistoryTaskEventWatchHistory extends HistoryTaskEvent {
+  final ModelWorkspaceMerge? data;
 
-  HistoryTaskEventGetData({this.data});
+  HistoryTaskEventWatchHistory({this.data});
 }
 
 class HistoryTaskEventChangeStatus extends HistoryTaskEvent {
@@ -15,3 +15,5 @@ class HistoryTaskEventChangeStatus extends HistoryTaskEvent {
 
   HistoryTaskEventChangeStatus({required this.status});
 }
+
+class HistoryTaskEventWatchUser extends HistoryTaskEvent {}

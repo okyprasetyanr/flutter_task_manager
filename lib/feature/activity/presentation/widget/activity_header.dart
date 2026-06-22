@@ -17,10 +17,13 @@ class ActivityHeader extends StatelessWidget {
       widgetRight:
           BlocSelector<ActivityBloc, ActivityState, (String?, EnumStatusState)>(
             selector: (state) => state is ActivityStateLoaded
-                ? (state.dataWorkspace?.name ?? "...", state.status)
+                ? (
+                    state.dataWorkspace?.dataWorkspace.name ?? "...",
+                    state.status,
+                  )
                 : (null, EnumStatusState.loading),
             builder: (context, state) => state.$2 == EnumStatusState.loading
-                ? CustomLoading()
+                ? SizedBox(height: 20, width: 20, child: CustomLoading())
                 : Text(
                     "${state.$1} Company",
                     style: lv1TextStyle,

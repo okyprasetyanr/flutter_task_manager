@@ -18,7 +18,6 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
   final Set<ModelWorkspaceMerge> dataWorkspace;
   final Set<ModelUser> dataUser;
   final ModelWorkspaceMerge? selectedWorkspace;
-  final bool? initMember;
 
   WorkspaceStateLoaded({
     this.selectedWorkspace,
@@ -27,7 +26,6 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
     this.failed,
     this.error,
     this.noconnection,
-    this.initMember,
     this.dataWorkspace = const {},
     this.dataUser = const {},
   });
@@ -41,11 +39,9 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
     String? failed,
     String? error,
     String? noconnection,
-    bool? initMember,
   }) {
     return WorkspaceStateLoaded(
       dataUser: dataUser ?? this.dataUser,
-      initMember: initMember ?? this.initMember,
       selectedWorkspace: selectedWorkspace,
       noconnection: noconnection,
       companyName: companyName ?? this.companyName,
@@ -58,7 +54,6 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
 
   @override
   List<Object?> get props => [
-    initMember,
     selectedWorkspace,
     companyName,
     status,

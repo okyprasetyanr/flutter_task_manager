@@ -6,13 +6,11 @@ import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/stream_manager/stream_manager.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
-import 'package:task_manager/feature/activity/data/local/activity_local.dart';
 import 'package:task_manager/feature/activity/data/repository_imp/activity_repository_imp.dart';
 import 'package:task_manager/feature/activity/domain/repository/activity_repository.dart';
 import 'package:task_manager/feature/activity/presentation/bloc/activity_bloc.dart';
 import 'package:task_manager/feature/activity/presentation/bloc/activity_event.dart';
 import 'package:task_manager/feature/activity/presentation/page/activity_page.dart';
-import 'package:task_manager/feature/history_task/data/local/history_task_local.dart';
 import 'package:task_manager/feature/history_task/data/repository_imp/history_task_repository_imp.dart';
 import 'package:task_manager/feature/history_task/domain/repository/history_task_repository.dart';
 import 'package:task_manager/feature/history_task/presentation/bloc/history_task_bloc.dart';
@@ -53,7 +51,6 @@ import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project.dart';
 import 'package:task_manager/shared/model/model_task.dart';
-import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 
 final statusInit = EnumStatusState.loading;
 final routes = {
@@ -80,7 +77,7 @@ final routes = {
   '/${RoutesEnum.workspace}': (context) =>
       RepositoryProvider<WorkspaceRepository>(
         create: (context) => WorkspaceRepositoryImp(
-          userCache: context.read<UserCache>(),
+          userRepo: context.read<UserRepository>(),
           streamManager: context.read<StreamManager>(),
           messageCollector: context.read<CollectorMessage>(),
           remote: context.read<RemoteServices>(),
@@ -93,8 +90,7 @@ final routes = {
             BlocProvider(
               create: (context) =>
                   WorkspaceBloc(context.read<WorkspaceRepository>())
-                    ..add(WorkspaceEventWatch())
-                    ..add(WorkspaceEventWatchUser()),
+                    ..add(WorkspaceEventWatch()),
             ),
           ],
           child: WorkspacePage(),
@@ -105,7 +101,7 @@ final routes = {
     final data = args!['dataTransfered'] as ModelWorkspaceMerge;
     return RepositoryProvider<WorkspaceDetailRepository>(
       create: (context) => WorkspaceDetailRepositoryImp(
-        userCache: context.read<UserCache>(),
+        userRepo: context.read<UserRepository>(),
         remote: context.read<RemoteServices>(),
         local: context.read<LocalServices>(),
         userSession: context.read<UserSession>(),
@@ -142,12 +138,12 @@ final routes = {
   },
   '/${RoutesEnum.historyTask}': (context) {
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
-    final data = args!['dataTransfered'] as ModelWorkspace;
+    final data = args!['dataTransfered'] as ModelWorkspaceMerge;
     return RepositoryProvider<HistoryTaskRepository>(
       create: (context) => HistoryTaskRepositoryImp(
-        userCache: context.read<UserCache>(),
+        userRepo: context.read<UserRepository>(),
         remote: context.read<RemoteServices>(),
-        local: HistoryTaskLocal(),
+        local: context.read<LocalServices>(),
         userSession: context.read<UserSession>(),
         helper: context.read<CollectData>(),
         messageCollector: context.read<CollectorMessage>(),
@@ -155,7 +151,7 @@ final routes = {
       child: BlocProvider(
         create: (context) =>
             HistoryTaskBloc(context.read<HistoryTaskRepository>())
-              ..add(HistoryTaskEventGetData(data: data)),
+              ..add(HistoryTaskEventWatchHistory(data: data)),
         child: HistoryTaskPage(),
       ),
     );
@@ -183,12 +179,12 @@ final routes = {
   },
   '/${RoutesEnum.activity}': (context) {
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
-    final data = args!['dataTransfered'] as ModelWorkspace;
+    final data = args!['dataTransfered'] as ModelWorkspaceMerge;
     return RepositoryProvider<ActivityRepository>(
       create: (context) => ActivityRepositoryImp(
-        userCache: context.read<UserCache>(),
+        userRepo: context.read<UserRepository>(),
         remote: context.read<RemoteServices>(),
-        local: ActivityLocal(),
+        local: context.read<LocalServices>(),
         userSession: context.read<UserSession>(),
         helper: context.read<CollectData>(),
         messageCollector: context.read<CollectorMessage>(),
@@ -196,7 +192,7 @@ final routes = {
       child: BlocProvider(
         create: (context) =>
             ActivityBloc(context.read<ActivityRepository>())
-              ..add(ActivityEventGetData(data: data)),
+              ..add(ActivityEventWatchActivity(data: data)),
         child: ActivityPage(),
       ),
     );

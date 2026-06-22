@@ -1,20 +1,18 @@
-import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
+import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
 import 'package:task_manager/shared/enum.dart';
-import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 
 abstract class WorkspaceRepository {
-  Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchWorkspace();
-  // Stream<CollectorMessage> watchMessage();
-  Future<void> initWorkspaceRealtime();
-  Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchMember();
-  // Stream<CollectorMessage> watchMessageMember();
-  Future<void> initMemberRealtime();
-  void disposeWorkspaceRealtime();
-  String getCompanyName();
+  Stream<WorkspaceStateLoaded> watchDashboard();
 
-  Stream<Set<ModelUser>> getUser();
+  Future<void> initWorkspaceRealtime();
+
+  Future<void> initMemberRealtime();
+
+  void disposeWorkspaceRealtime();
+
+  String getCompanyName();
 
   Future<CollectorMessage?> createWorkspace({
     required String name,

@@ -24,7 +24,7 @@ part 'local_database.g.dart';
 @DriftDatabase(
   tables: [
     Companies,
-    Users,
+    UserMembers,
     Projects,
     ProjectMembers,
     Workspaces,

@@ -6,7 +6,7 @@ import 'package:task_manager/feature/activity/presentation/bloc/activity_state.d
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
-import 'package:task_manager/shared/model/model_activity.dart';
+import 'package:task_manager/feature/activity/domain/model/model_activity.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 
@@ -59,7 +59,7 @@ class ActivittyListActivity extends StatelessWidget {
                         ),
                         const TextSpan(text: ' changed '),
                         TextSpan(
-                          text: data.action.label.toLowerCase(),
+                          text: data.action.text.toLowerCase(),
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ];
@@ -71,7 +71,7 @@ class ActivittyListActivity extends StatelessWidget {
                         ),
                         const TextSpan(text: ' '),
                         TextSpan(
-                          text: data.action.label,
+                          text: data.action.text,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ];

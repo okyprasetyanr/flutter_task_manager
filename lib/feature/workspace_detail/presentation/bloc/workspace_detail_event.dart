@@ -13,11 +13,7 @@ class WorkspaceDetailEventWatch extends WorkspaceDetailEvent {
   WorkspaceDetailEventWatch({required this.data});
 }
 
-class WorkspaceDetailEventWatchMember extends WorkspaceDetailEvent {}
-
 class WorkspaceDetailEventResetSelected extends WorkspaceDetailEvent {}
-
-class WorkspaceDetailEventWatchUser extends WorkspaceDetailEvent {}
 
 class WorkspaceDetailEventChangeStatus extends WorkspaceDetailEvent {
   final EnumStatusState status;

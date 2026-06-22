@@ -14,7 +14,6 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
   final Set<ModelUser> dataUser;
   final Set<ModelProjectMerge> dataProject;
   final EnumStatusState status;
-  final bool? initMember;
   final String? failed;
   final String? error;
   final String? noconnection;
@@ -22,7 +21,6 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
 
   WorkspaceDetailStateLoaded({
     this.selectedProject,
-    this.initMember,
     this.failed,
     this.error,
     this.noconnection,
@@ -42,14 +40,12 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
     Set<ModelUser>? dataUser,
     Set<ModelProjectMerge>? dataProject,
     EnumStatusState? status,
-    bool? initMember,
   }) {
     return WorkspaceDetailStateLoaded(
       selectedProject: selectedProject,
       error: error,
       failed: failed,
       noconnection: noconnection,
-      initMember: initMember ?? this.initMember,
       workspace: workspace ?? this.workspace,
       dataProject: dataProject ?? this.dataProject,
       status: status ?? this.status,
@@ -60,7 +56,6 @@ class WorkspaceDetailStateLoaded extends WorkspaceDetailState
   @override
   List<Object?> get props => [
     selectedProject,
-    initMember,
     workspace,
     dataProject,
     dataUser,

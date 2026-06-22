@@ -7,7 +7,7 @@ class WorkspaceMembers extends Table {
   TextColumn get workspaceId =>
       text().references(Workspaces, #id, onDelete: KeyAction.cascade)();
   TextColumn get userId =>
-      text().references(Users, #id, onDelete: KeyAction.cascade)();
+      text().references(UserMembers, #id, onDelete: KeyAction.cascade)();
   TextColumn get role => text()();
   TextColumn get companyId =>
       text().references(Companies, #id, onDelete: KeyAction.cascade)();

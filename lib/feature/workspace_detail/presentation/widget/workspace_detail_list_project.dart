@@ -22,102 +22,83 @@ class WorkspaceDetailListProject extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<WorkspaceDetailBloc, WorkspaceDetailState>(
-      listenWhen: (previous, current) =>
-          previous is WorkspaceDetailStateLoaded &&
-          current is WorkspaceDetailStateLoaded &&
-          previous.initMember == null &&
-          current.initMember == true,
-      listener: (context, state) {
-        if (state is WorkspaceDetailStateLoaded) {
-          context.read<WorkspaceDetailBloc>().add(
-            WorkspaceDetailEventWatchMember(),
-          );
-        }
-      },
-      child:
-          BlocSelector<
-            WorkspaceDetailBloc,
-            WorkspaceDetailState,
-            (Set<ModelProjectMerge>, EnumStatusState)
-          >(
-            selector: (state) => state is WorkspaceDetailStateLoaded
-                ? (state.dataProject, state.status)
-                : (const {}, EnumStatusState.loading),
-            builder: (context, state) =>
-                CustomListViewBuilderV<ModelProjectMerge>(
-                  status: state.$2,
-                  data: state.$1.toList(),
-                  content: (data, status) => [
-                    Text(data.dataProject.name, style: lv05TextStyle),
-                    const SizedBox(height: 4),
-                    Text(data.dataProject.type, style: lv05TextStyle),
-                    const SizedBox(height: 4),
-                    Text(
-                      data.dataProject.status.text,
-                      style: lv05TextStyle.copyWith(color: Colors.grey),
-                    ),
-                    Text(data.dataProject.createdBy, style: lv05TextStyle),
-                    const SizedBox(height: 4),
-                    Text(
-                      HelperDateConvert.toDisplayUI(
-                        date: data.dataProject.start,
-                      ),
-                      style: lv05TextStyle,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      HelperDateConvert.toDisplayUI(date: data.dataProject.end),
-                      style: lv05TextStyle,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      data.dataProject.totalContribut.toString(),
-                      style: lv05TextStyle,
-                    ),
-                    const SizedBox(height: 4),
-                    SizedBox(
-                      height: 30,
-                      child:
-                          data.dataProjectMember.isEmpty &&
-                              status == EnumStatusState.synchronize
-                          ? const CustomLoading()
-                          : data.dataProjectMember.isEmpty &&
-                                status == EnumStatusState.none
-                          ? const CustomTextEmpty()
-                          : SharedWidgetMemberList(
-                              data: data.dataProjectMember,
-                              status: status,
-                            ),
-                    ),
-                  ],
-                  onPressed: (data) => {
-                    RoutesNavigator(
-                      context: context,
-                      routeName: RoutesEnum.projectDetail,
-                      replace: false,
-                      arguments: {'dataTransfered': data},
-                    ).navigate(),
-                  },
-                  onEdit: (data) {
-                    final bloc = context.read<WorkspaceDetailBloc>();
-                    bloc.add(WorkspaceDetailEventSelectedProject(data: data));
-                    return customBottomSheet(
-                      context: context,
-                      resetItemForm: () =>
-                          bloc.add(WorkspaceDetailEventResetSelected()),
-                      content: (scrollController) {
-                        return BlocProvider.value(
-                          value: bloc,
-                          child: WorkspaceDetailBotshetContent(
-                            scrollController: scrollController,
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
+    return BlocSelector<
+      WorkspaceDetailBloc,
+      WorkspaceDetailState,
+      (Set<ModelProjectMerge>, EnumStatusState)
+    >(
+      selector: (state) => state is WorkspaceDetailStateLoaded
+          ? (state.dataProject, state.status)
+          : (const {}, EnumStatusState.loading),
+      builder: (context, state) => CustomListViewBuilderV<ModelProjectMerge>(
+        status: state.$2,
+        data: state.$1.toList(),
+        content: (data, status) => [
+          Text(data.dataProject.name, style: lv05TextStyle),
+          const SizedBox(height: 4),
+          Text(data.dataProject.type, style: lv05TextStyle),
+          const SizedBox(height: 4),
+          Text(
+            data.dataProject.status.text,
+            style: lv05TextStyle.copyWith(color: Colors.grey),
           ),
+          Text(data.dataProject.createdBy, style: lv05TextStyle),
+          const SizedBox(height: 4),
+          Text(
+            HelperDateConvert.toDisplayUI(date: data.dataProject.start),
+            style: lv05TextStyle,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            HelperDateConvert.toDisplayUI(date: data.dataProject.end),
+            style: lv05TextStyle,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            data.dataProject.totalContribut.toString(),
+            style: lv05TextStyle,
+          ),
+          const SizedBox(height: 4),
+          SizedBox(
+            height: 30,
+            child:
+                data.dataProjectMember.isEmpty &&
+                    status == EnumStatusState.synchronize
+                ? const CustomLoading()
+                : data.dataProjectMember.isEmpty &&
+                      status == EnumStatusState.none
+                ? const CustomTextEmpty()
+                : SharedWidgetMemberList(
+                    data: data.dataProjectMember,
+                    status: status,
+                  ),
+          ),
+        ],
+        onPressed: (data) => {
+          RoutesNavigator(
+            context: context,
+            routeName: RoutesEnum.projectDetail,
+            replace: false,
+            arguments: {'dataTransfered': data},
+          ).navigate(),
+        },
+        onEdit: (data) {
+          final bloc = context.read<WorkspaceDetailBloc>();
+          bloc.add(WorkspaceDetailEventSelectedProject(data: data));
+          return customBottomSheet(
+            context: context,
+            resetItemForm: () => bloc.add(WorkspaceDetailEventResetSelected()),
+            content: (scrollController) {
+              return BlocProvider.value(
+                value: bloc,
+                child: WorkspaceDetailBotshetContent(
+                  scrollController: scrollController,
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

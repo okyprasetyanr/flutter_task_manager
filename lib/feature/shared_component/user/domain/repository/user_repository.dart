@@ -3,4 +3,5 @@ import 'package:task_manager/feature/shared_component/user/domain/model/model_us
 abstract class UserRepository {
   void watchUser();
   Stream<Set<ModelUser>> getUser();
+  void disposeUserRealtime();
 }

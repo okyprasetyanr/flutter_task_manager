@@ -16,29 +16,32 @@ class SyncTable {
     required Insertable<L> Function(T modelToDrift) modelData,
     bool init = false,
   }) async {
-    await localDatabase.transaction(() async {
-      for (final model in remoteModels) {
-        await localDatabase
-            .into(tableName)
-            .insertOnConflictUpdate(modelData(model));
-      }
-
-      if (init) {
-        var query = localDatabase.select(tableName);
-        final localRows = await query.get();
-
-        final localIds = localRows.map((row) => getLocalId(row)).toSet();
-        final remoteIds = remoteModels.map(getRemoteId).toSet();
-        final deletedIds = localIds.difference(remoteIds);
-
-        if (deletedIds.isNotEmpty) {
-          await (localDatabase.delete(
-            tableName,
-          )..where((tbl) => idColumn.isIn(deletedIds))).go();
-          devLog("First Load Sync: Berhasil menghapus selisih data lama.");
+    try {
+      await localDatabase.transaction(() async {
+        for (final model in remoteModels) {
+          await localDatabase
+              .into(tableName)
+              .insertOnConflictUpdate(modelData(model));
         }
-      }
-    });
+
+        if (init) {
+          var query = localDatabase.select(tableName);
+          final localRows = await query.get();
+
+          final localIds = localRows.map((row) => getLocalId(row)).toSet();
+          final remoteIds = remoteModels.map(getRemoteId).toSet();
+          final deletedIds = localIds.difference(remoteIds);
+
+          if (deletedIds.isNotEmpty) {
+            await (localDatabase.delete(
+              tableName,
+            )..where((tbl) => idColumn.isIn(deletedIds))).go();
+          }
+        }
+      });
+    } catch (e) {
+      devLog("Log SyncTable: error: ${e.toString()}");
+    }
   }
 
   Future<void> deleteData({

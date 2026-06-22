@@ -5,8 +5,9 @@ import 'package:task_manager/feature/history_task/presentation/bloc/history_task
 import 'package:task_manager/feature/history_task/presentation/bloc/history_task_state.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
-import 'package:task_manager/shared/model/model_task_history.dart';
+import 'package:task_manager/feature/history_task/domain/model/model_task_history.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 
@@ -22,31 +23,24 @@ class HistoryTaskListHistory extends StatelessWidget {
           BlocSelector<
             HistoryTaskBloc,
             HistoryTaskState,
-            (Set<ModelHistoryTask>, EnumStatusState)
+            (Set<ModelHistoryTask>, EnumStatusState, Set<ModelUser>?)
           >(
             selector: (state) => state is HistoryTaskStateLoaded
-                ? (state.dataHistoryTask, state.status)
-                : (const {}, EnumStatusState.loading),
+                ? (state.dataHistoryTask, state.status, state.dataUser)
+                : (const {}, EnumStatusState.loading, const {}),
             builder: (context, state) {
               return CustomListViewBuilderV<ModelHistoryTask>(
                 status: state.$2,
                 data: state.$1.toList(),
                 content: (data, _) {
-                  final bloc = context.read<HistoryTaskBloc>().state;
-
-                  final users = bloc is HistoryTaskStateLoaded
-                      ? bloc.dataUser
-                      : const <ModelUser>{};
-
-                  final display = data.display(users: users!);
-
+                  final display = data.display(users: state.$3!);
                   final actor =
-                      users
-                          .where((e) => e.id == data.changedBy)
+                      state.$3
+                          ?.where((e) => e.id == data.changedBy)
                           .firstOrNull
                           ?.name ??
                       data.changedBy;
-
+                  devLog("Log HistoryTaskUI: listData: dataUser: ${state.$3}");
                   return [
                     Padding(
                       padding: const EdgeInsets.all(12),
@@ -65,7 +59,7 @@ class HistoryTaskListHistory extends StatelessWidget {
                                 ),
                                 const TextSpan(text: ' changed '),
                                 TextSpan(
-                                  text: data.field.label,
+                                  text: data.field.text,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),

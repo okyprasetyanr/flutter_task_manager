@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
-import 'package:task_manager/shared/model/model_activity.dart';
+import 'package:task_manager/feature/activity/domain/model/model_activity.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
-import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 
 class ActivityState {}
 
@@ -11,7 +11,7 @@ class ActivityStateInitial extends ActivityState {}
 class ActivityStateLoaded extends ActivityState with EquatableMixin {
   final Set<ModelActivity> dataActivity;
   final Set<ModelUser> dataUser;
-  final ModelWorkspace? dataWorkspace;
+  final ModelWorkspaceMerge? dataWorkspace;
   final EnumStatusState status;
   final String? failed;
   final String? error;
@@ -30,7 +30,7 @@ class ActivityStateLoaded extends ActivityState with EquatableMixin {
   ActivityStateLoaded copyWith({
     Set<ModelActivity>? dataActivity,
     Set<ModelUser>? dataUser,
-    ModelWorkspace? dataWorkspace,
+    ModelWorkspaceMerge? workspace,
     EnumStatusState? status,
     String? failed,
     String? error,
@@ -39,7 +39,7 @@ class ActivityStateLoaded extends ActivityState with EquatableMixin {
     return ActivityStateLoaded(
       dataActivity: dataActivity ?? this.dataActivity,
       dataUser: dataUser ?? this.dataUser,
-      dataWorkspace: dataWorkspace ?? this.dataWorkspace,
+      dataWorkspace: workspace ?? this.dataWorkspace,
       error: error ?? this.error,
       failed: failed ?? this.failed,
       noconnection: noconnection ?? this.noconnection,

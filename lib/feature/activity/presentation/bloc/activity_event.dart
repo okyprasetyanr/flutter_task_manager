@@ -1,12 +1,12 @@
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
-import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 
 class ActivityEvent {}
 
-class ActivityEventGetData extends ActivityEvent {
-  final ModelWorkspace? data;
+class ActivityEventWatchActivity extends ActivityEvent {
+  final ModelWorkspaceMerge? data;
 
-  ActivityEventGetData({required this.data});
+  ActivityEventWatchActivity({required this.data});
 }
 
 class ActivityEventChangeStatus extends ActivityEvent {
@@ -14,3 +14,5 @@ class ActivityEventChangeStatus extends ActivityEvent {
 
   ActivityEventChangeStatus({required this.status});
 }
+
+class ActivityEventWatchUser extends ActivityEvent {}

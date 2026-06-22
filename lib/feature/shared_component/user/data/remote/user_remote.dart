@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
 import 'package:task_manager/shared/enum.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class UserRemote {
   final ResponseWrapperRemote responseWrapper;
@@ -10,13 +11,27 @@ class UserRemote {
 
   UserRemote({required this.responseWrapper, required this.supabaseClient});
 
-  Stream<Map<String, dynamic>> watchUser({required String companyId}) {
-    return responseWrapper.wrapStream(
-      getStream: () => supabaseClient
+  Future<List<Map<String, dynamic>>> getAllUser({
+    required String companyId,
+  }) async {
+    try {
+      final response = await supabaseClient
           .from(EnumTable.users.value)
-          .stream(primaryKey: [EnumUser.id.value])
-          .eq(EnumUser.companyId.value, companyId)
-          .order(EnumUser.name.value, ascending: false),
-    );
+          .select()
+          .eq(EnumUser.companyId.value, companyId);
+
+      return List<Map<String, dynamic>>.from(response);
+    } catch (e) {
+      devLog("Log UserRemote: Error: $e");
+      rethrow;
+    }
+  }
+
+  void removeUserChannel(RealtimeChannel userChannel) {
+    supabaseClient.removeChannel(userChannel);
+  }
+
+  RealtimeChannel buildUserChannel(String companyId) {
+    return supabaseClient.channel('public:${EnumTable.users.value}:$companyId');
   }
 }

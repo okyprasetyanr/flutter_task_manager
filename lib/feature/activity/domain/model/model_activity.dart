@@ -38,6 +38,21 @@ class ModelActivity extends Equatable {
     );
   }
 
+  factory ModelActivity.fromDrift(Map<String, dynamic> data) {
+    return ModelActivity(
+      id: data[EnumActivity.id.name],
+      taskId: data[EnumActivity.taskId.name],
+      userId: data[EnumActivity.userId.name],
+      action: EnumActivityActionX.fromServer(data[EnumActivity.action.name]),
+      oldValue: data[EnumActivity.oldValue.name],
+      newValue: data[EnumActivity.newValue.name],
+      createdAt: HelperDateConvert.toDateTime(
+        data[EnumActivity.createdAt.name],
+      ),
+      workspaceId: data[EnumActivity.workspaceId.name],
+    );
+  }
+
   @override
   List<Object?> get props => [
     id,

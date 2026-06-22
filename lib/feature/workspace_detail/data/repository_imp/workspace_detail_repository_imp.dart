@@ -1,18 +1,22 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:rxdart/rxdart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:task_manager/core/cache/user_cache.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
+import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_member.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
+import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_filter/helper_date_filter.dart';
 
@@ -22,7 +26,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   final UserSession userSession;
   final CollectData helper;
   final CollectorMessage messageCollector;
-  final UserCache userCache;
+  final UserRepository userRepo;
 
   WorkspaceDetailRepositoryImp({
     required this.remote,
@@ -30,7 +34,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     required this.userSession,
     required this.helper,
     required this.messageCollector,
-    required this.userCache,
+    required this.userRepo,
   });
 
   RealtimeChannel? _projectChannel;
@@ -166,7 +170,6 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     }
   }
 
-  @override
   Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchProject({
     required String workspaceId,
   }) {
@@ -178,7 +181,6 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
         });
   }
 
-  @override
   Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchMember({
     required String workspaceId,
   }) {
@@ -190,9 +192,54 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
         });
   }
 
-  @override
   Stream<Set<ModelUser>> watchUser() {
-    return userCache.stream;
+    return userRepo.getUser();
+  }
+
+  @override
+  Stream<WorkspaceDetailStateLoaded> watchDashboard({
+    required ModelWorkspaceMerge workspace,
+  }) {
+    return Rx.combineLatest3(
+      watchUser(),
+      watchProject(workspaceId: workspace.dataWorkspace.id),
+      watchMember(workspaceId: workspace.dataWorkspace.id),
+      (a, b, c) {
+        final projectList = (b.$1[EnumFetchApiStatus.success] as List)
+            .map((e) => ModelProject.fromDrift(e))
+            .toSet();
+
+        final memberList = c.$1.containsKey(EnumFetchApiStatus.success)
+            ? (c.$1[EnumFetchApiStatus.success] as List)
+                  .map((e) => ModelProjectMember.fromDrift(e))
+                  .toSet()
+            : <ModelProjectMember>[];
+
+        final dataProject = projectList.map((project) {
+          final members = memberList
+              .where((e) => e.projectId == project.id)
+              .toSet();
+
+          final matchedUsers = a
+              .where((user) => members.any((e) => e.userId == user.id))
+              .toSet();
+
+          return ModelProjectMerge(
+            dataProject: project,
+            dataProjectMember: matchedUsers,
+          );
+        }).toSet();
+
+        return WorkspaceDetailStateLoaded(
+          workspace: workspace,
+          dataUser: a,
+          dataProject: dataProject,
+          status: EnumStatusState.none,
+          error: b.$2.error,
+          failed: b.$2.failed,
+        );
+      },
+    );
   }
 
   @override

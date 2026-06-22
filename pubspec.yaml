@@ -24,6 +24,7 @@ dependencies:
   supabase_flutter: ^2.14.2
   drift: ^2.14.1
   drift_flutter: ^0.1.0
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:

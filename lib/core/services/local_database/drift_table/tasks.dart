@@ -13,9 +13,9 @@ class Tasks extends Table {
   TextColumn get priority => text()();
   IntColumn get storyPoint => integer()();
   TextColumn get reporterId =>
-      text().references(Users, #id, onDelete: KeyAction.setNull)();
+      text().references(UserMembers, #id, onDelete: KeyAction.setNull)();
   TextColumn get assigneeId =>
-      text().references(Users, #id, onDelete: KeyAction.setNull)();
+      text().references(UserMembers, #id, onDelete: KeyAction.setNull)();
   DateTimeColumn get startDate => dateTime()();
   DateTimeColumn get dueDate => dateTime()();
   DateTimeColumn get createdAt => dateTime()();

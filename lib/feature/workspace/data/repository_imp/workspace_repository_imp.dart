@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:task_manager/core/cache/user_cache.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
@@ -11,12 +11,15 @@ import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/stream_manager/stream_manager.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
+import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_member.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace/domain/repository/workspace_repository.dart';
+import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
+import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class WorkspaceRepositoryImp implements WorkspaceRepository {
@@ -26,7 +29,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   final CollectData helper;
   final CollectorMessage messageCollector;
   final StreamManager streamManager;
-  final UserCache userCache;
+  final UserRepository userRepo;
 
   WorkspaceRepositoryImp({
     required this.remote,
@@ -35,7 +38,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
     required this.helper,
     required this.messageCollector,
     required this.streamManager,
-    required this.userCache,
+    required this.userRepo,
   });
 
   RealtimeChannel? _workspaceChannel;
@@ -44,17 +47,6 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   @override
   String getCompanyName() {
     return userSession.getCompanyName();
-  }
-
-  @override
-  Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>
-  watchWorkspace() {
-    return local.workspaceLocal
-        .watchWorkspace(companyId: userSession.getCompanyId())
-        .map((event) {
-          final data = helper.collectDataLocal(fetchResult: event);
-          return (data, messageCollector.getMessage(data));
-        });
   }
 
   @override
@@ -181,7 +173,6 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
     }
   }
 
-  @override
   Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchMember() {
     return local.workspaceLocal
         .watchMember(companyId: userSession.getCompanyId())
@@ -193,9 +184,61 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
         });
   }
 
+  Stream<Set<ModelUser>> watchUser() {
+    return userRepo.getUser();
+  }
+
+  Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>
+  watchWorkspace() {
+    return local.workspaceLocal
+        .watchWorkspace(companyId: userSession.getCompanyId())
+        .map((event) {
+          final data = helper.collectDataLocal(fetchResult: event);
+          return (data, messageCollector.getMessage(data));
+        });
+  }
+
   @override
-  Stream<Set<ModelUser>> getUser() {
-    return userCache.stream;
+  Stream<WorkspaceStateLoaded> watchDashboard() {
+    return Rx.combineLatest3(watchUser(), watchWorkspace(), watchMember(), (
+      a,
+      b,
+      c,
+    ) {
+      final workspaceList = (b.$1[EnumFetchApiStatus.success] as List)
+          .map((e) => ModelWorkspace.fromDrift(e))
+          .toList();
+
+      final memberList = c.$1.containsKey(EnumFetchApiStatus.success)
+          ? (c.$1[EnumFetchApiStatus.success] as List)
+                .map((e) => ModelWorkspaceMember.fromDrift(e))
+                .toList()
+          : <ModelWorkspaceMember>[];
+
+      final dataWorkspace = workspaceList.map((workspace) {
+        final members = memberList
+            .where((m) => m.workspaceId == workspace.id)
+            .toList();
+
+        final matchedUsers = a
+            .where((u) => members.any((m) => m.userId == u.id))
+            .toSet();
+
+        return ModelWorkspaceMerge(
+          dataWorkspace: workspace,
+          dataWorkspaceMember: matchedUsers,
+        );
+      }).toSet();
+
+      return WorkspaceStateLoaded(
+        dataUser: a,
+        dataWorkspace: dataWorkspace,
+        companyName: getCompanyName(),
+        status: EnumStatusState.none,
+        error: b.$2.error,
+        failed: b.$2.failed,
+      );
+    });
   }
 
   @override

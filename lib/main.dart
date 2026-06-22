@@ -14,7 +14,9 @@ import 'package:task_manager/core/services/response_wrapper/response_wrapper_loc
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
 import 'package:task_manager/core/stream_manager/stream_manager.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
+import 'package:task_manager/feature/activity/data/local/activity_local.dart';
 import 'package:task_manager/feature/activity/data/remote/activity_remote.dart';
+import 'package:task_manager/feature/history_task/data/local/history_task_local.dart';
 import 'package:task_manager/feature/history_task/data/remote/history_task_remote.dart';
 import 'package:task_manager/feature/login/data/remote/login_remote.dart';
 import 'package:task_manager/feature/project_detail/data/remote/project_detail_remote.dart';
@@ -75,20 +77,33 @@ Future<void> main() async {
         RepositoryProvider(
           lazy: false,
           create: (context) {
+            final local = context.read<LocalDatabase>();
+            final syncTable = context.read<SyncTable>();
             final wrapper = context.read<ResponseWrapperLocal>();
             return LocalServices(
+              activityLocal: ActivityLocal(
+                localDatabase: local,
+                responseWrapper: wrapper,
+                syncTable: syncTable,
+              ),
+              historyTaskLocal: HistoryTaskLocal(
+                localDatabase: local,
+                responseWrapper: wrapper,
+                syncTable: syncTable,
+              ),
               workspaceDetailLocal: WorkspaceDetailLocal(
-                syncTable: context.read<SyncTable>(),
-                localDatabase: context.read<LocalDatabase>(),
-                responseWrapper: context.read<ResponseWrapperLocal>(),
+                syncTable: syncTable,
+                localDatabase: local,
+                responseWrapper: wrapper,
               ),
               userLocal: UserLocal(
+                syncTable: syncTable,
                 responseWrapper: wrapper,
-                localDatabase: context.read<LocalDatabase>(),
+                localDatabase: local,
               ),
               workspaceLocal: WorkspaceLocal(
-                syncTable: context.read<SyncTable>(),
-                localDatabase: context.read<LocalDatabase>(),
+                syncTable: syncTable,
+                localDatabase: local,
                 responseWrapper: wrapper,
               ),
             );
@@ -114,9 +129,15 @@ Future<void> main() async {
               projectDetailRemote: ProjectDetailRemote(
                 responseWrapper: wrapper,
               ),
-              historyTaskRemote: HistoryTaskRemote(responseWrapper: wrapper),
+              historyTaskRemote: HistoryTaskRemote(
+                responseWrapper: wrapper,
+                supabaseClient: client,
+              ),
               taskDetailRemote: TaskDetailRemote(responseWrapper: wrapper),
-              activityRemote: ActivityRemote(responseWrapper: wrapper),
+              activityRemote: ActivityRemote(
+                responseWrapper: wrapper,
+                supabaseClient: client,
+              ),
               notificationRemote: NotificationRemote(
                 responseWrapper: wrapper,
                 supabaseClient: client,

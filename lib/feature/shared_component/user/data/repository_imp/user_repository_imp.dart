@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_manager/core/cache/user_cache.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
@@ -36,32 +37,18 @@ class UserRepositoryImp implements UserRepository {
     required this.streamSubsc,
   });
 
+  RealtimeChannel? _userChannel;
+
   @override
-  void watchUser() {
+  Future<void> watchUser() async {
     _sub?.cancel();
-
-    remote.userRemote.watchUser(companyId: userSession.getCompanyId()).listen((
-      event,
-    ) async {
-      final data = await helper.collectDataRemote(
-        remoteFunc: () async => event,
-        localFunc: ({required dataToCache}) async {
-          local.userLocal.saveWorkspaces(dataToCache as List);
-        },
-        pageName: "User",
-      );
-
-      if (!data.containsKey(EnumFetchApiStatus.success)) {
-        devLog("Log UserRepositoryImp: watchUser: data: $data");
-        customRootSnackBar(messageCollector.getMessage(data));
-      }
-    });
-
+    await initUserRealtime();
     _sub = local.userLocal
-        .watchUsers(companyId: userSession.getCompanyId())
+        .watchUser(companyId: userSession.getCompanyId())
         .listen((event) {
           final data = helper.collectDataLocal(fetchResult: event);
 
+          devLog("Log UserRepositoryImp: initData: $data");
           if (data.containsKey(EnumFetchApiStatus.success)) {
             final users = (data[EnumFetchApiStatus.success] as List)
                 .map((e) => ModelUser.fromDrift(e))
@@ -75,8 +62,67 @@ class UserRepositoryImp implements UserRepository {
     streamSubsc.addStreamSubsc(EnumTable.users, _sub!);
   }
 
+  Future<void> initUserRealtime() async {
+    final companyId = userSession.getCompanyId();
+    try {
+      final List<Map<String, dynamic>> rawRemoteData = await remote.userRemote
+          .getAllUser(companyId: companyId);
+      devLog("Log UserRepositoryImp: initData: $rawRemoteData");
+      await local.userLocal.syncUser(remoteResults: rawRemoteData, init: true);
+    } catch (e) {
+      devLog("Log UserRepositoryImp: error: $e");
+    }
+
+    if (_userChannel != null) {
+      remote.userRemote.removeUserChannel(_userChannel!);
+    }
+    _userChannel = remote.userRemote.buildUserChannel(companyId);
+
+    _userChannel!
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: EnumTable.users.value,
+          filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq,
+            column: EnumUser.companyId.value,
+            value: companyId,
+          ),
+          callback: (PostgresChangePayload payload) async {
+            try {
+              if (payload.eventType == PostgresChangeEvent.delete) {
+                final deleteId = payload.oldRecord['id'];
+
+                if (deleteId != null) {
+                  await local.userLocal.deleteUser(deleteId.toString());
+                }
+              } else {
+                final data = payload.newRecord;
+                await local.userLocal.syncUser(remoteResults: [data]);
+              }
+            } catch (e) {
+              devLog("Log UsereRepositoryImp: error: $e");
+            }
+          },
+        )
+        .subscribe((state, error) {
+          if (error != null) {
+            devLog("Log UsereRepositoryImp: error Supabase: $error");
+          }
+        });
+  }
+
   @override
   Stream<Set<ModelUser>> getUser() {
+    devLog("Log UserRepository: getUser: check");
     return userCache.stream;
+  }
+
+  @override
+  void disposeUserRealtime() {
+    if (_userChannel != null) {
+      remote.userRemote.removeUserChannel(_userChannel!);
+      _userChannel = null;
+    }
   }
 }

@@ -4,43 +4,38 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/feature/history_task/domain/repository/history_task_repository.dart';
 import 'package:task_manager/feature/history_task/presentation/bloc/history_task_event.dart';
 import 'package:task_manager/feature/history_task/presentation/bloc/history_task_state.dart';
-import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
-import 'package:task_manager/shared/model/model_task_history.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class HistoryTaskBloc extends Bloc<HistoryTaskEvent, HistoryTaskState> {
   final HistoryTaskRepository repo;
-  StreamSubscription? _sub;
   HistoryTaskBloc(this.repo) : super(HistoryTaskStateInitial()) {
-    on<HistoryTaskEventGetData>(_onGetData);
+    on<HistoryTaskEventWatchHistory>(_onWatchDashboard);
     on<HistoryTaskEventChangeStatus>(_onChangeStatus);
   }
 
-  Future<void> _onGetData(
-    HistoryTaskEventGetData event,
+  Future<void> _onWatchDashboard(
+    HistoryTaskEventWatchHistory event,
     Emitter<HistoryTaskState> emit,
   ) async {
-    final currentState = state is HistoryTaskStateLoaded
-        ? state as HistoryTaskStateLoaded
-        : HistoryTaskStateLoaded();
     add(HistoryTaskEventChangeStatus(status: EnumStatusState.loading));
-    final dataWorkspace = event.data ?? currentState.dataWorkspace!;
-    final data = await repo.getHistoryTask(workspaceId: dataWorkspace.id);
-    // final dataUser = repo.getUser();
-    emit(
-      currentState.copyWith(
-        // dataUser: dataUser,
-        dataHistoryTask: data.$1.containsKey(EnumFetchApiStatus.success)
-            ? (data.$1[EnumFetchApiStatus.success] as List)
-                  .map((e) => ModelHistoryTask.fromJson(e))
-                  .toSet()
-            : const {},
-        dataWorkspace: dataWorkspace,
-        error: data.$2.error,
-        failed: data.$2.failed,
-        noconnection: data.$2.noconnection,
-        status: EnumStatusState.none,
-      ),
+    final workspace = event.data!;
+    await repo.initHistoryRealTime(workspaceId: workspace.dataWorkspace.id);
+    await emit.forEach<HistoryTaskStateLoaded>(
+      repo.watchDashboard(workspace: workspace),
+      onData: (data) {
+        devLog("Log HistoryTaskBloc: watchDashboard: checked");
+        return data;
+      },
+      onError: (error, stackTrace) =>
+          (state is HistoryTaskStateLoaded
+                  ? state as HistoryTaskStateLoaded
+                  : HistoryTaskStateLoaded())
+              .copyWith(
+                error: error.toString(),
+                workspace: workspace,
+                status: EnumStatusState.none,
+              ),
     );
   }
 
@@ -56,5 +51,9 @@ class HistoryTaskBloc extends Bloc<HistoryTaskEvent, HistoryTaskState> {
     );
   }
 
-  void data() {}
+  @override
+  Future<void> close() {
+    repo.disposeHistoryRealtime();
+    return super.close();
+  }
 }

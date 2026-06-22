@@ -38,6 +38,21 @@ class ModelHistoryTask extends Equatable {
     );
   }
 
+  factory ModelHistoryTask.fromDrift(Map<String, dynamic> data) {
+    return ModelHistoryTask(
+      workspaceId: data[EnumHistoryTask.workspaceId.name],
+      id: data[EnumHistoryTask.id.name],
+      taskId: data[EnumHistoryTask.taskId.name],
+      field: EnumHistoryField.fromString(data[EnumHistoryTask.field.name]),
+      oldValue: data[EnumHistoryTask.oldValue.name],
+      newValue: data[EnumHistoryTask.newValue.name],
+      changedBy: data[EnumHistoryTask.changedBy.name],
+      changedAt: HelperDateConvert.toDateTime(
+        data[EnumHistoryTask.changedAt.name],
+      ),
+    );
+  }
+
   @override
   List<Object?> get props => [
     workspaceId,
