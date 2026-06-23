@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
-import 'package:task_manager/core/stream_manager/stream_manager.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/login/data/local/login_local.dart';
 import 'package:task_manager/feature/login/domain/enum/enum.dart';

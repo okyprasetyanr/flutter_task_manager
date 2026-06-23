@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
-import 'package:task_manager/core/stream_manager/stream_manager.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/activity/data/repository_imp/activity_repository_imp.dart';
 import 'package:task_manager/feature/activity/domain/repository/activity_repository.dart';
