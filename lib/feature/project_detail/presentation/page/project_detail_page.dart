@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/base_layout/base_layout.dart';
+import 'package:task_manager/feature/shared_component/widget/base_layout/base_layout.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_header.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_list_member.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_list_task.dart';

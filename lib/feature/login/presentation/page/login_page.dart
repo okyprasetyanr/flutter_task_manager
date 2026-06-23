@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/base_layout/base_layout.dart';
+import 'package:task_manager/feature/shared_component/widget/base_layout/base_layout.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/routes/routes_navigator.dart';
 import 'package:task_manager/feature/login/presentation/bloc/login_bloc.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/base_layout/base_layout.dart';
+import 'package:task_manager/feature/shared_component/widget/base_layout/base_layout.dart';
 import 'package:task_manager/feature/shared_component/widget/floating_button_add/floating_button_add.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_bloc.dart';
 import 'package:task_manager/feature/workspace/presentation/widget/workspace_botshet_content.dart';

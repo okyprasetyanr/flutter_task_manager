@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/app_properties/app_properties.dart';
-import 'package:task_manager/base_layout/base_layout.dart';
+import 'package:task_manager/feature/shared_component/widget/base_layout/base_layout.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/feature/shared_component/widget/floating_button_add/floating_button_add.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
