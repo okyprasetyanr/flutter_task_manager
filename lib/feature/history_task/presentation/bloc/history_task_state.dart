@@ -11,7 +11,7 @@ class HistoryTaskStateInitial extends HistoryTaskState {}
 class HistoryTaskStateLoaded extends HistoryTaskState with EquatableMixin {
   final Set<ModelHistoryTask> dataHistoryTask;
   final EnumStatusState status;
-  final ModelWorkspaceMerge? dataWorkspace;
+  final ModelWorkspaceMerge? workspace;
   final Set<ModelUser>? dataUser;
   final String? failed;
   final String? error;
@@ -24,7 +24,7 @@ class HistoryTaskStateLoaded extends HistoryTaskState with EquatableMixin {
     this.failed,
     this.error,
     this.noconnection,
-    this.dataWorkspace,
+    this.workspace,
   });
 
   HistoryTaskStateLoaded copyWith({
@@ -43,7 +43,7 @@ class HistoryTaskStateLoaded extends HistoryTaskState with EquatableMixin {
       failed: failed ?? this.failed,
       noconnection: noconnection ?? this.noconnection,
       status: status ?? this.status,
-      dataWorkspace: workspace ?? this.dataWorkspace,
+      workspace: workspace ?? this.workspace,
     );
   }
 
@@ -55,6 +55,6 @@ class HistoryTaskStateLoaded extends HistoryTaskState with EquatableMixin {
     failed,
     noconnection,
     status,
-    dataWorkspace,
+    workspace,
   ];
 }

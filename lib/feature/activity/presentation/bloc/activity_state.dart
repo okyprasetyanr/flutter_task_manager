@@ -11,7 +11,7 @@ class ActivityStateInitial extends ActivityState {}
 class ActivityStateLoaded extends ActivityState with EquatableMixin {
   final Set<ModelActivity> dataActivity;
   final Set<ModelUser> dataUser;
-  final ModelWorkspaceMerge? dataWorkspace;
+  final ModelWorkspaceMerge? workspace;
   final EnumStatusState status;
   final String? failed;
   final String? error;
@@ -20,7 +20,7 @@ class ActivityStateLoaded extends ActivityState with EquatableMixin {
   ActivityStateLoaded({
     this.dataActivity = const {},
     this.dataUser = const {},
-    this.dataWorkspace,
+    this.workspace,
     this.status = EnumStatusState.none,
     this.failed,
     this.error,
@@ -39,7 +39,7 @@ class ActivityStateLoaded extends ActivityState with EquatableMixin {
     return ActivityStateLoaded(
       dataActivity: dataActivity ?? this.dataActivity,
       dataUser: dataUser ?? this.dataUser,
-      dataWorkspace: workspace ?? this.dataWorkspace,
+      workspace: workspace ?? this.workspace,
       error: error ?? this.error,
       failed: failed ?? this.failed,
       noconnection: noconnection ?? this.noconnection,
@@ -51,7 +51,7 @@ class ActivityStateLoaded extends ActivityState with EquatableMixin {
   List<Object?> get props => [
     dataActivity,
     dataUser,
-    dataWorkspace,
+    workspace,
     status,
     failed,
     error,

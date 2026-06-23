@@ -108,7 +108,7 @@ class ActivityRepositoryImp implements ActivityRepository {
       (a, b) {
         return ActivityStateLoaded(
           dataUser: a,
-          dataWorkspace: workspace,
+          workspace: workspace,
           dataActivity: (b.$1[EnumFetchApiStatus.success] as List)
               .map((e) => ModelActivity.fromDrift(e))
               .toSet(),

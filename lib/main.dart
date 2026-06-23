@@ -20,7 +20,15 @@ import 'package:task_manager/feature/history_task/data/local/history_task_local.
 import 'package:task_manager/feature/history_task/data/remote/history_task_remote.dart';
 import 'package:task_manager/feature/login/data/remote/login_remote.dart';
 import 'package:task_manager/feature/project_detail/data/local/project_detail_local.dart';
+import 'package:task_manager/feature/project_detail/data/local/source/label_local_source.dart';
+import 'package:task_manager/feature/project_detail/data/local/source/subtask_local_source.dart';
+import 'package:task_manager/feature/project_detail/data/local/source/task_label_local_source.dart';
+import 'package:task_manager/feature/project_detail/data/local/source/task_local_source.dart';
 import 'package:task_manager/feature/project_detail/data/remote/project_detail_remote.dart';
+import 'package:task_manager/feature/project_detail/data/remote/source/label_remote_source.dart';
+import 'package:task_manager/feature/project_detail/data/remote/source/subtask_remote_source.dart';
+import 'package:task_manager/feature/project_detail/data/remote/source/task_label_remote_source.dart';
+import 'package:task_manager/feature/project_detail/data/remote/source/task_remote_source.dart';
 import 'package:task_manager/feature/shared_component/helper/sync_table.dart';
 import 'package:task_manager/feature/shared_component/notification/data/remote/notification_remote.dart';
 import 'package:task_manager/feature/shared_component/notification/data/repository_imp/notification_repository_imp.dart';
@@ -83,9 +91,26 @@ Future<void> main() async {
             final wrapper = context.read<ResponseWrapperLocal>();
             return LocalServices(
               projectDetailLocal: ProjectDetailLocal(
-                localDatabase: local,
-                syncTable: syncTable,
-                responseWrapper: wrapper,
+                label: LabelLocalSource(
+                  localDatabase: local,
+                  syncTable: syncTable,
+                  responseWrapper: wrapper,
+                ),
+                subtask: SubtaskLocalSource(
+                  localDatabase: local,
+                  syncTable: syncTable,
+                  responseWrapper: wrapper,
+                ),
+                task: TaskLocalSource(
+                  localDatabase: local,
+                  syncTable: syncTable,
+                  responseWrapper: wrapper,
+                ),
+                taskLabel: TaskLabelLocalSource(
+                  localDatabase: local,
+                  syncTable: syncTable,
+                  responseWrapper: wrapper,
+                ),
               ),
               activityLocal: ActivityLocal(
                 localDatabase: local,
@@ -133,8 +158,22 @@ Future<void> main() async {
               ),
               loginRemote: LoginRemote(responseWrapper: wrapper),
               projectDetailRemote: ProjectDetailRemote(
-                supabaseClient: client,
-                responseWrapper: wrapper,
+                label: LabelRemoteSource(
+                  responseWrapper: wrapper,
+                  supabaseClient: client,
+                ),
+                subtask: SubtaskRemoteSource(
+                  responseWrapper: wrapper,
+                  supabaseClient: client,
+                ),
+                task: TaskRemoteSource(
+                  responseWrapper: wrapper,
+                  supabaseClient: client,
+                ),
+                taskLabel: TaskLabelRemoteSource(
+                  responseWrapper: wrapper,
+                  supabaseClient: client,
+                ),
               ),
               historyTaskRemote: HistoryTaskRemote(
                 responseWrapper: wrapper,

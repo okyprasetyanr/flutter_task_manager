@@ -7,13 +7,16 @@ import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
+import 'package:task_manager/feature/project_detail/data/repository_imp/handler/label_handler.dart';
+import 'package:task_manager/feature/project_detail/data/repository_imp/handler/subtask_handler.dart';
+import 'package:task_manager/feature/project_detail/data/repository_imp/handler/task_label_handler.dart';
+import 'package:task_manager/feature/project_detail/data/repository_imp/handler/task_handler.dart';
 import 'package:task_manager/feature/project_detail/domain/model/model_task_merge.dart';
 import 'package:task_manager/feature/project_detail/domain/repository/project_detail_repository.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
-import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
@@ -42,322 +45,69 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
   RealtimeChannel? taskChannel;
   RealtimeChannel? taskLabelChannel;
   RealtimeChannel? subTaskChannel;
-  RealtimeChannel? labekChannel;
+  RealtimeChannel? labelChannel;
+
+  late SubtaskHandler subTaskHandler;
+  late TaskHandler taskHandler;
+  late TaskLabelHandler taskLabelHandler;
+  late LabelHandler labelHandler;
 
   @override
   void disposeRealtime() {
-    if (taskChannel != null) {
-      remote.projectDetailRemote.removeTaskChannel(taskChannel!);
-      taskChannel = null;
-    }
-    if (taskLabelChannel != null) {
-      remote.projectDetailRemote.removeTaskLabelChannel(taskLabelChannel!);
-      taskLabelChannel = null;
-    }
-    if (subTaskChannel != null) {
-      remote.projectDetailRemote.removeSubTaskChannel(subTaskChannel!);
-      subTaskChannel = null;
-    }
-    if (labekChannel != null) {
-      remote.projectDetailRemote.removeLabelChannel(labekChannel!);
-      labekChannel = null;
-    }
+    subTaskHandler.dispose();
+    taskHandler.dispose();
+    taskLabelHandler.dispose();
+    labelHandler.dispose();
   }
 
   @override
   Future<void> initTaskRealtime({required String projectId}) async {
-    try {
-      final List<Map<String, dynamic>> rawRemoteData = await remote
-          .projectDetailRemote
-          .getAllTask(projectId: projectId);
-      await local.projectDetailLocal.syncTask(
-        remoteResults: rawRemoteData,
-        init: true,
-      );
-    } catch (e) {
-      devLog(
-        "Log ProjectDetailRepositoryImp: initTaskRealtime: init: error: $e",
-      );
-    }
+    taskHandler = TaskHandler(
+      local: local,
+      remote: remote,
+      messageCollector: messageCollector,
+      helper: helper,
+    );
 
-    if (taskChannel != null) {
-      remote.projectDetailRemote.removeTaskChannel(taskChannel!);
-    }
-    taskChannel = remote.projectDetailRemote.buildTaskChannel(projectId);
-
-    taskChannel!
-        .onPostgresChanges(
-          event: PostgresChangeEvent.all,
-          schema: 'public',
-          table: EnumTable.tasks.value,
-          filter: PostgresChangeFilter(
-            type: PostgresChangeFilterType.eq,
-            column: EnumTask.projectId.value,
-            value: projectId,
-          ),
-          callback: (PostgresChangePayload payload) async {
-            try {
-              if (payload.eventType == PostgresChangeEvent.delete) {
-                final deleteId = payload.oldRecord['id'];
-
-                if (deleteId != null) {
-                  await local.projectDetailLocal.deleteTask(
-                    deleteId.toString(),
-                  );
-                }
-              } else {
-                final data = payload.newRecord;
-                await local.projectDetailLocal.syncTask(remoteResults: [data]);
-              }
-            } catch (e) {
-              devLog(
-                "Log ProjectDetailRepositoryImp: initTaskRealtime: error: $e",
-              );
-            }
-          },
-        )
-        .subscribe((state, error) {
-          if (error != null) {
-            devLog("Log ProjectDetailRepositoryImp: error Supabase: $error");
-          }
-        });
+    taskHandler.initTaskRealtime(projectId: projectId);
   }
 
   @override
   Future<void> initSubTaskRealtime({required String projectId}) async {
-    try {
-      final List<Map<String, dynamic>> rawRemoteData = await remote
-          .projectDetailRemote
-          .getAllSubTask(projectId: projectId);
-      devLog(
-        "Log ProjectDetailRepositoryImp: initSubTaskRealtime: init: $rawRemoteData",
-      );
-      await local.projectDetailLocal.syncSubTask(
-        remoteResults: rawRemoteData,
-        init: true,
-      );
-    } catch (e) {
-      devLog("Log ProjectDetailRepositoryImp: initSubTaskRealtime: error: $e");
-    }
+    subTaskHandler = SubtaskHandler(
+      local: local,
+      remote: remote,
+      messageCollector: messageCollector,
+      helper: helper,
+    );
 
-    if (subTaskChannel != null) {
-      remote.projectDetailRemote.removeSubTaskChannel(subTaskChannel!);
-    }
-    taskChannel = remote.projectDetailRemote.buildSubTaskChannel(projectId);
-
-    taskChannel!
-        .onPostgresChanges(
-          event: PostgresChangeEvent.all,
-          schema: 'public',
-          table: EnumTable.subtasks.value,
-          filter: PostgresChangeFilter(
-            type: PostgresChangeFilterType.eq,
-            column: EnumSubTask.projectId.value,
-            value: projectId,
-          ),
-          callback: (PostgresChangePayload payload) async {
-            try {
-              if (payload.eventType == PostgresChangeEvent.delete) {
-                final deleteId = payload.oldRecord['id'];
-
-                if (deleteId != null) {
-                  await local.projectDetailLocal.deleteSubTask(
-                    deleteId.toString(),
-                  );
-                }
-              } else {
-                final data = payload.newRecord;
-                await local.projectDetailLocal.syncSubTask(
-                  remoteResults: [data],
-                );
-              }
-            } catch (e) {
-              devLog(
-                "Log ProjectDetailRepositoryImp: initSubTaskRealtime: error: $e",
-              );
-            }
-          },
-        )
-        .subscribe((state, error) {
-          if (error != null) {
-            devLog("Log ProjectDetailRepositoryImp: error Supabase: $error");
-          }
-        });
+    subTaskHandler.initSubTaskRealtime(projectId: projectId);
   }
 
   @override
   Future<void> initTaskLabelRealtime({required String projectId}) async {
-    try {
-      final List<Map<String, dynamic>> rawRemoteData = await remote
-          .projectDetailRemote
-          .getAllTaskLabel(projectId: projectId);
-      await local.projectDetailLocal.syncTaskLabel(
-        remoteResults: rawRemoteData,
-        init: true,
-      );
-    } catch (e) {
-      devLog(
-        "Log ProjectDetailRepositoryImp: initTaskLabelRealtime: error: $e",
-      );
-    }
-
-    if (taskLabelChannel != null) {
-      remote.projectDetailRemote.removeTaskLabelChannel(taskLabelChannel!);
-    }
-    taskLabelChannel = remote.projectDetailRemote.buildTaskLabelChannel(
-      projectId,
+    taskLabelHandler = TaskLabelHandler(
+      local: local,
+      remote: remote,
+      messageCollector: messageCollector,
+      helper: helper,
     );
 
-    taskLabelChannel!
-        .onPostgresChanges(
-          event: PostgresChangeEvent.all,
-          schema: 'public',
-          table: EnumTable.taskLabels.value,
-          filter: PostgresChangeFilter(
-            type: PostgresChangeFilterType.eq,
-            column: EnumTaskLabel.projectId.value,
-            value: projectId,
-          ),
-          callback: (PostgresChangePayload payload) async {
-            try {
-              if (payload.eventType == PostgresChangeEvent.delete) {
-                final deleteId = payload.oldRecord['id'];
-
-                if (deleteId != null) {
-                  await local.projectDetailLocal.deleteTaskLabel(
-                    deleteId.toString(),
-                  );
-                }
-              } else {
-                final data = payload.newRecord;
-                await local.projectDetailLocal.syncTaskLabel(
-                  remoteResults: [data],
-                );
-              }
-            } catch (e) {
-              devLog(
-                "Log ProjectDetailRepositoryImp: initTaskLabelRealtime: error: $e",
-              );
-            }
-          },
-        )
-        .subscribe((state, error) {
-          if (error != null) {
-            devLog("Log ProjectDetailRepositoryImp: error Supabase: $error");
-          }
-        });
+    taskLabelHandler.initTaskLabelRealtime(projectId: projectId);
   }
 
   @override
   Future<void> initLabelRealtime() async {
     final companyId = userSession.getCompanyId();
-    try {
-      final List<Map<String, dynamic>> rawRemoteData = await remote
-          .projectDetailRemote
-          .getAllLabel(companyId: companyId);
-      await local.projectDetailLocal.syncLabel(
-        remoteResults: rawRemoteData,
-        init: true,
-      );
-    } catch (e) {
-      devLog("Log ProjectDetailRepositoryImp: initLabelRealtime: error: $e");
-    }
+    labelHandler = LabelHandler(
+      companyId: companyId,
+      local: local,
+      remote: remote,
+      messageCollector: messageCollector,
+      helper: helper,
+    );
 
-    if (labekChannel != null) {
-      remote.projectDetailRemote.removeLabelChannel(labekChannel!);
-    }
-    labekChannel = remote.projectDetailRemote.buildLabelChannel(companyId);
-
-    labekChannel!
-        .onPostgresChanges(
-          event: PostgresChangeEvent.all,
-          schema: 'public',
-          table: EnumTable.labels.value,
-          filter: PostgresChangeFilter(
-            type: PostgresChangeFilterType.eq,
-            column: EnumLabel.companyId.value,
-            value: companyId,
-          ),
-          callback: (PostgresChangePayload payload) async {
-            try {
-              if (payload.eventType == PostgresChangeEvent.delete) {
-                final deleteId = payload.oldRecord['id'];
-
-                if (deleteId != null) {
-                  await local.projectDetailLocal.deleteLabel(
-                    deleteId.toString(),
-                  );
-                }
-              } else {
-                final data = payload.newRecord;
-                await local.projectDetailLocal.syncLabel(remoteResults: [data]);
-              }
-            } catch (e) {
-              devLog(
-                "Log ProjectDetailRepositoryImp: initLabelRealtime: error: $e",
-              );
-            }
-          },
-        )
-        .subscribe((state, error) {
-          if (error != null) {
-            devLog("Log ProjectDetailRepositoryImp: error Supabase: $error");
-          }
-        });
-  }
-
-  Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchTask({
-    required String projectId,
-  }) {
-    return local.projectDetailLocal.watchTask(projectId: projectId).map((
-      event,
-    ) {
-      final data = helper.collectDataLocal(fetchResult: event);
-      final collectorMessage = messageCollector.getMessage(data);
-      devLog("Log ProjectDetailRepositoryImp: watchTask: data: $data");
-      return (data, collectorMessage);
-    });
-  }
-
-  Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchTaskLabel({
-    required String projectId,
-  }) {
-    return local.projectDetailLocal.watchTaskLabel(projectId: projectId).map((
-      event,
-    ) {
-      final data = helper.collectDataLocal(fetchResult: event);
-      final collectorMessage = messageCollector.getMessage(data);
-      devLog(
-        "Log ProjectDetailRepositoryImp: watchTaskLabel: data: $data, id: $projectId",
-      );
-      return (data, collectorMessage);
-    });
-  }
-
-  Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchSubTask({
-    required String projectId,
-  }) {
-    return local.projectDetailLocal.watchSubTask(projectId: projectId).map((
-      event,
-    ) {
-      final data = helper.collectDataLocal(fetchResult: event);
-      final collectorMessage = messageCollector.getMessage(data);
-      devLog("Log ProjectDetailRepositoryImp: watchSubTask: data: $data");
-      return (data, collectorMessage);
-    });
-  }
-
-  Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchlabel({
-    required String companyId,
-  }) {
-    return local.projectDetailLocal
-        .watchLabel(companyId: userSession.getCompanyId())
-        .map((event) {
-          final data = helper.collectDataLocal(fetchResult: event);
-          final collectorMessage = messageCollector.getMessage(data);
-          devLog("Log ProjectDetailRepositoryImp: watchlabel: data: $data");
-          return (data, collectorMessage);
-        });
+    labelHandler.initLabelRealtime();
   }
 
   Stream<Set<ModelUser>> watchUser() {
@@ -370,10 +120,10 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
   }) {
     return Rx.combineLatest5(
       userRepo.getUser(),
-      watchTask(projectId: project.dataProject.id),
-      watchTaskLabel(projectId: project.dataProject.id),
-      watchSubTask(projectId: project.dataProject.id),
-      watchlabel(companyId: userSession.getCompanyId()),
+      taskHandler.watchTask(projectId: project.dataProject.id),
+      taskLabelHandler.watchTaskLabel(projectId: project.dataProject.id),
+      subTaskHandler.watchSubTask(projectId: project.dataProject.id),
+      labelHandler.watchlabel(companyId: userSession.getCompanyId()),
       (a, b, c, d, e) {
         try {
           final rawTasks =

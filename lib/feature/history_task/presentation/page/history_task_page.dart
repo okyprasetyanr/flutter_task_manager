@@ -64,7 +64,7 @@ class _HistoryTaskPageState extends State<HistoryTaskPage> {
       ModelWorkspaceMerge?
     >(
       selector: (state) {
-        return state is HistoryTaskStateLoaded ? state.dataWorkspace : null;
+        return state is HistoryTaskStateLoaded ? state.workspace : null;
       },
       builder: (context, workspace) {
         return NavigationGesture(

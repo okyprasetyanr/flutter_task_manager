@@ -60,7 +60,7 @@ class _ActivityPageState extends State<ActivityPage> {
   Widget navigationGesture() {
     return BlocSelector<ActivityBloc, ActivityState, ModelWorkspaceMerge?>(
       selector: (state) {
-        return state is ActivityStateLoaded ? state.dataWorkspace : null;
+        return state is ActivityStateLoaded ? state.workspace : null;
       },
       builder: (context, workspace) {
         return NavigationGesture(

@@ -118,7 +118,7 @@ class HistoryTaskRepositoryImp implements HistoryTaskRepository {
         devLog("Log HistoryTaskRepository: watchDashboard: data:$b");
         return HistoryTaskStateLoaded(
           dataUser: a,
-          dataWorkspace: workspace,
+          workspace: workspace,
           dataHistoryTask: (b.$1[EnumFetchApiStatus.success] as List)
               .map((e) => ModelHistoryTask.fromDrift(e))
               .toSet(),
