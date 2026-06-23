@@ -20,10 +20,14 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
   ) async {
     add(ProjectDetailEventChangeStatus(status: EnumStatusState.loading));
     final project = event.data!;
-    await repo.initTaskRealtime(projectId: project.dataProject.id);
-    await repo.initTaskLabelRealtime(projectId: project.dataProject.id);
-    await repo.initSubTaskRealtime(projectId: project.dataProject.id);
-    await repo.initLabelRealtime();
+
+    await Future.wait([
+      repo.initTaskRealtime(projectId: project.dataProject.id),
+      repo.initTaskLabelRealtime(projectId: project.dataProject.id),
+      repo.initSubTaskRealtime(projectId: project.dataProject.id),
+      repo.initLabelRealtime(),
+    ]);
+
     await emit.forEach(
       repo.watchDashboard(project: project),
       onData: (data) {

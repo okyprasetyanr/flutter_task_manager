@@ -9,12 +9,12 @@ import 'package:task_manager/feature/workspace_detail/data/local/workspace_detai
 
 class LocalServices {
   final WorkspaceLocal workspaceLocal;
-  final UserLocal userLocal;
   final WorkspaceDetailLocal workspaceDetailLocal;
-  final HistoryTaskLocal historyTaskLocal;
-  final ActivityLocal activityLocal;
+  final UserLocal userLocal;
   final ProjectDetailLocal projectDetailLocal;
+  final HistoryTaskLocal historyTaskLocal;
   final TaskDetailLocal taskDetailLocal;
+  final ActivityLocal activityLocal;
 
   LocalServices({
     required this.workspaceLocal,
