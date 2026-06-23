@@ -56,7 +56,6 @@ final routes = {
     providers: [
       RepositoryProvider<LoginRepository>(
         create: (context) => LoginRepositoryImp(
-          streamManager: context.read<StreamManager>(),
           userRepository: context.read<UserRepository>(),
           userSession: context.read<UserSession>(),
           helper: context.read<CollectData>(),
@@ -76,7 +75,6 @@ final routes = {
       RepositoryProvider<WorkspaceRepository>(
         create: (context) => WorkspaceRepositoryImp(
           userRepo: context.read<UserRepository>(),
-          streamManager: context.read<StreamManager>(),
           messageCollector: context.read<CollectorMessage>(),
           remote: context.read<RemoteServices>(),
           local: context.read<LocalServices>(),

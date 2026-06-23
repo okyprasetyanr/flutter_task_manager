@@ -30,7 +30,6 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   final UserSession userSession;
   final CollectData helper;
   final CollectorMessage messageCollector;
-  final StreamManager streamManager;
   final UserRepository userRepo;
 
   WorkspaceRepositoryImp({
@@ -39,7 +38,6 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
     required this.userSession,
     required this.helper,
     required this.messageCollector,
-    required this.streamManager,
     required this.userRepo,
   });
 

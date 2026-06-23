@@ -17,7 +17,6 @@ class LoginRepositoryImp implements LoginRepository {
   final LoginLocal local;
   final UserSession userSession;
   final UserRepository userRepository;
-  final StreamManager streamManager;
 
   LoginRepositoryImp({
     required this.helper,
@@ -25,7 +24,6 @@ class LoginRepositoryImp implements LoginRepository {
     required this.local,
     required this.userSession,
     required this.userRepository,
-    required this.streamManager,
   });
 
   @override
