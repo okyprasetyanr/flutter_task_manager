@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:task_manager/shared/enum.dart';
+import 'package:task_manager/feature/workspace/domain/enum/enum.dart';
 import 'package:uuid/uuid.dart';
 
 class ModelWorkspaceMember extends Equatable {

@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:task_manager/shared/enum.dart';
+import 'package:task_manager/feature/login/domain/enum/enum.dart';
 
 class UserSession {
   String? companyId;

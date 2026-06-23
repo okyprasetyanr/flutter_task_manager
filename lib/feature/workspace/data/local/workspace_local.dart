@@ -3,9 +3,9 @@
 import 'package:task_manager/core/services/local_database/local_database.dart';
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_local.dart';
 import 'package:task_manager/feature/shared_component/helper/sync_table.dart';
+import 'package:task_manager/feature/workspace/domain/enum/enum.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_member.dart';
-import 'package:task_manager/shared/enum.dart';
 
 class WorkspaceLocal {
   final LocalDatabase localDatabase;

@@ -1,22 +1,23 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:rxdart/rxdart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:task_manager/core/services/local_database/enum/enum.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/project_detail/domain/model/model_task_merge.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
+import 'package:task_manager/feature/task_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/task_detail/domain/repository/task_detail_repository.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_state.dart';
-import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
-import 'package:task_manager/shared/model/model_comment.dart';
-import 'package:task_manager/shared/model/model_label.dart';
+import 'package:task_manager/feature/task_detail/domain/model/model_comment.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_label.dart';
 
 class TaskDetailRepositoryImp implements TaskDetailRepository {
   final RemoteServices remote;

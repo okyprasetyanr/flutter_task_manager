@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/feature/activity/domain/enum/enum.dart';
 import 'package:task_manager/feature/activity/presentation/bloc/activity_bloc.dart';
 import 'package:task_manager/feature/activity/presentation/bloc/activity_state.dart';
-import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/feature/activity/domain/model/model_activity.dart';

@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
+import 'package:task_manager/feature/workspace/domain/enum/enum.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
-import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 
 class WorkspaceEvent {}

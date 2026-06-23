@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:task_manager/core/services/local_database/enum/enum.dart';
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
-import 'package:task_manager/shared/enum.dart';
+import 'package:task_manager/feature/history_task/domain/enum/enum.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class HistoryTaskRemote {

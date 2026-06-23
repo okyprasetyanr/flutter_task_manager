@@ -4,7 +4,7 @@ import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_b
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_state.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
-import 'package:task_manager/shared/model/model_comment.dart';
+import 'package:task_manager/feature/task_detail/domain/model/model_comment.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';

@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
-
-import 'package:task_manager/shared/enum.dart';
+import 'package:task_manager/feature/project_detail/domain/enum/enum.dart';
 
 class ModelLabel extends Equatable {
   final String id;

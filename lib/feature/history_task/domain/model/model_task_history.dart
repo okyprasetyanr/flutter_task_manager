@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:task_manager/shared/enum.dart';
+import 'package:task_manager/feature/history_task/domain/enum/enum.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 
 class ModelHistoryTask extends Equatable {

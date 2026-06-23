@@ -1,7 +1,7 @@
 import 'package:task_manager/core/services/local_database/local_database.dart';
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_local.dart';
 import 'package:task_manager/feature/shared_component/helper/sync_table.dart';
-import 'package:task_manager/shared/model/model_label.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_label.dart';
 
 class LabelLocalSource {
   final LocalDatabase localDatabase;

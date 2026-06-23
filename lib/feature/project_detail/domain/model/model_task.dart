@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs??this.public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
-import 'package:task_manager/shared/enum.dart';
+import 'package:task_manager/feature/project_detail/domain/enum/enum.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
-import 'package:task_manager/shared/model/model_label.dart';
-import 'package:task_manager/shared/model/model_sub_task.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_label.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_sub_task.dart';
 
 class ModelTask extends Equatable {
   final String id;

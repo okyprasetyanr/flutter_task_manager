@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/app_properties/app_properties.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
-import 'package:task_manager/shared/model/model_sub_task.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_sub_task.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 

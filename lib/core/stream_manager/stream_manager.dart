@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:task_manager/shared/enum.dart';
+import 'package:task_manager/core/services/local_database/enum/enum.dart';
 
 class StreamManager {
   final Map<EnumTable, StreamSubscription> streamSubsc = {};

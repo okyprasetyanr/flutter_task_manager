@@ -1,7 +1,6 @@
 import 'package:task_manager/feature/activity/domain/model/model_activity.dart';
 import 'package:task_manager/feature/project_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
-import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/shared/model/model_display_history.dart';
 
@@ -194,6 +193,5 @@ extension ModelActivityX on ModelActivity {
       case EnumActivityAction.unknown:
         return OldNewDisplayValue(oldValue: oldValue, newValue: newValue);
     }
-    return OldNewDisplayValue(oldValue: oldValue, newValue: newValue);
   }
 }

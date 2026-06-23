@@ -18,7 +18,7 @@ import 'package:task_manager/core/services/local_database/drift_table/tasks.dart
 import 'package:task_manager/core/services/local_database/drift_table/users.dart';
 import 'package:task_manager/core/services/local_database/drift_table/workspace_members.dart';
 import 'package:task_manager/core/services/local_database/drift_table/workspaces.dart';
-import 'package:task_manager/shared/enum.dart';
+import 'package:task_manager/core/services/local_database/enum/enum.dart';
 
 part 'local_database.g.dart';
 

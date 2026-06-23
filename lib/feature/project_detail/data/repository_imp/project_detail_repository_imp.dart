@@ -20,10 +20,10 @@ import 'package:task_manager/feature/workspace_detail/domain/model/model_project
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
-import 'package:task_manager/shared/model/model_label.dart';
-import 'package:task_manager/shared/model/model_sub_task.dart';
-import 'package:task_manager/shared/model/model_task.dart';
-import 'package:task_manager/shared/model/model_task_labels.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_label.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_sub_task.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_task.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_task_labels.dart';
 
 class ProjectDetailRepositoryImp implements ProjectDetailRepository {
   final RemoteServices remote;
