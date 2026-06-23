@@ -20,56 +20,7 @@ class AppPropertyColor {
 
 class AppPropertyText {
   static const String appName = "Ringkas Task Manager";
-  static const String manualDelete =
-      "Panduan: Geser ke kiri untuk hapus data yang diinginkan.";
 }
-
-// extension AppThemeExtension on BuildContext {
-//   Color getDynamicColor<T extends BlocBase<Object?>>(
-//     bool Function(Object? state) selector,
-//   ) {
-//     final bool condition = select<T, bool>((bloc) => selector(bloc.state));
-
-//     return condition
-//         ? AppPropertyColor.primary
-//         : AppPropertyColor.secondPrimary;
-//   }
-
-//   Color get colorHistAdjustment => getDynamicColor<HistoryAdjustmentBloc>(
-//     (state) => state is HistoryAdjustmentLoaded && state.isAdjustmentIn,
-//   );
-
-//   Color get colorTrans => getDynamicColor<TransactionBloc>(
-//     (state) => state is TransactionLoaded && state.isSell,
-//   );
-
-//   Color get colorAdjustment => getDynamicColor<AdjustmentBloc>(
-//     (state) => state is AdjustmentLoaded && state.isAdjustIn,
-//   );
-
-//   Color get colorTransFinance => getDynamicColor<TransFinancialBloc>(
-//     (state) => state is TransFinancialLoaded ? state.isIncome : true,
-//   );
-
-//   Color get colorFinance => getDynamicColor<FinancialBloc>(
-//     (state) => state is FinancialLoaded ? state.isIncome : true,
-//   );
-
-//   Color get colorPartner => getDynamicColor<PartnerBloc>(
-//     (state) => state is PartnerLoaded ? state.isCustomer : true,
-//   );
-
-//   Color get colorHist => getDynamicColor<HistoryTransactionBloc>(
-//     (state) => state is HistoryTransactionLoaded ? state.isSell : true,
-//   );
-//   Color get colorHistFinance => getDynamicColor<HistoryFinancialBloc>(
-//     (state) => state is HistoryFinancialLoaded ? state.isIncome : true,
-//   );
-
-//   Color get colorReport => getDynamicColor<ReportBloc>(
-//     (state) => state is ReportLoaded ? state.isSell : true,
-//   );
-// }
 
 class AppPropertyBorderRadius {
   static final rounded10 = RoundedRectangleBorder(
