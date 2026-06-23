@@ -1,55 +1,50 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_task_merge.dart';
 
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/model/model_comment.dart';
-import 'package:task_manager/shared/model/model_label.dart';
-import 'package:task_manager/shared/model/model_sub_task.dart';
-import 'package:task_manager/shared/model/model_task.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
+import 'package:task_manager/shared/model/model_label.dart';
 
 class TaskDetailState {}
 
 class TaskDetailStateInitial extends TaskDetailState {}
 
 class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
-  final ModelTask? dataTask;
-  final Set<ModelSubTask> dataSubTask;
-  final Set<ModelLabel> dataLabel;
+  final ModelTaskMerge? task;
   final EnumStatusState status;
   final Set<ModelUser> dataUser;
+  final Set<ModelLabel> dataLabel;
   final Set<ModelComment> dataComment;
   final String? failed;
   final String? error;
   final String? noconnection;
 
   TaskDetailStateLoaded({
-    this.dataTask,
-    this.dataSubTask = const {},
-    this.dataLabel = const {},
+    this.task,
     this.status = EnumStatusState.none,
     this.dataUser = const {},
     this.dataComment = const {},
+    this.dataLabel = const {},
     this.failed,
     this.error,
     this.noconnection,
   });
 
   TaskDetailStateLoaded copyWith({
-    ModelTask? dataTask,
-    Set<ModelSubTask>? dataSubTask,
-    Set<ModelLabel>? dataLabel,
+    ModelTaskMerge? task,
     EnumStatusState? status,
     Set<ModelComment>? dataComment,
     Set<ModelUser>? dataUser,
+    Set<ModelLabel>? dataLabel,
     String? failed,
     String? error,
     String? noconnection,
   }) {
     return TaskDetailStateLoaded(
       dataLabel: dataLabel ?? this.dataLabel,
-      dataSubTask: dataSubTask ?? this.dataSubTask,
-      dataTask: dataTask ?? this.dataTask,
+      task: task ?? this.task,
       status: status ?? this.status,
       dataComment: dataComment ?? this.dataComment,
       dataUser: dataUser ?? this.dataUser,
@@ -61,10 +56,9 @@ class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
 
   @override
   List<Object?> get props => [
-    dataComment,
     dataLabel,
-    dataTask,
-    dataSubTask,
+    dataComment,
+    task,
     dataUser,
     status,
     failed,

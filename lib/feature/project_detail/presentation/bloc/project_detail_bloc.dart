@@ -49,4 +49,10 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
           .copyWith(status: event.status),
     );
   }
+
+  @override
+  Future<void> close() {
+    repo.disposeRealtime();
+    return super.close();
+  }
 }

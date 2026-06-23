@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/core/cache/user_cache.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
@@ -17,12 +16,12 @@ import 'package:task_manager/feature/history_task/presentation/bloc/history_task
 import 'package:task_manager/feature/history_task/presentation/bloc/history_task_event.dart';
 import 'package:task_manager/feature/history_task/presentation/page/history_task_page.dart';
 import 'package:task_manager/feature/project_detail/data/repository_imp/project_detail_repository_imp.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_task_merge.dart';
 import 'package:task_manager/feature/project_detail/domain/repository/project_detail_repository.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_event.dart';
 import 'package:task_manager/feature/project_detail/presentation/page/project_detail_page.dart';
 import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
-import 'package:task_manager/feature/task_detail/data/local/task_detail_local.dart';
 import 'package:task_manager/feature/task_detail/data/repository_imp/task_detail_repository_imp.dart';
 import 'package:task_manager/feature/task_detail/domain/repository/task_detail_repository.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_bloc.dart';
@@ -49,7 +48,7 @@ import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
-import 'package:task_manager/shared/model/model_task.dart';
+import 'package:task_manager/shared/model/model_label.dart';
 
 final statusInit = EnumStatusState.loading;
 final routes = {
@@ -158,21 +157,25 @@ final routes = {
   },
   '/${RoutesEnum.taskDetail}': (context) {
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
-    final data = args!['dataTransfered'] as ModelTask;
+    final data = args!['dataTransfered'] as (ModelTaskMerge, Set<ModelLabel>);
 
     return RepositoryProvider<TaskDetailRepository>(
       create: (context) => TaskDetailRepositoryImp(
         remote: context.read<RemoteServices>(),
-        local: TaskDetailLocal(),
+        local: context.read<LocalServices>(),
         userSession: context.read<UserSession>(),
         helper: context.read<CollectData>(),
         messageCollector: context.read<CollectorMessage>(),
-        userCache: context.read<UserCache>(),
+        userRepo: context.read<UserRepository>(),
       ),
       child: BlocProvider(
         create: (context) =>
-            TaskDetailBloc(context.read<TaskDetailRepository>())
-              ..add(TaskDetailEventGetData(dataTask: data)),
+            TaskDetailBloc(context.read<TaskDetailRepository>())..add(
+              TaskDetailEventWatchDashboard(
+                dataTask: data.$1,
+                dataLabel: data.$2,
+              ),
+            ),
         child: TaskDetailPage(),
       ),
     );

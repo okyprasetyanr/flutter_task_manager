@@ -34,6 +34,17 @@ class ModelComment extends Equatable {
     );
   }
 
+  factory ModelComment.fromDrift(Map<String, dynamic> data) {
+    return ModelComment(
+      id: data[EnumComment.id.name],
+      taskId: data[EnumComment.taskId.name],
+      userId: data[EnumComment.userId.name],
+      content: data[EnumComment.content.name],
+      createdAt: HelperDateConvert.toDateTime(data[EnumComment.createdAt.name]),
+      updatedAt: HelperDateConvert.toDateTime(data[EnumComment.updatedAt.name]),
+    );
+  }
+
   @override
   List<Object?> get props => [
     id,

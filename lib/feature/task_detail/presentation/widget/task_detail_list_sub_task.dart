@@ -19,7 +19,7 @@ class TaskDetailListSubTask extends StatelessWidget {
       (Set<ModelSubTask>, EnumStatusState)
     >(
       selector: (state) => state is TaskDetailStateLoaded
-          ? (state.dataSubTask, state.status)
+          ? (state.task?.dataSubTask ?? const {}, state.status)
           : (const {}, EnumStatusState.loading),
       builder: (context, state) => CustomListViewBuilderV<ModelSubTask>(
         status: state.$2,

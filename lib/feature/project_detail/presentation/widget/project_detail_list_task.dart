@@ -10,6 +10,7 @@ import 'package:task_manager/feature/project_detail/presentation/widget/project_
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
+import 'package:task_manager/shared/model/model_label.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 
@@ -30,14 +31,14 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
           BlocSelector<
             ProjectDetailBloc,
             ProjectDetailState,
-            (Set<ModelTaskMerge>, EnumStatusState)
+            (Set<ModelTaskMerge>, Set<ModelLabel>, EnumStatusState)
           >(
             selector: (state) => state is ProjectDetailStateLoaded
-                ? (state.dataTask, state.status)
-                : (const {}, EnumStatusState.loading),
+                ? (state.dataTask, state.dataLabel, state.status)
+                : (const {}, const {}, EnumStatusState.loading),
             builder: (context, state) {
               return CustomListViewBuilderV(
-                status: state.$2,
+                status: state.$3,
                 data: state.$1.toList(),
                 content: (data, status) => [
                   Row(
@@ -92,7 +93,7 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
                     context: context,
                     routeName: RoutesEnum.taskDetail,
                     replace: false,
-                    arguments: {'dataTransfered': (data)},
+                    arguments: {'dataTransfered': (data, state.$2)},
                   ).navigate(),
                 },
               );

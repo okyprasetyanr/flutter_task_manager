@@ -40,6 +40,7 @@ import 'package:task_manager/feature/shared_component/user/data/local/user_local
 import 'package:task_manager/feature/shared_component/user/data/remote/user_remote.dart';
 import 'package:task_manager/feature/shared_component/user/data/repository_imp/user_repository_imp.dart';
 import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
+import 'package:task_manager/feature/task_detail/data/local/task_detail_local.dart';
 import 'package:task_manager/feature/task_detail/data/remote/task_detail_remote.dart';
 import 'package:task_manager/feature/workspace/data/local/workspace_local.dart';
 import 'package:task_manager/feature/workspace/data/remote/workspace_remote.dart';
@@ -90,6 +91,11 @@ Future<void> main() async {
             final syncTable = context.read<SyncTable>();
             final wrapper = context.read<ResponseWrapperLocal>();
             return LocalServices(
+              taskDetailLocal: TaskDetailLocal(
+                localDatabase: local,
+                responseWrapper: wrapper,
+                syncTable: syncTable,
+              ),
               projectDetailLocal: ProjectDetailLocal(
                 label: LabelLocalSource(
                   localDatabase: local,
@@ -179,7 +185,10 @@ Future<void> main() async {
                 responseWrapper: wrapper,
                 supabaseClient: client,
               ),
-              taskDetailRemote: TaskDetailRemote(responseWrapper: wrapper),
+              taskDetailRemote: TaskDetailRemote(
+                responseWrapper: wrapper,
+                supabaseClient: client,
+              ),
               activityRemote: ActivityRemote(
                 responseWrapper: wrapper,
                 supabaseClient: client,

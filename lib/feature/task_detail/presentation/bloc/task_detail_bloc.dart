@@ -4,43 +4,36 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/feature/task_detail/domain/repository/task_detail_repository.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_event.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_state.dart';
-import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
-import 'package:task_manager/shared/model/model_comment.dart';
 
 class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
   final TaskDetailRepository repo;
 
   TaskDetailBloc(this.repo) : super(TaskDetailStateInitial()) {
-    on<TaskDetailEventGetData>(_onGetData);
+    on<TaskDetailEventWatchDashboard>(_onWatchDashboard);
     on<TaskDetailEventChangeStatus>(_onChangeStatus);
   }
 
-  Future<void> _onGetData(
-    TaskDetailEventGetData event,
+  Future<void> _onWatchDashboard(
+    TaskDetailEventWatchDashboard event,
     Emitter<TaskDetailState> emit,
   ) async {
-    final currentState = state is TaskDetailStateLoaded
-        ? state as TaskDetailStateLoaded
-        : TaskDetailStateLoaded();
     add(TaskDetailEventChangeStatus(status: EnumStatusState.loading));
-    final dataTask = event.dataTask ?? currentState.dataTask!;
-    final data = await repo.getComment(taskId: dataTask.id);
-    // final dataUser = repo.getUser();
-    emit(
-      currentState.copyWith(
-        dataComment: data.$1.containsKey(EnumFetchApiStatus.success)
-            ? (data.$1[EnumFetchApiStatus.success] as List)
-                  .map((e) => ModelComment.fromJson(e))
-                  .toSet()
-            : const {},
-        // dataUser: dataUser,
-        dataTask: dataTask,
-        status: EnumStatusState.none,
-        error: data.$2.error,
-        failed: data.$2.failed,
-        noconnection: data.$2.noconnection,
-      ),
+    final task = event.dataTask!;
+    final label = event.dataLabel!;
+    await repo.initCommentRealtime(taskId: task.dataTask.id);
+    await emit.forEach<TaskDetailStateLoaded>(
+      repo.watchDashboard(task: task, label: label),
+      onData: (data) {
+        return data;
+      },
+      onError: (error, stackTrace) {
+        return TaskDetailStateLoaded(
+          error: error.toString(),
+          status: EnumStatusState.none,
+          task: task,
+        );
+      },
     );
   }
 
@@ -54,5 +47,11 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
               : TaskDetailStateLoaded())
           .copyWith(status: event.status),
     );
+  }
+
+  @override
+  Future<void> close() {
+    repo.disposeRealtime();
+    return super.close();
   }
 }
