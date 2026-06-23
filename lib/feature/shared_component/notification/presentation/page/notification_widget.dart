@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_bloc.dart';
 import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_state.dart';
 import 'package:task_manager/feature/shared_component/notification/presentation/widget/notification_list_notification.dart';

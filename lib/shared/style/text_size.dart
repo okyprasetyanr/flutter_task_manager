@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/app_properties/app_properties.dart';
 
 final labelTextStyle = GoogleFonts.poppins(
   color: AppPropertyColor.black,

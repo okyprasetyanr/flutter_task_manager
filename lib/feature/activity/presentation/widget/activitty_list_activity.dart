@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/activity/domain/enum/enum.dart';
 import 'package:task_manager/feature/activity/presentation/bloc/activity_bloc.dart';
 import 'package:task_manager/feature/activity/presentation/bloc/activity_state.dart';

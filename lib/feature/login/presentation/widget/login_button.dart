@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/login/presentation/bloc/login_bloc.dart';
 import 'package:task_manager/feature/login/presentation/bloc/login_event.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button.dart';

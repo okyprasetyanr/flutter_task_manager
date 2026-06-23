@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
 class CustomTextField extends StatelessWidget {

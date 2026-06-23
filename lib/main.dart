@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/core/cache/user_cache.dart';
 import 'package:task_manager/core/root_scaffold_messenger_key/root_scaffold_message_key.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/app_properties/app_properties.dart';
 
 class CustomButtonIcon extends StatelessWidget {
   final VoidCallback? onPressed;

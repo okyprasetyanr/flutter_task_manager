@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button.dart';
 import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
 class WidgetDropDown<T extends Enum> extends StatelessWidget {

@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_bloc.dart';
 import 'package:task_manager/feature/task_detail/presentation/widget/task_detail_list_comment.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';

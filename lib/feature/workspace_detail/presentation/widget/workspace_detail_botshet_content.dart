@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/app_properties/app_properties.dart';
+import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/shared_component/widget/drop_down/widget_drop_down.dart';
 import 'package:task_manager/feature/workspace_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
