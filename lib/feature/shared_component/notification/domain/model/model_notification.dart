@@ -32,6 +32,21 @@ class ModelNotification extends Equatable {
     );
   }
 
+  factory ModelNotification.fromDrift(Map<String, dynamic> data) {
+    return ModelNotification(
+      id: data[EnumNotification.id.name],
+      userId: data[EnumNotification.userId.name],
+      title: data[EnumNotification.title.name],
+      body: data[EnumNotification.body.name],
+      isRead: data[EnumNotification.isRead.name],
+      createdAt: HelperDateConvert.toDateTime(
+        DateTime.fromMillisecondsSinceEpoch(
+          data[EnumNotification.createdAt.name],
+        ),
+      ),
+    );
+  }
+
   static Map<String, dynamic> updateIsRead({required String notificationId}) {
     return {
       EnumNotification.id.value: notificationId,

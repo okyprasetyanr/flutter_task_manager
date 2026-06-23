@@ -30,6 +30,7 @@ import 'package:task_manager/feature/project_detail/data/remote/source/subtask_r
 import 'package:task_manager/feature/project_detail/data/remote/source/task_label_remote_source.dart';
 import 'package:task_manager/feature/project_detail/data/remote/source/task_remote_source.dart';
 import 'package:task_manager/feature/shared_component/helper/sync_table.dart';
+import 'package:task_manager/feature/shared_component/notification/data/local/notification_local.dart';
 import 'package:task_manager/feature/shared_component/notification/data/remote/notification_remote.dart';
 import 'package:task_manager/feature/shared_component/notification/data/repository_imp/notification_repository_imp.dart';
 import 'package:task_manager/feature/shared_component/notification/domain/repository/notification_repository.dart';
@@ -91,6 +92,11 @@ Future<void> main() async {
             final syncTable = context.read<SyncTable>();
             final wrapper = context.read<ResponseWrapperLocal>();
             return LocalServices(
+              notificationLocal: NotificationLocal(
+                responseWrapper: wrapper,
+                localDatabase: local,
+                syncTable: syncTable,
+              ),
               taskDetailLocal: TaskDetailLocal(
                 localDatabase: local,
                 responseWrapper: wrapper,

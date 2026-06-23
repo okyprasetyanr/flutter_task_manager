@@ -4,6 +4,7 @@ import 'package:task_manager/core/services/local_database/enum/enum.dart';
 
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
 import 'package:task_manager/feature/shared_component/notification/domain/enum/enum.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class NotificationRemote {
   final ResponseWrapperRemote responseWrapper;
@@ -14,13 +15,29 @@ class NotificationRemote {
     required this.supabaseClient,
   });
 
-  Stream<Map<String, dynamic>> watchNotification({required String userId}) {
-    return responseWrapper.wrapStream(
-      getStream: () => supabaseClient
+  Future<List<Map<String, dynamic>>> getAllNotification({
+    required String userId,
+  }) async {
+    try {
+      final response = await supabaseClient
           .from(EnumTable.notifications.value)
-          .stream(primaryKey: [EnumNotification.id.value])
-          .eq(EnumNotification.userId.value, userId)
-          .order(EnumNotification.createdAt.value, ascending: false),
+          .select()
+          .eq(EnumNotification.userId.value, userId);
+
+      return List<Map<String, dynamic>>.from(response);
+    } catch (e) {
+      devLog("Log NotificationRemote: Error: $e");
+      rethrow;
+    }
+  }
+
+  void removeNotificationChannel(RealtimeChannel notificationChannel) {
+    supabaseClient.removeChannel(notificationChannel);
+  }
+
+  RealtimeChannel buildNotificationChannel(String userId) {
+    return supabaseClient.channel(
+      'public:${EnumTable.notifications.value}:$userId',
     );
   }
 
