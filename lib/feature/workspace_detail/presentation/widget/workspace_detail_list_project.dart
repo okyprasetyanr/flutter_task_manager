@@ -82,7 +82,7 @@ class WorkspaceDetailListProject extends StatelessWidget {
             arguments: {'dataTransfered': data},
           ).navigate(),
         },
-        onEdit: (data) {
+        onOption: (data) {
           final bloc = context.read<WorkspaceDetailBloc>();
           bloc.add(WorkspaceDetailEventSelectedProject(data: data));
           return customBottomSheet(

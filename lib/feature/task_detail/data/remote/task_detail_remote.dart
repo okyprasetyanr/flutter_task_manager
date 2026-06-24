@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_manager/core/services/local_database/enum/enum.dart';
 
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
+import 'package:task_manager/feature/project_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/task_detail/domain/enum/enum.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
@@ -25,7 +26,7 @@ class TaskDetailRemote {
 
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
-      devLog("Log WorkspaceRemote: Error: $e");
+      devLog("Log CommentRemote: Error: $e");
       rethrow;
     }
   }
@@ -38,13 +39,55 @@ class TaskDetailRemote {
     return supabaseClient.channel('public:${EnumTable.comments.value}:$taskId');
   }
 
-  Future<Map<String, dynamic>> createWorkspace(
-    Map<String, dynamic> data,
-  ) async {
+  Future<Map<String, dynamic>> createComment(Map<String, dynamic> data) async {
+    devLog("Log CommentRemote: createComment: $data");
     return await responseWrapper.wrap(
       getData: () async => supabaseClient
           .from(EnumTable.comments.value)
           .insert(data)
+          .select()
+          .single(),
+    );
+  }
+
+  Future<Map<String, dynamic>> deleteComment(String commentId) async {
+    return await responseWrapper.wrap(
+      getData: () async => supabaseClient
+          .from(EnumTable.comments.value)
+          .delete()
+          .eq(EnumComment.id.value, commentId)
+          .select()
+          .single(),
+    );
+  }
+
+  Future<Map<String, dynamic>> createSubtask(Map<String, dynamic> data) async {
+    return await responseWrapper.wrap(
+      getData: () async => supabaseClient
+          .from(EnumTable.subtasks.value)
+          .insert(data)
+          .select()
+          .single(),
+    );
+  }
+
+  Future<Map<String, dynamic>> deleteSubtaskt(String subtaskId) async {
+    return await responseWrapper.wrap(
+      getData: () async => supabaseClient
+          .from(EnumTable.subtasks.value)
+          .delete()
+          .eq(EnumSubtask.id.value, subtaskId)
+          .select()
+          .single(),
+    );
+  }
+
+  Future<Map<String, dynamic>> updateSubtaskt(Map<String, dynamic> data) async {
+    return await responseWrapper.wrap(
+      getData: () async => supabaseClient
+          .from(EnumTable.subtasks.value)
+          .update(data)
+          .eq(EnumSubtask.id.value, data[EnumSubtask.id.value])
           .select()
           .single(),
     );

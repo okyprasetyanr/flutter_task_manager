@@ -58,7 +58,7 @@ enum EnumTask {
   const EnumTask(this.value);
 }
 
-enum EnumSubTask {
+enum EnumSubtask {
   id('id'),
   taskId('task_id'),
   title('title'),
@@ -66,7 +66,7 @@ enum EnumSubTask {
   projectId('project_id');
 
   final String value;
-  const EnumSubTask(this.value);
+  const EnumSubtask(this.value);
 }
 
 enum EnumLabel {

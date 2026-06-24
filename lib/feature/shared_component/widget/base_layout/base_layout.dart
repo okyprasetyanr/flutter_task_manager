@@ -6,7 +6,13 @@ import 'package:task_manager/core/app_properties/app_properties.dart';
 class BaseLayout extends StatelessWidget {
   final Widget uiPage;
   final Widget? widgetNavigation;
-  const BaseLayout({super.key, required this.uiPage, this.widgetNavigation});
+  final Widget? fab;
+  const BaseLayout({
+    super.key,
+    required this.uiPage,
+    this.widgetNavigation,
+    this.fab,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +20,7 @@ class BaseLayout extends StatelessWidget {
       bottom: true,
       top: true,
       child: Scaffold(
+        floatingActionButton: fab,
         backgroundColor: AppPropertyColor.white,
         body: Padding(
           padding: const EdgeInsets.all(10),

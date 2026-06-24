@@ -24,7 +24,7 @@ class TaskDetailHeader extends StatelessWidget {
                 ? (state.task?.dataTask.title ?? "...", state.status)
                 : (null, EnumStatusState.loading),
             builder: (context, state) => state.$2 == EnumStatusState.loading
-                ? SizedBox(height: 20, width: 20, child: CustomLoading())
+                ? SizedBox(height: 20, width: 20, child: const CustomLoading())
                 : Text(
                     "${state.$1} Task",
                     style: lv1TextStyle,

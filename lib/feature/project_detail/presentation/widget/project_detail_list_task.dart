@@ -41,7 +41,7 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
                 : (const {}, const {}, EnumStatusState.loading),
             builder: (context, state) {
               return CustomListViewBuilderV(
-                onEdit: (data) {
+                onOption: (data) {
                   context.read<ProjectDetailBloc>().add(
                     ProjectDetailEventSelectedData(selectedDate: data),
                   );

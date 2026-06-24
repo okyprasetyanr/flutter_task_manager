@@ -132,7 +132,7 @@ class ModelTask extends Equatable {
     required DateTime updatedAt,
   }) {
     return ModelTask(
-      id: "TASK ${Uuid().v4().substring(0, 6)}",
+      id: "TASK${Uuid().v4().substring(0, 6)}",
       projectId: projectId,
       title: title,
       description: description,

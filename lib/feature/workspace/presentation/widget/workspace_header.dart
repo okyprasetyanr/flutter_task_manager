@@ -22,7 +22,7 @@ class WorkspaceHeader extends StatelessWidget {
                 style: lv1TextStyle,
                 textAlign: TextAlign.end,
               )
-            : SizedBox(height: 20, width: 20, child: CustomLoading()),
+            : SizedBox(height: 20, width: 20, child: const CustomLoading()),
       ),
     );
   }

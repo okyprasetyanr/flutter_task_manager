@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_sub_task.dart';
 import 'package:task_manager/feature/project_detail/domain/model/model_task_merge.dart';
 
 import 'package:task_manager/shared/enum/enum_status_state.dart';
@@ -20,6 +21,7 @@ class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
   final String? failed;
   final String? error;
   final String? noconnection;
+  final ModelSubTask? selectedSubtask;
 
   TaskDetailStateLoaded({
     this.task,
@@ -30,6 +32,7 @@ class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
     this.failed,
     this.error,
     this.noconnection,
+    this.selectedSubtask,
   });
 
   TaskDetailStateLoaded copyWith({
@@ -41,6 +44,7 @@ class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
     String? failed,
     String? error,
     String? noconnection,
+    ModelSubTask? selectedSubtask,
   }) {
     return TaskDetailStateLoaded(
       dataLabel: dataLabel ?? this.dataLabel,
@@ -51,6 +55,7 @@ class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
       error: error ?? this.error,
       failed: failed ?? this.failed,
       noconnection: noconnection ?? this.noconnection,
+      selectedSubtask: selectedSubtask,
     );
   }
 
@@ -64,5 +69,6 @@ class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
     failed,
     error,
     noconnection,
+    selectedSubtask,
   ];
 }

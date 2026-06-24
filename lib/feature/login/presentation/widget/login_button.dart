@@ -28,10 +28,10 @@ class LoginButton extends StatelessWidget {
             backgroundColor: AppPropertyColor.primary,
             onPressed: () {
               if (keyform.currentState!.validate()) {
-                customSnackBar(context, "Fitur belum tersedia!", top: true);
+                customSnackBar(context, "Feature not available!", top: true);
               }
             },
-            child: Text("Daftar", style: lv05TextStyleWhite),
+            child: Text("Create Account", style: lv05TextStyleWhite),
           ),
         ),
         Expanded(
@@ -44,7 +44,7 @@ class LoginButton extends StatelessWidget {
                 );
               }
             },
-            child: Text("Masuk", style: lv05TextStyleWhite),
+            child: Text("Login", style: lv05TextStyleWhite),
           ),
         ),
       ],

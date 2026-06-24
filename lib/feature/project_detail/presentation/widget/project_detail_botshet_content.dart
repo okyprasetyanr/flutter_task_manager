@@ -215,7 +215,7 @@ class _ProjectDetailBotshetContentState
                   builder: (context, state) => Padding(
                     padding: const EdgeInsets.all(10),
                     child: state == EnumStatusState.synchronize
-                        ? CustomLoading()
+                        ? const CustomLoading()
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

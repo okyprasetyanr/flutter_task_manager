@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 import 'package:task_manager/feature/project_detail/domain/enum/enum.dart';
+import 'package:uuid/uuid.dart';
 
 class ModelSubTask extends Equatable {
   final String id;
@@ -19,22 +20,64 @@ class ModelSubTask extends Equatable {
 
   factory ModelSubTask.fromJson(Map<String, dynamic> data) {
     return ModelSubTask(
-      projectId: data[EnumSubTask.projectId.value],
-      id: data[EnumSubTask.id.value],
-      taskId: data[EnumSubTask.taskId.value],
-      title: data[EnumSubTask.title.value],
-      isDone: data[EnumSubTask.isDone.value],
+      projectId: data[EnumSubtask.projectId.value],
+      id: data[EnumSubtask.id.value],
+      taskId: data[EnumSubtask.taskId.value],
+      title: data[EnumSubtask.title.value],
+      isDone: data[EnumSubtask.isDone.value],
     );
   }
 
   factory ModelSubTask.fromDrift(Map<String, dynamic> data) {
     return ModelSubTask(
-      projectId: data[EnumSubTask.projectId.name],
-      id: data[EnumSubTask.id.name],
-      taskId: data[EnumSubTask.taskId.name],
-      title: data[EnumSubTask.title.name],
-      isDone: data[EnumSubTask.isDone.name],
+      projectId: data[EnumSubtask.projectId.name],
+      id: data[EnumSubtask.id.name],
+      taskId: data[EnumSubtask.taskId.name],
+      title: data[EnumSubtask.title.name],
+      isDone: data[EnumSubtask.isDone.name],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      EnumSubtask.projectId.value: projectId,
+      EnumSubtask.id.value: id,
+      EnumSubtask.taskId.value: taskId,
+      EnumSubtask.title.value: title,
+      EnumSubtask.isDone.value: isDone,
+    };
+  }
+
+  static ModelSubTask createSubtask({
+    required String title,
+    required String taskId,
+    required String projectId,
+    required bool isDone,
+  }) {
+    return ModelSubTask(
+      id: "SUB${Uuid().v4().substring(0, 6)}",
+      taskId: taskId,
+      title: title,
+      isDone: isDone,
+      projectId: projectId,
+    );
+  }
+
+  static Map<String, dynamic> subtaskGetChangedData({
+    required Map<String, dynamic> original,
+    required Map<String, dynamic> edited,
+  }) {
+    Map<String, dynamic> changedData = {
+      EnumSubtask.id.value: original[EnumSubtask.id.value],
+    };
+
+    edited.forEach((key, value) {
+      if (original[key] != value) {
+        changedData[key] = value;
+      }
+    });
+
+    return changedData;
   }
 
   ModelSubTask copyWith({

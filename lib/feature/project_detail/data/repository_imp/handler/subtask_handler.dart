@@ -55,7 +55,7 @@ class SubtaskHandler {
           table: EnumTable.subtasks.value,
           filter: PostgresChangeFilter(
             type: PostgresChangeFilterType.eq,
-            column: EnumSubTask.projectId.value,
+            column: EnumSubtask.projectId.value,
             value: projectId,
           ),
           callback: (PostgresChangePayload payload) async {

@@ -5,6 +5,7 @@ import 'package:task_manager/core/services/local_database/enum/enum.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
+import 'package:task_manager/feature/project_detail/domain/model/model_sub_task.dart';
 import 'package:task_manager/feature/project_detail/domain/model/model_task_merge.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
@@ -125,9 +126,17 @@ class TaskDetailRepositoryImp implements TaskDetailRepository {
       watchComment(taskId: task.dataTask.id),
       (a, b) {
         final comment = (b.$1[EnumFetchApiStatus.success] as List)
-            .map((e) => ModelComment.fromDrift(e))
+            .map(
+              (e) => ModelComment.fromDrift(
+                data: e,
+                isOwned: userSession.getUserId() == e[EnumComment.userId.name],
+              ),
+            )
             .toSet();
 
+        devLog(
+          "Log TaskDetailRepositoryImp: watchDashboard: data: isOwned ${comment.map((e) => e.isOwned)}",
+        );
         final labelIds = task.dataTaskLabel.map((e) => e.labelId).toSet();
 
         final filteredLabel = label
@@ -145,5 +154,98 @@ class TaskDetailRepositoryImp implements TaskDetailRepository {
         );
       },
     );
+  }
+
+  @override
+  Future<CollectorMessage?> createComment({
+    required String content,
+    required String taskId,
+  }) async {
+    final data = await helper.collectDataRemote(
+      remoteFunc: () async => remote.taskDetailRemote.createComment(
+        ModelComment.createComment(
+          taskId: taskId,
+          content: content,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          userId: userSession.getUserId(),
+        ).toJson(),
+      ),
+      localFunc: ({required dataToCache}) async => {},
+    );
+
+    devLog("Log TaskDetailRepositoryImp: createComment: data: $data}");
+
+    return data.containsKey(EnumFetchApiStatus.success)
+        ? null
+        : messageCollector.getMessage(data);
+  }
+
+  @override
+  Future<CollectorMessage?> deleteComment({required String commentId}) async {
+    final data = await helper.collectDataRemote(
+      remoteFunc: () async => remote.taskDetailRemote.deleteComment(commentId),
+      localFunc: ({required dataToCache}) async => {},
+    );
+
+    return data.containsKey(EnumFetchApiStatus.success)
+        ? null
+        : messageCollector.getMessage(data);
+  }
+
+  @override
+  Future<CollectorMessage?> createSubTask({
+    required String title,
+    required String taskId,
+    required String projectId,
+  }) async {
+    final data = await helper.collectDataRemote(
+      remoteFunc: () async => remote.taskDetailRemote.createSubtask(
+        ModelSubTask.createSubtask(
+          title: title,
+          taskId: taskId,
+          projectId: projectId,
+          isDone: false,
+        ).toJson(),
+      ),
+      localFunc: ({required dataToCache}) async => {},
+    );
+
+    return data.containsKey(EnumFetchApiStatus.success)
+        ? null
+        : messageCollector.getMessage(data);
+  }
+
+  @override
+  Future<CollectorMessage?> deleteSubTask({required String subtaskId}) async {
+    final data = await helper.collectDataRemote(
+      remoteFunc: () async => remote.taskDetailRemote.deleteSubtaskt(subtaskId),
+      localFunc: ({required dataToCache}) async => {},
+    );
+
+    return data.containsKey(EnumFetchApiStatus.success)
+        ? null
+        : messageCollector.getMessage(data);
+  }
+
+  @override
+  Future<CollectorMessage?> updateSubtask({
+    required ModelSubTask original,
+    required ModelSubTask edited,
+  }) async {
+    final finalUpdate = ModelSubTask.subtaskGetChangedData(
+      original: original.toJson(),
+      edited: edited.toJson(),
+    );
+
+    final data = await helper.collectDataRemote(
+      remoteFunc: () async =>
+          remote.taskDetailRemote.updateSubtaskt(finalUpdate),
+      localFunc: ({required dataToCache}) async => {},
+    );
+
+    return data.containsKey(EnumFetchApiStatus.success)
+        ? null
+        : messageCollector.getMessage(data);
   }
 }

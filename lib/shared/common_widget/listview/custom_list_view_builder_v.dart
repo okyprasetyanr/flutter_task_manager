@@ -13,7 +13,9 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
   final List<Widget> Function(T data, EnumStatusState status) content;
   final int? limit;
   final Function(T data)? onPressed;
-  final Function(T data)? onEdit;
+  final Function(T data)? onOption;
+  final bool Function(T data)? specificOption;
+  final Widget? Function(T data)? changeOptionIcon;
 
   const CustomListViewBuilderV({
     super.key,
@@ -23,7 +25,9 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
     required this.data,
     required this.content,
     this.onPressed,
-    this.onEdit,
+    this.onOption,
+    this.changeOptionIcon,
+    this.specificOption,
   });
 
   @override
@@ -59,6 +63,11 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
           }
 
           final finalData = data[index];
+
+          final bool showOptionButton =
+              onOption != null &&
+              (specificOption == null || specificOption!(finalData));
+
           return Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Card(
@@ -87,19 +96,7 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (onEdit != null)
-                    CustomButton(
-                      backgroundColor: AppPropertyColor.white,
-                      onPressed: onEdit != null
-                          ? () {
-                              onEdit!(finalData);
-                            }
-                          : null,
-                      child: Icon(
-                        Icons.edit_rounded,
-                        color: AppPropertyColor.primary,
-                      ),
-                    ),
+                  if (showOptionButton) onPressedAction(finalData),
                 ],
               ),
             ),
@@ -107,5 +104,19 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
         },
       );
     }
+  }
+
+  Widget onPressedAction(T finalData) {
+    return CustomButton(
+      backgroundColor: AppPropertyColor.white,
+      onPressed: onOption != null
+          ? () {
+              onOption!(finalData);
+            }
+          : null,
+      child: changeOptionIcon != null
+          ? changeOptionIcon!(finalData)
+          : Icon(Icons.edit_rounded, color: AppPropertyColor.primary),
+    );
   }
 }

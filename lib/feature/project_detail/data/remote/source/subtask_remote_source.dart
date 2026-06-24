@@ -20,7 +20,7 @@ class SubtaskRemoteSource {
       final response = await supabaseClient
           .from(EnumTable.subtasks.value)
           .select()
-          .eq(EnumSubTask.projectId.value, projectId);
+          .eq(EnumSubtask.projectId.value, projectId);
 
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {

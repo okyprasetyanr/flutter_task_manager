@@ -33,7 +33,7 @@ class NotificationListNotification extends StatelessWidget {
             children: [
               Text("Notification List", style: titleTextStyle),
               if (status == EnumStatusState.synchronize)
-                const SizedBox(width: 50, child: CustomLoading()),
+                const SizedBox(width: 50, child: const CustomLoading()),
             ],
           ),
 

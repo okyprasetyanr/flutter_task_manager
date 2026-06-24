@@ -60,7 +60,7 @@ class WorkspaceListWorkspace extends StatelessWidget {
             replace: false,
             arguments: {'dataTransfered': data},
           ).navigate(),
-          onEdit: (data) {
+          onOption: (data) {
             context.read<WorkspaceBloc>().add(
               WorkspaceEventSelectedData(data: data),
             );
