@@ -14,6 +14,18 @@ class ModelTaskMerge extends Equatable {
     required this.dataTaskLabel,
   });
 
+  ModelTaskMerge copyWith({
+    ModelTask? dataTask,
+    Set<ModelSubTask>? dataSubTask,
+    Set<ModelTaskLabels>? dataTaskLabel,
+  }) {
+    return ModelTaskMerge(
+      dataTask: dataTask ?? this.dataTask,
+      dataSubTask: dataSubTask ?? this.dataSubTask,
+      dataTaskLabel: dataTaskLabel ?? this.dataTaskLabel,
+    );
+  }
+
   @override
   List<Object?> get props => [dataTask, dataSubTask, dataTaskLabel];
 }

@@ -127,7 +127,7 @@ final routes = {
       child: BlocProvider(
         create: (context) =>
             ProjectDetailBloc(context.read<ProjectDetailRepository>())
-              ..add(ProjectDetailEventGetData(data: data)),
+              ..add(ProjectDetailEventWatch(data: data)),
         child: ProjectDetailPage(),
       ),
     );

@@ -41,7 +41,6 @@ extension EnumTaskPriorityX on EnumTaskPriority {
 enum EnumTask {
   id('id'),
   projectId('project_id'),
-  labelIds('label_ids'),
   sprintId('sprint_id'),
   title('title'),
   description('description'),

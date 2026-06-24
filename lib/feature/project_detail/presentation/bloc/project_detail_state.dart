@@ -18,6 +18,7 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
   final String? error;
   final String? failed;
   final String? noconnection;
+  final ModelTaskMerge? selectedTask;
 
   ProjectDetailStateLoaded({
     this.dataProject,
@@ -28,6 +29,7 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
     this.error,
     this.failed,
     this.noconnection,
+    this.selectedTask,
   });
 
   ProjectDetailStateLoaded copyWith({
@@ -35,12 +37,14 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
     Set<ModelTaskMerge>? dataTask,
     Set<ModelLabel>? dataLabel,
     EnumStatusState? status,
+    ModelTaskMerge? selectedTask,
     String? error,
     String? failed,
     String? noconnection,
     Set<ModelUser>? dataUser,
   }) {
     return ProjectDetailStateLoaded(
+      selectedTask: selectedTask ?? this.selectedTask,
       dataUser: dataUser ?? this.dataUser,
       dataLabel: dataLabel ?? this.dataLabel,
       dataProject: dataProject ?? this.dataProject,
@@ -54,6 +58,7 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
 
   @override
   List<Object?> get props => [
+    selectedTask,
     dataUser,
     dataProject,
     dataTask,

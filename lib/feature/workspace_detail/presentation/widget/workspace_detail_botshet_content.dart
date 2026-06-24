@@ -148,6 +148,7 @@ class _WorkspaceDetailBotshetContentState
                             valueListenable: pickedStart,
                             builder: (context, value, child) => Text(
                               HelperDateConvert.toDisplayUI(date: value),
+                              style: lv1TextStyleBold,
                             ),
                           ),
                         ],
@@ -157,7 +158,7 @@ class _WorkspaceDetailBotshetContentState
                   const SizedBox(width: 20),
                   Expanded(
                     child: CustomButton(
-                      backgroundColor: AppPropertyColor.white,
+                      backgroundColor: AppPropertyColor.red,
                       onPressed: () async => await customDatePicker(
                         dateEnd: true,
                         text: "Date End",
@@ -167,11 +168,12 @@ class _WorkspaceDetailBotshetContentState
                       ),
                       child: Column(
                         children: [
-                          Text("End", style: lv05TextStyle),
+                          Text("End", style: lv05TextStyleWhite),
                           ValueListenableBuilder(
                             valueListenable: pickedEnd,
                             builder: (context, value, child) => Text(
                               HelperDateConvert.toDisplayUI(date: value),
+                              style: lv1TextStyleWhiteBold,
                             ),
                           ),
                         ],

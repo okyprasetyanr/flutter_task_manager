@@ -6,9 +6,12 @@ import 'package:task_manager/core/routes/routes_navigator.dart';
 import 'package:task_manager/feature/project_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/project_detail/domain/model/model_task_merge.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
+import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_event.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
+import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_botshet_content.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_list_sub_task.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
+import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/feature/project_detail/domain/model/model_label.dart';
 import 'package:task_manager/shared/style/text_size.dart';
@@ -38,6 +41,28 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
                 : (const {}, const {}, EnumStatusState.loading),
             builder: (context, state) {
               return CustomListViewBuilderV(
+                onEdit: (data) {
+                  context.read<ProjectDetailBloc>().add(
+                    ProjectDetailEventSelectedData(selectedDate: data),
+                  );
+                  return customBottomSheet(
+                    context: context,
+                    resetItemForm: () {
+                      context.read<ProjectDetailBloc>().add(
+                        ProjectDetailEventResetSelected(),
+                      );
+                    },
+                    content: (scrollController) {
+                      final bloc = context.read<ProjectDetailBloc>();
+                      return BlocProvider.value(
+                        value: bloc,
+                        child: ProjectDetailBotshetContent(
+                          scrollController: scrollController,
+                        ),
+                      );
+                    },
+                  );
+                },
                 status: state.$3,
                 data: state.$1.toList(),
                 content: (data, status) => [
@@ -79,7 +104,6 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
                           ),
                         ],
                       ),
-
                       Text(data.dataTask.status.text, style: lv05TextStyle),
                     ],
                   ),

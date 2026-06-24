@@ -2,8 +2,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:task_manager/feature/project_detail/domain/enum/enum.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
-import 'package:task_manager/feature/project_detail/domain/model/model_label.dart';
-import 'package:task_manager/feature/project_detail/domain/model/model_sub_task.dart';
+import 'package:uuid/uuid.dart';
 
 class ModelTask extends Equatable {
   final String id;
@@ -67,17 +66,91 @@ class ModelTask extends Equatable {
       storyPoint: data[EnumTask.storyPoint.name],
       reporterId: data[EnumTask.reporterId.name],
       assigneeId: data[EnumTask.assigneeId.name],
-      startDate: HelperDateConvert.toDateTime(data[EnumTask.startDate.name]),
-      dueDate: HelperDateConvert.toDateTime(data[EnumTask.dueDate.name]),
-      createdAt: HelperDateConvert.toDateTime(data[EnumTask.createdAt.name]),
-      updatedAt: HelperDateConvert.toDateTime(data[EnumTask.updatedAt.name]),
+      startDate: HelperDateConvert.toDateTime(
+        DateTime.fromMillisecondsSinceEpoch(data[EnumTask.startDate.name]),
+      ),
+      dueDate: HelperDateConvert.toDateTime(
+        DateTime.fromMillisecondsSinceEpoch(data[EnumTask.dueDate.name]),
+      ),
+      createdAt: HelperDateConvert.toDateTime(
+        DateTime.fromMillisecondsSinceEpoch(data[EnumTask.createdAt.name]),
+      ),
+      updatedAt: HelperDateConvert.toDateTime(
+        DateTime.fromMillisecondsSinceEpoch(data[EnumTask.updatedAt.name]),
+      ),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      EnumTask.id.value: id,
+      EnumTask.projectId.value: projectId,
+      EnumTask.title.value: title,
+      EnumTask.description.value: description,
+      EnumTask.status.value: status.text,
+      EnumTask.priority.value: priority.text,
+      EnumTask.storyPoint.value: storyPoint,
+      EnumTask.reporterId.value: reporterId,
+      EnumTask.assigneeId.value: assigneeId,
+      EnumTask.startDate.value: HelperDateConvert.toJsonISO(startDate),
+      EnumTask.dueDate.value: HelperDateConvert.toJsonISO(dueDate),
+      EnumTask.createdAt.value: HelperDateConvert.toJsonISO(createdAt),
+      EnumTask.updatedAt.value: HelperDateConvert.toJsonISO(updatedAt),
+    };
+  }
+
+  static Map<String, dynamic> taskGetChangedData({
+    required Map<String, dynamic> original,
+    required Map<String, dynamic> edited,
+  }) {
+    Map<String, dynamic> changedData = {
+      EnumTask.id.value: original[EnumTask.id.value],
+    };
+
+    edited.forEach((key, value) {
+      if (original[key] != value) {
+        changedData[key] = value;
+      }
+    });
+
+    return changedData;
+  }
+
+  static ModelTask createTask({
+    required String projectId,
+    required String? sprintId,
+    required String title,
+    required String description,
+    required EnumTaskStatus status,
+    required EnumTaskPriority priority,
+    required int storyPoint,
+    required String reporterId,
+    required String assigneeId,
+    required DateTime startDate,
+    required DateTime dueDate,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) {
+    return ModelTask(
+      id: "TASK ${Uuid().v4().substring(0, 6)}",
+      projectId: projectId,
+      title: title,
+      description: description,
+      status: status,
+      priority: priority,
+      storyPoint: storyPoint,
+      reporterId: reporterId,
+      assigneeId: assigneeId,
+      startDate: startDate,
+      dueDate: dueDate,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     );
   }
 
   ModelTask copyWith({
     String? id,
     String? projectId,
-    Set<String>? labelIds,
     String? sprintId,
     String? title,
     String? description,
@@ -90,8 +163,6 @@ class ModelTask extends Equatable {
     DateTime? dueDate,
     DateTime? createdAt,
     DateTime? updatedAt,
-    Set<ModelSubTask>? subTask,
-    Set<ModelLabel>? label,
   }) {
     return ModelTask(
       id: id ?? this.id,

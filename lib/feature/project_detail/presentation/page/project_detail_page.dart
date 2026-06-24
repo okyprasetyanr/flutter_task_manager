@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
+import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_botshet_content.dart';
 import 'package:task_manager/feature/shared_component/widget/base_layout/base_layout.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_header.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_list_member.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_list_task.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_project.dart';
+import 'package:task_manager/feature/shared_component/widget/floating_button_add/floating_button_add.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
 class ProjectDetailPage extends StatefulWidget {
@@ -33,6 +36,13 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
         Text("Task", style: lv1TextStyleBold),
         const SizedBox(height: 5),
         Expanded(flex: 5, child: ProjectDetailListTask()),
+        FloatingButtonAdd<ProjectDetailBloc>(
+          content: (scrollController) {
+            return ProjectDetailBotshetContent(
+              scrollController: scrollController,
+            );
+          },
+        ),
       ],
     );
   }

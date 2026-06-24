@@ -11,6 +11,7 @@ import 'package:task_manager/feature/project_detail/data/repository_imp/handler/
 import 'package:task_manager/feature/project_detail/data/repository_imp/handler/subtask_handler.dart';
 import 'package:task_manager/feature/project_detail/data/repository_imp/handler/task_label_handler.dart';
 import 'package:task_manager/feature/project_detail/data/repository_imp/handler/task_handler.dart';
+import 'package:task_manager/feature/project_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/project_detail/domain/model/model_task_merge.dart';
 import 'package:task_manager/feature/project_detail/domain/repository/project_detail_repository.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
@@ -179,5 +180,76 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
         return ProjectDetailStateLoaded();
       },
     );
+  }
+
+  @override
+  Future<CollectorMessage?> createTask({
+    required String assigneeId,
+    required String projectId,
+    required String title,
+    required String description,
+    required DateTime startDate,
+    required DateTime dueDate,
+    required int storyPoint,
+    required EnumTaskStatus status,
+    required EnumTaskPriority priority,
+  }) async {
+    final createdData = ModelTask.createTask(
+      projectId: projectId,
+      sprintId: "",
+      title: title,
+      description: description,
+      status: status,
+      priority: priority,
+      storyPoint: storyPoint,
+      reporterId: userSession.getUserId(),
+      assigneeId: assigneeId,
+      startDate: startDate,
+      dueDate: dueDate,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+
+    final data = await helper.collectDataRemote(
+      remoteFunc: () =>
+          remote.projectDetailRemote.task.createTask(createdData.toJson()),
+      localFunc: ({required dataToCache}) async => {},
+    );
+
+    return data.containsKey(EnumFetchApiStatus.success)
+        ? null
+        : messageCollector.getMessage(data);
+  }
+
+  @override
+  Future<CollectorMessage?> deleteTask({required String taskId}) async {
+    final data = await helper.collectDataRemote(
+      remoteFunc: () => remote.projectDetailRemote.task.deleteTask(taskId),
+      localFunc: ({required dataToCache}) async => {},
+    );
+    return data.containsKey(EnumFetchApiStatus.success)
+        ? null
+        : messageCollector.getMessage(data);
+  }
+
+  @override
+  Future<CollectorMessage?> updateTask({
+    required ModelTaskMerge original,
+    required ModelTaskMerge edited,
+  }) async {
+    final finalUpdated = ModelTask.taskGetChangedData(
+      original: original.dataTask.toJson(),
+      edited: edited.dataTask.toJson(),
+    );
+
+    final data = await helper.collectDataRemote(
+      remoteFunc: () async =>
+          remote.projectDetailRemote.task.updateTask(finalUpdated),
+      localFunc: ({required dataToCache}) async => {},
+    );
+
+    return data.containsKey(EnumFetchApiStatus.success)
+        ? null
+        : messageCollector.getMessage(data);
   }
 }
