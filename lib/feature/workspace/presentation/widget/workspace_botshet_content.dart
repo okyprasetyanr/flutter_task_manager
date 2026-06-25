@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
+import 'package:task_manager/feature/workspace/domain/enum/enum.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_bloc.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_event.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button.dart';
+import 'package:task_manager/shared/common_widget/snackbar/custom_snackbar.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/style/icon_size.dart';
 import 'package:task_manager/shared/style/text_size.dart';
@@ -27,14 +29,16 @@ class WorkspaceBotshetContent extends StatefulWidget {
 class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
+  final searchController = TextEditingController();
   final _keyForm = GlobalKey<FormState>();
   bool _initialized = false;
-  final listUser = <ModelUser>{}.obs;
+  final listUser = <(ModelUser, EnumWorkspaceRole)>{}.obs;
 
   @override
   void dispose() {
     nameController.dispose();
     descriptionController.dispose();
+    searchController.dispose();
     super.dispose();
   }
 
@@ -57,7 +61,11 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
             _initialized = true;
             nameController.text = data.dataWorkspace.name;
             descriptionController.text = data.dataWorkspace.description;
-            listUser.addAll(data.dataWorkspaceMember);
+            listUser.addAll(
+              data.dataWorkspaceMember.map(
+                (e) => (e, EnumWorkspaceRole.member),
+              ),
+            );
           }
           return Padding(
             padding: const EdgeInsets.all(10),
@@ -105,7 +113,7 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                                   shrinkWrap: true,
                                   itemCount: listUser.length,
                                   itemBuilder: (context, index) {
-                                    final data = listUser.elementAt(index);
+                                    final data = listUser.elementAt(index).$1;
                                     return Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -118,7 +126,8 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                                           backgroundColor:
                                               AppPropertyColor.white,
                                           onPressed: () => listUser.removeWhere(
-                                            (element) => element.id == data.id,
+                                            (element) =>
+                                                element.$1.id == data.id,
                                           ),
                                           child: Icon(
                                             Icons.close_rounded,
@@ -143,11 +152,20 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                               Set<ModelUser>
                             >(
                               selector: (state) => state is WorkspaceStateLoaded
-                                  ? state.dataUser
+                                  ? state.filteredUser
                                   : {},
                               builder: (context, state) => Column(
                                 children: [
-                                  Text("List Member", style: lv2TextStyle),
+                                  CustomTextField(
+                                    controller: searchController,
+                                    label: "Search new Member",
+                                    onChanged: (value) =>
+                                        context.read<WorkspaceBloc>().add(
+                                          WorkspaceEventSearchMember(
+                                            search: value,
+                                          ),
+                                        ),
+                                  ),
                                   Expanded(
                                     child: ListView.builder(
                                       controller: widget.scrollController,
@@ -168,11 +186,26 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                                                 backgroundColor:
                                                     AppPropertyColor.white,
                                                 onPressed: () =>
-                                                    listUser.add(data),
+                                                    listUser.any(
+                                                      (element) =>
+                                                          element.$1.id ==
+                                                          data.id,
+                                                    )
+                                                    ? customSnackBar(
+                                                        context,
+                                                        "${data.name} was added!",
+                                                        top: true,
+                                                      )
+                                                    : listUser.add((
+                                                        data,
+                                                        EnumWorkspaceRole
+                                                            .member,
+                                                      )),
                                                 child:
                                                     listUser.any(
                                                       (element) =>
-                                                          element.id == data.id,
+                                                          element.$1.id ==
+                                                          data.id,
                                                     )
                                                     ? Icon(
                                                         Icons
@@ -251,7 +284,7 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                                             name: nameController.text,
                                             description:
                                                 descriptionController.text,
-                                            contributor: {},
+                                            contributor: listUser.toSet(),
                                           ),
                                         )
                                       : context.read<WorkspaceBloc>().add(
@@ -259,9 +292,12 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                                             name: nameController.text,
                                             description:
                                                 descriptionController.text,
-                                            contributor: {},
+                                            contributor: listUser.toSet(),
                                           ),
                                         );
+                                  nameController.clear();
+                                  descriptionController.clear();
+                                  searchController.clear();
                                 },
                               ),
                             ),

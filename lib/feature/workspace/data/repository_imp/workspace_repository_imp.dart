@@ -18,7 +18,6 @@ import 'package:task_manager/feature/workspace/domain/model/model_workspace_memb
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace/domain/repository/workspace_repository.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
-import 'package:task_manager/feature/workspace_detail/domain/enum/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
@@ -231,6 +230,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
 
       return WorkspaceStateLoaded(
         dataUser: a,
+        filteredUser: a,
         dataWorkspace: dataWorkspace,
         companyName: getCompanyName(),
         status: EnumStatusState.none,
@@ -259,7 +259,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
     );
 
     if (data.containsKey(EnumFetchApiStatus.success)) {
-      await helper.collectDataRemote(
+      final dataMember = await helper.collectDataRemote(
         remoteFunc: () => remote.workspaceRemote.createWorkspaceMember(
           contributor
               .map(
@@ -274,6 +274,9 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
               .toSet(),
         ),
         localFunc: ({required dataToCache}) async => {},
+      );
+      devLog(
+        "Log WorkspaceRepositoryImp: createWorkspace: Member: $dataMember",
       );
     }
     devLog("Log WorkspaceRepositoryImp: createWorkspace: $data");
@@ -328,12 +331,14 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
 
       if (usersToCreate.isNotEmpty) {
         await helper.collectDataRemote(
-          remoteFunc: () => remote.workspaceDetailRemote.createProjectMember(
+          remoteFunc: () => remote.workspaceRemote.createWorkspaceMember(
             usersToCreate
                 .map(
                   (e) => ModelWorkspaceMember.createWorkspaceMember(
                     workspaceId:
-                        data[EnumFetchApiStatus.success][EnumProject.id.value],
+                        data[EnumFetchApiStatus.success][EnumWorkspaceMember
+                            .id
+                            .value],
                     companyId: userSession.getCompanyId(),
                     userId: e,
                     role: contributor

@@ -39,11 +39,11 @@ class ModelWorkspaceMember extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
-      EnumWorkspaceMember.workspaceId.name: workspaceId,
-      EnumWorkspaceMember.companyId.name: companyId,
-      EnumWorkspaceMember.id.name: id,
-      EnumWorkspaceMember.userId.name: userId,
-      EnumWorkspaceMember.role.name: role.name,
+      EnumWorkspaceMember.workspaceId.value: workspaceId,
+      EnumWorkspaceMember.companyId.value: companyId,
+      EnumWorkspaceMember.id.value: id,
+      EnumWorkspaceMember.userId.value: userId,
+      EnumWorkspaceMember.role.value: role.name,
     };
   }
 

@@ -16,7 +16,13 @@ class WorkspacePage extends StatefulWidget {
 class _WorkspacePageState extends State<WorkspacePage> {
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(uiPage: uiPage());
+    return BaseLayout(
+      uiPage: uiPage(),
+      fab: FloatingButtonAdd<WorkspaceBloc>(
+        content: (scrollController) =>
+            WorkspaceBotshetContent(scrollController: scrollController),
+      ),
+    );
   }
 
   Widget uiPage() {
@@ -26,10 +32,6 @@ class _WorkspacePageState extends State<WorkspacePage> {
         WorkspaceHeader(),
         const SizedBox(height: 15),
         Expanded(child: WorkspaceListWorkspace()),
-        FloatingButtonAdd<WorkspaceBloc>(
-          content: (scrollController) =>
-              WorkspaceBotshetContent(scrollController: scrollController),
-        ),
       ],
     );
   }

@@ -45,3 +45,9 @@ class WorkspaceEventSelectedData extends WorkspaceEvent {
 }
 
 class WorkspaceEventResetSelected extends WorkspaceEvent {}
+
+class WorkspaceEventSearchMember extends WorkspaceEvent {
+  final String search;
+
+  WorkspaceEventSearchMember({required this.search});
+}

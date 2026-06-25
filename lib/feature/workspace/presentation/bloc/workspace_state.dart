@@ -17,6 +17,7 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
   final String? noconnection;
   final Set<ModelWorkspaceMerge> dataWorkspace;
   final Set<ModelUser> dataUser;
+  final Set<ModelUser> filteredUser;
   final ModelWorkspaceMerge? selectedWorkspace;
 
   WorkspaceStateLoaded({
@@ -28,6 +29,7 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
     this.noconnection,
     this.dataWorkspace = const {},
     this.dataUser = const {},
+    this.filteredUser = const {},
   });
 
   WorkspaceStateLoaded copyWith({
@@ -35,12 +37,14 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
     EnumStatusState? status,
     Set<ModelWorkspaceMerge>? dataWorkspace,
     Set<ModelUser>? dataUser,
+    Set<ModelUser>? filteredUser,
     String? companyName,
     String? failed,
     String? error,
     String? noconnection,
   }) {
     return WorkspaceStateLoaded(
+      filteredUser: filteredUser ?? this.filteredUser,
       dataUser: dataUser ?? this.dataUser,
       selectedWorkspace: selectedWorkspace,
       noconnection: noconnection,
@@ -54,6 +58,7 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
 
   @override
   List<Object?> get props => [
+    filteredUser,
     selectedWorkspace,
     companyName,
     status,

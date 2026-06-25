@@ -5,6 +5,7 @@ import 'package:task_manager/feature/workspace/domain/repository/workspace_repos
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_event.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
+import 'package:task_manager/shared/helper/debounce/debounce_event_bloc.dart';
 
 class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
   final WorkspaceRepository repo;
@@ -16,6 +17,10 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     on<WorkspaceEventUpdateWorkspace>(_onUpdate);
     on<WorkspaceEventDeleteWorkspace>(_onDelete);
     on<WorkspaceEventResetSelected>(_onResetSelected);
+    on<WorkspaceEventSearchMember>(
+      _onSearchMember,
+      transformer: debounceRestartable(),
+    );
   }
 
   Future<void> _onWatch(
@@ -157,5 +162,20 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
   Future<void> close() {
     repo.disposeRealtime();
     return super.close();
+  }
+
+  FutureOr<void> _onSearchMember(
+    WorkspaceEventSearchMember event,
+    Emitter<WorkspaceState> emit,
+  ) {
+    final currentState = state as WorkspaceStateLoaded;
+    final data = currentState.dataUser
+        .where((element) => element.name.contains(event.search))
+        .toSet();
+    emit(
+      currentState.copyWith(
+        filteredUser: event.search.isEmpty ? currentState.dataUser : data,
+      ),
+    );
   }
 }

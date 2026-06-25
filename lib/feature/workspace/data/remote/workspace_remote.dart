@@ -82,9 +82,8 @@ class WorkspaceRemote {
     return await responseWrapper.wrap(
       getData: () async => supabaseClient
           .from(EnumTable.workspaceMembers.value)
-          .insert(data)
-          .select()
-          .single(),
+          .insert(data.toList())
+          .select(),
     );
   }
 
