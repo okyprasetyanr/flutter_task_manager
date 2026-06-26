@@ -3,6 +3,7 @@ import 'package:task_manager/feature/shared_component/user/domain/model/model_us
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
+import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 
 class WorkspaceDetailEvent {}
@@ -26,7 +27,7 @@ class WorkspaceDetailEventCreateProject extends WorkspaceDetailEvent {
   final DateTime start;
   final DateTime end;
   final DateTime createdAt;
-  final Set<(ModelUser, String)> contributor;
+  final Set<(ModelUser, EnumProjectRole)> contributor;
   final String type;
 
   WorkspaceDetailEventCreateProject({
@@ -43,7 +44,7 @@ class WorkspaceDetailEventUpdateProject extends WorkspaceDetailEvent {
   final DateTime start;
   final DateTime end;
   final DateTime createdAt;
-  final Set<(ModelUser, String)> contributor;
+  final Set<(ModelUser, EnumProjectRole)> contributor;
   final String type;
   final EnumProjectStatus status;
 
@@ -63,4 +64,10 @@ class WorkspaceDetailEventSelectedProject extends WorkspaceDetailEvent {
   final ModelProjectMerge data;
 
   WorkspaceDetailEventSelectedProject({required this.data});
+}
+
+class WorkspaceDetailEventSearchMember extends WorkspaceDetailEvent {
+  final String search;
+
+  WorkspaceDetailEventSearchMember({required this.search});
 }

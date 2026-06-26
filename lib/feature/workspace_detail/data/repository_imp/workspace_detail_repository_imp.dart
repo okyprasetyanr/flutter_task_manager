@@ -13,6 +13,7 @@ import 'package:task_manager/feature/workspace_detail/domain/model/model_project
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
+import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
@@ -225,6 +226,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
               .where((user) => members.any((e) => e.userId == user.id))
               .toSet();
 
+          devLog("Log watchDashboard: projectMember: data: $matchedUsers");
           return ModelProjectMerge(
             dataProject: project,
             dataProjectMember: matchedUsers,
@@ -234,6 +236,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
         return WorkspaceDetailStateLoaded(
           workspace: workspace,
           dataUser: a,
+          filteredUser: a,
           dataProject: dataProject,
           status: EnumStatusState.none,
           error: b.$2.error,
@@ -248,7 +251,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     required String name,
     required DateTime start,
     required DateTime end,
-    required Set<(String userId, String role)> contributor,
+    required Set<(String userId, EnumProjectRole role)> contributor,
     required String type,
     required String workspaceId,
   }) async {
@@ -299,7 +302,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   Future<CollectorMessage?> updateProject({
     required ModelProjectMerge original,
     required ModelProjectMerge edited,
-    required Set<(String userId, String role)> contributor,
+    required Set<(String userId, EnumProjectRole role)> contributor,
   }) async {
     final data = await helper.collectDataRemote(
       remoteFunc: () => remote.workspaceDetailRemote.updateProject(
@@ -326,7 +329,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
           .toSet();
 
       if (usersToCreate.isNotEmpty) {
-        await helper.collectDataRemote(
+        final dataMember = await helper.collectDataRemote(
           remoteFunc: () => remote.workspaceDetailRemote.createProjectMember(
             usersToCreate
                 .map(
@@ -347,15 +350,22 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
           ),
           localFunc: ({required dataToCache}) async => {},
         );
+
+        devLog(
+          "Log WorkspaceRepositoryImp: updateProject: dataMember: $dataMember",
+        );
       }
 
       if (usersToDelete.isNotEmpty) {
-        await helper.collectDataRemote(
+        final dataDelete = await helper.collectDataRemote(
           remoteFunc: () => remote.workspaceDetailRemote.deleteProjectMember(
             usersToDelete.map((e) => e).toList(),
             original.dataProject.id,
           ),
           localFunc: ({required dataToCache}) async => {},
+        );
+        devLog(
+          "Log WorkspaceRepositoryImp: updateProject: dataMember: delete: $dataDelete",
         );
       }
     }

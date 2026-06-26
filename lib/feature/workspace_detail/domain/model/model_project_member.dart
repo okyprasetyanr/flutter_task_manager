@@ -1,12 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:task_manager/feature/workspace_detail/domain/enum/enum.dart';
+import 'package:task_manager/shared/enum.dart';
 import 'package:uuid/uuid.dart';
 
 class ModelProjectMember extends Equatable {
   final String projectId;
   final String workspaceId;
   final String userId;
-  final String role;
+  final EnumProjectRole role;
   final String id;
 
   const ModelProjectMember({
@@ -23,7 +24,7 @@ class ModelProjectMember extends Equatable {
       workspaceId: data[EnumProjectMember.workspaceId.value],
       projectId: data[EnumProjectMember.projectId.value],
       userId: data[EnumProjectMember.userId.value],
-      role: data[EnumProjectMember.role.value],
+      role: EnumProjectRoleX.fromServer(data[EnumProjectMember.role.value]),
     );
   }
 
@@ -33,7 +34,7 @@ class ModelProjectMember extends Equatable {
       workspaceId: data[EnumProjectMember.workspaceId.name],
       projectId: data[EnumProjectMember.projectId.name],
       userId: data[EnumProjectMember.userId.name],
-      role: data[EnumProjectMember.role.name],
+      role: EnumProjectRoleX.fromServer(data[EnumProjectMember.role.name]),
     );
   }
 
@@ -41,7 +42,7 @@ class ModelProjectMember extends Equatable {
     String? projectId,
     String? workspaceId,
     String? userId,
-    String? role,
+    EnumProjectRole? role,
     String? id,
   }) {
     return ModelProjectMember(
@@ -57,7 +58,7 @@ class ModelProjectMember extends Equatable {
     required String projectId,
     required String workspaceId,
     required String userId,
-    required String role,
+    required EnumProjectRole role,
   }) {
     return ModelProjectMember(
       projectId: projectId,
@@ -72,7 +73,7 @@ class ModelProjectMember extends Equatable {
     return {
       EnumProjectMember.id.value: id,
       EnumProjectMember.projectId.value: projectId,
-      EnumProjectMember.role.value: role,
+      EnumProjectMember.role.value: role.text,
       EnumProjectMember.userId.value: userId,
       EnumProjectMember.workspaceId.value: workspaceId,
     };

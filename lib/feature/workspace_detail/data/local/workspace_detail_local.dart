@@ -5,6 +5,7 @@ import 'package:task_manager/feature/shared_component/helper/sync_table.dart';
 import 'package:task_manager/feature/workspace_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_member.dart';
+import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class WorkspaceDetailLocal {
@@ -86,7 +87,7 @@ class WorkspaceDetailLocal {
         projectId: model.projectId,
         workspaceId: model.workspaceId,
         userId: model.userId,
-        role: model.role,
+        role: model.role.text,
         id: model.id,
       ),
     );

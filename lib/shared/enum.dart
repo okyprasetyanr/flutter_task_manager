@@ -68,10 +68,4 @@ extension EnumProjectRoleX on EnumProjectRole {
         return "Product Owner";
     }
   }
-
-  static EnumProjectRole fromText(String value) =>
-      EnumProjectRole.values.firstWhere(
-        (e) => e.text == value,
-        orElse: () => EnumProjectRole.mobileDeveloper,
-      );
 }

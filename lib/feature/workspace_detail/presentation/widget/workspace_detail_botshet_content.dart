@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/core/app_properties/app_properties.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/shared_component/widget/drop_down/widget_drop_down.dart';
 import 'package:task_manager/feature/workspace_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
@@ -12,10 +14,12 @@ import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart
 import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
 import 'package:task_manager/shared/common_widget/snackbar/custom_snackbar.dart';
 import 'package:task_manager/shared/common_widget/text_field/custom_text_field.dart';
+import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/date_picker/custom_date_picker.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
+import 'package:task_manager/shared/style/icon_size.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
 class WorkspaceDetailBotshetContent extends StatefulWidget {
@@ -36,11 +40,13 @@ class _WorkspaceDetailBotshetContentState
   final pickedEnd = ValueNotifier<DateTime>(DateTime.now());
   final nameController = TextEditingController();
   final typeController = TextEditingController();
+  final searchController = TextEditingController();
   final _keyForm = GlobalKey<FormState>();
   final projectStatus = ValueNotifier<EnumProjectStatus>(
     EnumProjectStatus.unknown,
   );
   bool _initialized = false;
+  final listUser = <(ModelUser, EnumProjectRole)>{}.obs;
 
   DateTime createdAt = DateTime.now();
   @override
@@ -79,6 +85,9 @@ class _WorkspaceDetailBotshetContentState
             pickedStart.value = data.dataProject.start;
             pickedEnd.value = data.dataProject.end;
             createdAt = data.dataProject.createdAt;
+            listUser.addAll(
+              data.dataProjectMember.map((e) => (e, EnumProjectRole.devOps)),
+            );
             devLog(
               "Log WorkspaceDetailBotShetContent: data: ${data.dataProject.status}",
             );
@@ -182,7 +191,141 @@ class _WorkspaceDetailBotshetContentState
                   ),
                 ],
               ),
-              const Spacer(),
+              const SizedBox(height: 10),
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text("List Member", style: lv2TextStyle),
+                          Expanded(
+                            child: Obx(() {
+                              return ListView.builder(
+                                controller: widget.scrollController,
+                                shrinkWrap: true,
+                                itemCount: listUser.length,
+                                itemBuilder: (context, index) {
+                                  final data = listUser.elementAt(index).$1;
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        data.name,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      CustomButton(
+                                        backgroundColor: AppPropertyColor.white,
+                                        onPressed: () => listUser.removeWhere(
+                                          (element) => element.$1.id == data.id,
+                                        ),
+                                        child: Icon(
+                                          Icons.close_rounded,
+                                          color: AppPropertyColor.red,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child:
+                          BlocSelector<
+                            WorkspaceDetailBloc,
+                            WorkspaceDetailState,
+                            Set<ModelUser>
+                          >(
+                            selector: (state) =>
+                                state is WorkspaceDetailStateLoaded
+                                ? state.filteredUser
+                                : {},
+                            builder: (context, state) => Column(
+                              children: [
+                                CustomTextField(
+                                  controller: searchController,
+                                  label: "Search new Member",
+                                  onChanged: (value) =>
+                                      context.read<WorkspaceDetailBloc>().add(
+                                        WorkspaceDetailEventSearchMember(
+                                          search: value,
+                                        ),
+                                      ),
+                                ),
+                                Expanded(
+                                  child: ListView.builder(
+                                    controller: widget.scrollController,
+                                    shrinkWrap: true,
+                                    itemCount: state.length,
+                                    itemBuilder: (context, index) {
+                                      final data = state.elementAt(index);
+                                      return Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            data.name,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Obx(
+                                            () => CustomButton(
+                                              backgroundColor:
+                                                  AppPropertyColor.white,
+                                              onPressed: () =>
+                                                  listUser.any(
+                                                    (element) =>
+                                                        element.$1.id ==
+                                                        data.id,
+                                                  )
+                                                  ? customSnackBar(
+                                                      context,
+                                                      "${data.name} was added!",
+                                                      top: true,
+                                                    )
+                                                  : listUser.add((
+                                                      data,
+                                                      EnumProjectRole.devOps,
+                                                    )),
+                                              child:
+                                                  listUser.any(
+                                                    (element) =>
+                                                        element.$1.id ==
+                                                        data.id,
+                                                  )
+                                                  ? Icon(
+                                                      Icons
+                                                          .check_circle_outline_rounded,
+                                                      size: lv2IconSize,
+                                                      color: AppPropertyColor
+                                                          .primary,
+                                                    )
+                                                  : Icon(
+                                                      Icons
+                                                          .radio_button_unchecked_rounded,
+                                                      size: lv2IconSize,
+                                                    ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+
               BlocSelector<
                 WorkspaceDetailBloc,
                 WorkspaceDetailState,
@@ -245,7 +388,7 @@ class _WorkspaceDetailBotshetContentState
                                             start: pickedStart.value,
                                             end: pickedEnd.value,
                                             createdAt: createdAt,
-                                            contributor: {},
+                                            contributor: listUser.toSet(),
                                             type: typeController.text,
                                             status: projectStatus.value,
                                           ),
@@ -256,7 +399,7 @@ class _WorkspaceDetailBotshetContentState
                                             start: pickedStart.value,
                                             end: pickedEnd.value,
                                             createdAt: createdAt,
-                                            contributor: {},
+                                            contributor: listUser.toSet(),
                                             type: typeController.text,
                                           ),
                                         );

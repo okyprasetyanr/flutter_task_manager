@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_manager/core/services/local_database/enum/enum.dart';
-
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
 import 'package:task_manager/feature/workspace_detail/domain/enum/enum.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
@@ -59,6 +58,7 @@ class WorkspaceDetailRemote {
           .select()
           .eq(EnumProjectMember.workspaceId.value, workspaceId);
 
+      devLog("Log ProjectRemote: getAllMember: $response");
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
       devLog("Log ProjectRemote: Error: $e");
@@ -82,6 +82,9 @@ class WorkspaceDetailRemote {
   }
 
   Future<Map<String, dynamic>> updateProject(Map<String, dynamic> data) async {
+    devLog(
+      "Log WorkspaceDetailRemote: updateProject: data: ${data.toString()}",
+    );
     return await responseWrapper.wrap(
       getData: () async => supabaseClient
           .from(EnumTable.projects.value)
@@ -95,12 +98,14 @@ class WorkspaceDetailRemote {
   Future<Map<String, dynamic>> createProjectMember(
     Set<Map<String, dynamic>> data,
   ) async {
+    devLog(
+      "Log WorkspaceDetailRemote: createProjectMember: data: ${data.toString()}",
+    );
     return await responseWrapper.wrap(
       getData: () async => supabaseClient
           .from(EnumTable.projectMembers.value)
-          .insert(data)
-          .select()
-          .single(),
+          .insert(data.toList())
+          .select(),
     );
   }
 
@@ -121,7 +126,7 @@ class WorkspaceDetailRemote {
   ) async {
     return await responseWrapper.wrap(
       getData: () => supabaseClient
-          .from(EnumTable.projects.value)
+          .from(EnumTable.projectMembers.value)
           .delete()
           .eq(EnumProjectMember.projectId.value, projectId)
           .inFilter(EnumProjectMember.userId.value, userId)

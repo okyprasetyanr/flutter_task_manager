@@ -19,6 +19,7 @@ class WorkspaceDetailBloc
     on<WorkspaceDetailEventDeleteProject>(_onDeleteProject);
     on<WorkspaceDetailEventSelectedProject>(_onSelectedProject);
     on<WorkspaceDetailEventResetSelected>(_onResetSelected);
+    on<WorkspaceDetailEventSearchMember>(_onSearchMember);
   }
 
   FutureOr<void> _onChangeStatus(
@@ -161,5 +162,20 @@ class WorkspaceDetailBloc
     repo.disposeRealtime();
     devLog("Log WorkspaceDetail: cancel: checked");
     return super.close();
+  }
+
+  FutureOr<void> _onSearchMember(
+    WorkspaceDetailEventSearchMember event,
+    Emitter<WorkspaceDetailState> emit,
+  ) {
+    final currentState = state as WorkspaceDetailStateLoaded;
+    final data = currentState.dataUser
+        .where((element) => element.name.contains(event.search))
+        .toSet();
+    emit(
+      currentState.copyWith(
+        filteredUser: event.search.isEmpty ? currentState.dataUser : data,
+      ),
+    );
   }
 }

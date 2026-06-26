@@ -36,7 +36,14 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(uiPage: uiPage(), widgetNavigation: navigationGesture());
+    return BaseLayout(
+      uiPage: uiPage(),
+      widgetNavigation: navigationGesture(),
+      fab: FloatingButtonAdd<WorkspaceDetailBloc>(
+        content: (scrollController) =>
+            WorkspaceDetailBotshetContent(scrollController: scrollController),
+      ),
+    );
   }
 
   Widget uiPage() {
@@ -56,10 +63,6 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
         ),
         WorkspaceDetailHeader(),
         Expanded(child: WorkspaceDetailListProject()),
-        FloatingButtonAdd<WorkspaceDetailBloc>(
-          content: (scrollController) =>
-              WorkspaceDetailBotshetContent(scrollController: scrollController),
-        ),
       ],
     );
   }
