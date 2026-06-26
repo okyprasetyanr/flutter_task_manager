@@ -19,7 +19,16 @@ class ProjectDetailPage extends StatefulWidget {
 class _ProjectDetailPageState extends State<ProjectDetailPage> {
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(uiPage: uiPage());
+    return BaseLayout(
+      uiPage: uiPage(),
+      fab: FloatingButtonAdd<ProjectDetailBloc>(
+        content: (scrollController) {
+          return ProjectDetailBotshetContent(
+            scrollController: scrollController,
+          );
+        },
+      ),
+    );
   }
 
   Widget uiPage() {
@@ -36,13 +45,6 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
         Text("Task", style: lv1TextStyleBold),
         const SizedBox(height: 5),
         Expanded(flex: 5, child: ProjectDetailListTask()),
-        FloatingButtonAdd<ProjectDetailBloc>(
-          content: (scrollController) {
-            return ProjectDetailBotshetContent(
-              scrollController: scrollController,
-            );
-          },
-        ),
       ],
     );
   }
