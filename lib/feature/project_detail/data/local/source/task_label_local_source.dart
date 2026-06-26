@@ -2,6 +2,7 @@ import 'package:task_manager/core/services/local_database/local_database.dart';
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_local.dart';
 import 'package:task_manager/feature/shared_component/helper/sync_table.dart';
 import 'package:task_manager/feature/project_detail/domain/model/model_task_labels.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class TaskLabelLocalSource {
   final LocalDatabase localDatabase;
@@ -37,11 +38,16 @@ class TaskLabelLocalSource {
   }
 
   Future<void> deleteTaskLabel(String id) async {
-    await syncTable.deleteData(
-      id: id,
-      tableName: localDatabase.taskLabels,
-      idColumn: localDatabase.taskLabels.id,
-    );
+    try {
+      await syncTable.deleteData(
+        id: id,
+        tableName: localDatabase.taskLabels,
+        idColumn: localDatabase.taskLabels.id,
+      );
+      devLog("Log TaskLabelLocalSource: delete: id: $id");
+    } catch (e) {
+      devLog("Log TaskLabelLocalSource: delete: error: ${e.toString()}");
+    }
   }
 
   Stream<Map<String, dynamic>> watchTaskLabel({required String projectId}) {

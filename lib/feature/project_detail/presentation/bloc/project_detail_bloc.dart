@@ -5,6 +5,7 @@ import 'package:task_manager/feature/project_detail/domain/repository/project_de
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_event.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
+import 'package:task_manager/shared/helper/debounce/debounce_event_bloc.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
@@ -17,6 +18,14 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
     on<ProjectDetailEventUpdateTask>(_onUpdateTask);
     on<ProjectDetailEventCreateTask>(_onCreateTask);
     on<ProjectDetailEventDeleteTask>(_onDeleteTask);
+    on<ProjectDetailEventSearchLabel>(
+      _onSearchLabel,
+      transformer: debounceRestartable(),
+    );
+    on<ProjectDetailEventSearchUser>(
+      _onSearchUser,
+      transformer: debounceRestartable(),
+    );
   }
 
   Future<void> _onWatchDashboard(
@@ -117,6 +126,7 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
         status: event.status,
         priority: event.priority,
       ),
+      dataTaskLabel: event.taskLabel,
     );
 
     final data = await repo.updateTask(original: original, edited: edited);
@@ -149,6 +159,7 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
       storyPoint: event.storyPoint,
       status: event.status,
       priority: event.priority,
+      taskLabel: event.taskLabel,
     );
     if (data != null) {
       emit(
@@ -160,5 +171,45 @@ class ProjectDetailBloc extends Bloc<ProjectDetailEvent, ProjectDetailState> {
         ),
       );
     }
+  }
+
+  FutureOr<void> _onSearchLabel(
+    ProjectDetailEventSearchLabel event,
+    Emitter<ProjectDetailState> emit,
+  ) {
+    final currentState = state as ProjectDetailStateLoaded;
+    emit(
+      currentState.copyWith(
+        filteredLabel: event.search.isNotEmpty
+            ? currentState.dataLabel
+                  .where(
+                    (element) => element.name.toLowerCase().contains(
+                      event.search.toLowerCase(),
+                    ),
+                  )
+                  .toSet()
+            : currentState.dataLabel,
+      ),
+    );
+  }
+
+  FutureOr<void> _onSearchUser(
+    ProjectDetailEventSearchUser event,
+    Emitter<ProjectDetailState> emit,
+  ) {
+    final currentState = state as ProjectDetailStateLoaded;
+    emit(
+      currentState.copyWith(
+        filteredUser: event.search.isNotEmpty
+            ? currentState.dataUser
+                  .where(
+                    (element) => element.name.toLowerCase().contains(
+                      event.search.toLowerCase(),
+                    ),
+                  )
+                  .toSet()
+            : currentState.dataUser,
+      ),
+    );
   }
 }

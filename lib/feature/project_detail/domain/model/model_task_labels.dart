@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 import 'package:task_manager/feature/project_detail/domain/enum/enum.dart';
+import 'package:uuid/uuid.dart';
 
 class ModelTaskLabels extends Equatable {
   final String id;
@@ -31,6 +32,28 @@ class ModelTaskLabels extends Equatable {
       labelId: data[EnumTaskLabel.labelId.name],
       projectId: data[EnumTaskLabel.projectId.name],
     );
+  }
+
+  static ModelTaskLabels createTaskLabel({
+    required String projectId,
+    required String taskId,
+    required String labelId,
+  }) {
+    return ModelTaskLabels(
+      id: "TASL${Uuid().v4().substring(0, 6)}",
+      taskId: taskId,
+      labelId: labelId,
+      projectId: projectId,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      EnumTaskLabel.id.value: id,
+      EnumTaskLabel.taskId.value: taskId,
+      EnumTaskLabel.labelId.value: labelId,
+      EnumTaskLabel.projectId.value: projectId,
+    };
   }
 
   @override

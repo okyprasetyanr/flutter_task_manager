@@ -33,6 +33,9 @@ class TaskLabelHandler {
         remoteResults: rawRemoteData,
         init: true,
       );
+      devLog(
+        "Log ProjectDetailRepositoryImp: initTaskLabelRealtime: init: $rawRemoteData",
+      );
     } catch (e) {
       devLog(
         "Log ProjectDetailRepositoryImp: initTaskLabelRealtime: error: $e",
@@ -61,16 +64,21 @@ class TaskLabelHandler {
             try {
               if (payload.eventType == PostgresChangeEvent.delete) {
                 final deleteId = payload.oldRecord['id'];
-
                 if (deleteId != null) {
                   await local.projectDetailLocal.taskLabel.deleteTaskLabel(
                     deleteId.toString(),
                   );
                 }
+                devLog(
+                  "Log ProjectDetailRepositoryImp: initTaskLabelRealtime: delete: $deleteId",
+                );
               } else {
                 final data = payload.newRecord;
                 await local.projectDetailLocal.taskLabel.syncTaskLabel(
                   remoteResults: [data],
+                );
+                devLog(
+                  "Log ProjectDetailRepositoryImp: initTaskLabelRealtime: insert: $data",
                 );
               }
             } catch (e) {

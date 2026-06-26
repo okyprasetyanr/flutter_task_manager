@@ -29,14 +29,28 @@ class TaskLabelRemoteSource {
     }
   }
 
-  Future<Map<String, dynamic>> deleteTaskLabel(String labelId) async {
+  Future<Map<String, dynamic>> createTasklabel(
+    Set<Map<String, dynamic>> data,
+  ) async {
+    return await responseWrapper.wrap(
+      getData: () async => supabaseClient
+          .from(EnumTable.taskLabels.value)
+          .insert(data.toList())
+          .select(),
+    );
+  }
+
+  Future<Map<String, dynamic>> deleteTaskLabel(
+    Set<String> labelId,
+    String taskId,
+  ) async {
     return await responseWrapper.wrap(
       getData: () async => supabaseClient
           .from(EnumTable.taskLabels.value)
           .delete()
-          .eq(EnumTask.id.value, labelId)
-          .select()
-          .maybeSingle(),
+          .eq(EnumTaskLabel.taskId.value, taskId)
+          .inFilter(EnumTaskLabel.labelId.value, labelId.toList())
+          .select(),
     );
   }
 

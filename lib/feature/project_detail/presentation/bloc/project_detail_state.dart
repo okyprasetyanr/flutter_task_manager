@@ -13,7 +13,9 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
   final ModelProjectMerge? dataProject;
   final Set<ModelTaskMerge> dataTask;
   final Set<ModelLabel> dataLabel;
+  final Set<ModelLabel> filteredLabel;
   final Set<ModelUser> dataUser;
+  final Set<ModelUser> filteredUser;
   final EnumStatusState status;
   final String? error;
   final String? failed;
@@ -24,7 +26,9 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
     this.dataProject,
     this.dataTask = const {},
     this.dataLabel = const {},
+    this.filteredLabel = const {},
     this.dataUser = const {},
+    this.filteredUser = const {},
     this.status = EnumStatusState.none,
     this.error,
     this.failed,
@@ -36,17 +40,21 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
     ModelProjectMerge? dataProject,
     Set<ModelTaskMerge>? dataTask,
     Set<ModelLabel>? dataLabel,
+    Set<ModelLabel>? filteredLabel,
     EnumStatusState? status,
     ModelTaskMerge? selectedTask,
     String? error,
     String? failed,
     String? noconnection,
     Set<ModelUser>? dataUser,
+    Set<ModelUser>? filteredUser,
   }) {
     return ProjectDetailStateLoaded(
+      filteredUser: filteredUser ?? this.filteredUser,
       selectedTask: selectedTask ?? this.selectedTask,
       dataUser: dataUser ?? this.dataUser,
       dataLabel: dataLabel ?? this.dataLabel,
+      filteredLabel: filteredLabel ?? this.filteredLabel,
       dataProject: dataProject ?? this.dataProject,
       dataTask: dataTask ?? this.dataTask,
       error: error,
@@ -58,6 +66,8 @@ class ProjectDetailStateLoaded extends ProjectDetailState with EquatableMixin {
 
   @override
   List<Object?> get props => [
+    filteredUser,
+    filteredLabel,
     selectedTask,
     dataUser,
     dataProject,

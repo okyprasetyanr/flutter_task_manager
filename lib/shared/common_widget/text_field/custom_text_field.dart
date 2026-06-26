@@ -6,6 +6,7 @@ import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
 class CustomTextField extends StatelessWidget {
+  final FocusNode? focusNode;
   final Widget? prefix;
   final String? label;
   final bool hint;
@@ -23,6 +24,7 @@ class CustomTextField extends StatelessWidget {
   final bool visiblepass;
   const CustomTextField({
     super.key,
+    this.focusNode,
     this.prefix,
     this.label,
     this.hint = true,
@@ -43,6 +45,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      focusNode: focusNode,
       textAlign: alignEnd ? TextAlign.end : TextAlign.start,
       validator: validator,
       keyboardType: inputType ?? TextInputType.text,

@@ -137,14 +137,9 @@ class TaskDetailRepositoryImp implements TaskDetailRepository {
         devLog(
           "Log TaskDetailRepositoryImp: watchDashboard: data: isOwned ${comment.map((e) => e.isOwned)}",
         );
-        final labelIds = task.dataTaskLabel.map((e) => e.labelId).toSet();
-
-        final filteredLabel = label
-            .where((e) => labelIds.contains(e.id))
-            .toSet();
 
         return TaskDetailStateLoaded(
-          dataLabel: filteredLabel,
+          dataTaskLabel: task.dataTaskLabel,
           dataUser: a,
           task: task,
           dataComment: comment,

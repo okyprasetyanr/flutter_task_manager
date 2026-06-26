@@ -16,7 +16,7 @@ class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
   final ModelTaskMerge? task;
   final EnumStatusState status;
   final Set<ModelUser> dataUser;
-  final Set<ModelLabel> dataLabel;
+  final Set<ModelLabel> dataTaskLabel;
   final Set<ModelComment> dataComment;
   final String? failed;
   final String? error;
@@ -28,7 +28,7 @@ class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
     this.status = EnumStatusState.none,
     this.dataUser = const {},
     this.dataComment = const {},
-    this.dataLabel = const {},
+    this.dataTaskLabel = const {},
     this.failed,
     this.error,
     this.noconnection,
@@ -47,7 +47,7 @@ class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
     ModelSubTask? selectedSubtask,
   }) {
     return TaskDetailStateLoaded(
-      dataLabel: dataLabel ?? this.dataLabel,
+      dataTaskLabel: dataLabel ?? this.dataTaskLabel,
       task: task ?? this.task,
       status: status ?? this.status,
       dataComment: dataComment ?? this.dataComment,
@@ -61,7 +61,7 @@ class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
 
   @override
   List<Object?> get props => [
-    dataLabel,
+    dataTaskLabel,
     dataComment,
     task,
     dataUser,

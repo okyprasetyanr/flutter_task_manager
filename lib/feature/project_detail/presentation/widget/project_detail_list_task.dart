@@ -10,6 +10,8 @@ import 'package:task_manager/feature/project_detail/presentation/bloc/project_de
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_botshet_content.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_list_sub_task.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_h.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
@@ -106,6 +108,24 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
                       ),
                       Text(data.dataTask.status.text, style: lv05TextStyle),
                     ],
+                  ),
+                  BlocSelector<
+                    ProjectDetailBloc,
+                    ProjectDetailState,
+                    Set<ModelUser>
+                  >(
+                    selector: (state) => state is ProjectDetailStateLoaded
+                        ? state.dataUser
+                        : const {},
+                    builder: (context, state) => Text(
+                      "Assignee: ${state.firstWhere((element) => element.id == data.dataTask.assigneeId).name}",
+                      style: lv05TextStyle,
+                    ),
+                  ),
+                  CustomListViewBuilderH<ModelLabel>(
+                    data: data.dataTaskLabel.toList(),
+                    status: status,
+                    getName: (data) => data.name,
                   ),
                   ProjectDetailListSubTask(
                     data: data.dataSubTask,

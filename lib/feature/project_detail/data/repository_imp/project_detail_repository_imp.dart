@@ -145,16 +145,20 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
           final dataLabel = rawLabel
               .map((e) => ModelLabel.fromDrift(e))
               .toSet();
-
           final mergedTasks = rawTasks.map((e) {
             final task = ModelTask.fromDrift(e);
-
-            final taskLabel = dataTaskLabel
+            final taskLabelId = dataTaskLabel
                 .where((element) => element.taskId == task.id)
+                .map((e) => e.labelId);
+            final taskLabel = dataLabel
+                .where((element) => taskLabelId.contains(element.id))
                 .toSet();
             final subTask = dataSubTask
                 .where((element) => element.taskId == task.id)
                 .toSet();
+            devLog(
+              "Log ProjectDetailRepositoryImp: watchDashboard: taskMerge: $taskLabel",
+            );
 
             return ModelTaskMerge(
               dataTask: task,
@@ -165,9 +169,11 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
 
           return ProjectDetailStateLoaded(
             dataUser: a,
+            filteredUser: a,
             dataLabel: dataLabel,
             dataProject: project,
             dataTask: mergedTasks,
+            filteredLabel: dataLabel,
             status: EnumStatusState.none,
             error: b.$2.error ?? c.$2.error ?? d.$2.error,
             failed: b.$2.failed ?? c.$2.failed ?? d.$2.failed,
@@ -193,6 +199,7 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
     required int storyPoint,
     required EnumTaskStatus status,
     required EnumTaskPriority priority,
+    required Set<ModelLabel> taskLabel,
   }) async {
     final createdData = ModelTask.createTask(
       projectId: projectId,
@@ -215,6 +222,26 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
           remote.projectDetailRemote.task.createTask(createdData.toJson()),
       localFunc: ({required dataToCache}) async => {},
     );
+
+    devLog("Log ProjectDEtailRepositoryImp: createTask $data");
+
+    if (data.containsKey(EnumFetchApiStatus.success) && taskLabel.isNotEmpty) {
+      final createData = taskLabel
+          .map(
+            (e) => ModelTaskLabels.createTaskLabel(
+              projectId: projectId,
+              taskId: data[EnumFetchApiStatus.success][EnumTask.id.value],
+              labelId: e.id,
+            ).toJson(),
+          )
+          .toSet();
+
+      await helper.collectDataRemote(
+        remoteFunc: () =>
+            remote.projectDetailRemote.taskLabel.createTasklabel(createData),
+        localFunc: ({required dataToCache}) async => {},
+      );
+    }
 
     return data.containsKey(EnumFetchApiStatus.success)
         ? null
@@ -247,6 +274,61 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
           remote.projectDetailRemote.task.updateTask(finalUpdated),
       localFunc: ({required dataToCache}) async => {},
     );
+
+    if (data.containsKey(EnumFetchApiStatus.success)) {
+      final originalIds = original.dataTaskLabel.map((e) => e.id).toSet();
+      final editedIds = edited.dataTaskLabel.map((e) => e.id).toSet();
+
+      final Set<String> labelsToCreate = edited.dataTaskLabel
+          .where((label) => !originalIds.contains(label.id))
+          .map((e) => e.id)
+          .toSet();
+
+      final Set<String> labelsToDelete = original.dataTaskLabel
+          .where((label) => !editedIds.contains(label.id))
+          .map((e) => e.id)
+          .toSet();
+
+      if (labelsToCreate.isNotEmpty) {
+        final dataTaskLabel = await helper.collectDataRemote(
+          remoteFunc: () =>
+              remote.projectDetailRemote.taskLabel.createTasklabel(
+                labelsToCreate
+                    .map(
+                      (e) => ModelTaskLabels.createTaskLabel(
+                        projectId:
+                            data[EnumFetchApiStatus.success][EnumTask
+                                .projectId
+                                .value],
+                        labelId: e,
+                        taskId:
+                            data[EnumFetchApiStatus.success][EnumTask.id.value],
+                      ).toJson(),
+                    )
+                    .toSet(),
+              ),
+          localFunc: ({required dataToCache}) async => {},
+        );
+
+        devLog(
+          "Log ProjectDetailRepositoryImp: updateProject: dataMember: $dataTaskLabel",
+        );
+      }
+
+      if (labelsToDelete.isNotEmpty) {
+        final dataDelete = await helper.collectDataRemote(
+          remoteFunc: () =>
+              remote.projectDetailRemote.taskLabel.deleteTaskLabel(
+                labelsToDelete.map((e) => e).toSet(),
+                data[EnumFetchApiStatus.success][EnumTask.id.value],
+              ),
+          localFunc: ({required dataToCache}) async => {},
+        );
+        devLog(
+          "Log ProjectDetailRepositoryImp: updateProject: dataMember: delete: $dataDelete",
+        );
+      }
+    }
 
     return data.containsKey(EnumFetchApiStatus.success)
         ? null
