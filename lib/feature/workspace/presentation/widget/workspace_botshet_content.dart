@@ -32,7 +32,7 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
   final searchController = TextEditingController();
   final _keyForm = GlobalKey<FormState>();
   bool _initialized = false;
-  final listUser = <(ModelUser, EnumWorkspaceRole)>{}.obs;
+  final listUser = <(ModelUser, EnumWorkspaceRole)>[].obs;
 
   @override
   void dispose() {
@@ -53,18 +53,25 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
       listener: (context, state) {
         Navigator.pop(context);
       },
-      child: BlocSelector<WorkspaceBloc, WorkspaceState, ModelWorkspaceMerge?>(
-        selector: (state) =>
-            state is WorkspaceStateLoaded ? state.selectedWorkspace : null,
+      child: BlocSelector<WorkspaceBloc, WorkspaceState, (ModelWorkspaceMerge?, Set<ModelUser>)>(
+        selector: (state) => state is WorkspaceStateLoaded
+            ? (state.selectedWorkspace, state.dataUser)
+            : (null, const {}),
         builder: (context, data) {
-          if (!_initialized && data != null) {
+          if (!_initialized && data.$1 != null) {
             _initialized = true;
-            nameController.text = data.dataWorkspace.name;
-            descriptionController.text = data.dataWorkspace.description;
+            nameController.text = data.$1!.dataWorkspace.name;
+            descriptionController.text = data.$1!.dataWorkspace.description;
+
+            final dataMembers = data.$1?.dataMember ?? {};
+            final memberRoleMap = {
+              for (var member in dataMembers) member.userId: member.role,
+            };
+
             listUser.addAll(
-              data.dataWorkspaceMember.map(
-                (e) => (e, EnumWorkspaceRole.member),
-              ),
+              data.$2
+                  .where((element) => memberRoleMap.containsKey(element.id))
+                  .map((e) => (e, memberRoleMap[e.id]!)),
             );
           }
           return Padding(
@@ -112,22 +119,132 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                                   controller: widget.scrollController,
                                   shrinkWrap: true,
                                   itemCount: listUser.length,
-                                  itemBuilder: (context, index) {
-                                    final data = listUser.elementAt(index).$1;
+                                  itemBuilder: (context, listMemberIndex) {
+                                    final data = listUser.elementAt(
+                                      listMemberIndex,
+                                    );
                                     return Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          data.name,
-                                          overflow: TextOverflow.ellipsis,
+                                        Expanded(
+                                          child: Material(
+                                            elevation: 2,
+                                            color: AppPropertyColor.white,
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            child: InkWell(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              onTap: () => showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return Dialog(
+                                                    backgroundColor:
+                                                        AppPropertyColor.white,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            10,
+                                                          ),
+                                                    ),
+
+                                                    child: ListView(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            16,
+                                                          ),
+                                                      shrinkWrap: true,
+                                                      children: [
+                                                        Text("Member Role"),
+                                                        Expanded(
+                                                          child: ListView.builder(
+                                                            shrinkWrap: true,
+                                                            itemCount:
+                                                                EnumWorkspaceRole
+                                                                    .values
+                                                                    .length,
+                                                            itemBuilder: (context, index) => CustomButtonIcon(
+                                                              left: true,
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .admin_panel_settings_rounded,
+                                                              ),
+                                                              backgroundColor:
+                                                                  AppPropertyColor
+                                                                      .white,
+                                                              label: Text(
+                                                                EnumWorkspaceRole
+                                                                    .values[index]
+                                                                    .text,
+                                                              ),
+                                                              onPressed: () {
+                                                                listUser[listMemberIndex] = (
+                                                                  data.$1,
+                                                                  EnumWorkspaceRole
+                                                                      .values[index],
+                                                                );
+                                                                Navigator.pop(
+                                                                  context,
+                                                                );
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(
+                                                  6,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      data.$1.name,
+                                                      style: lv05TextStyle,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                    Material(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            6,
+                                                          ),
+                                                      elevation: 3,
+                                                      color: AppPropertyColor
+                                                          .white,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                              5,
+                                                            ),
+                                                        child: Text(
+                                                          data.$2.text,
+                                                          style: lv05TextStyle,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                         CustomButton(
                                           backgroundColor:
                                               AppPropertyColor.white,
                                           onPressed: () => listUser.removeWhere(
                                             (element) =>
-                                                element.$1.id == data.id,
+                                                element.$1.id == data.$1.id,
                                           ),
                                           child: Icon(
                                             Icons.close_rounded,
@@ -143,92 +260,168 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 5),
                       Expanded(
-                        child:
-                            BlocSelector<
-                              WorkspaceBloc,
-                              WorkspaceState,
-                              Set<ModelUser>
-                            >(
-                              selector: (state) => state is WorkspaceStateLoaded
-                                  ? state.filteredUser
-                                  : {},
-                              builder: (context, state) => Column(
-                                children: [
-                                  CustomTextField(
-                                    controller: searchController,
-                                    label: "Search new Member",
-                                    onChanged: (value) =>
-                                        context.read<WorkspaceBloc>().add(
-                                          WorkspaceEventSearchMember(
-                                            search: value,
+                        child: BlocSelector<WorkspaceBloc, WorkspaceState, Set<ModelUser>>(
+                          selector: (state) => state is WorkspaceStateLoaded
+                              ? state.filteredUser
+                              : {},
+                          builder: (context, state) => Column(
+                            children: [
+                              CustomTextField(
+                                controller: searchController,
+                                label: "Search new Member",
+                                onChanged: (value) =>
+                                    context.read<WorkspaceBloc>().add(
+                                      WorkspaceEventSearchMember(search: value),
+                                    ),
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  controller: widget.scrollController,
+                                  shrinkWrap: true,
+                                  itemCount: state.length,
+                                  itemBuilder: (context, index) {
+                                    final data = state.elementAt(index);
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 5,
+                                        vertical: 7,
+                                      ),
+                                      child: Material(
+                                        color: AppPropertyColor.white,
+                                        elevation: 2,
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: InkWell(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                          onTap: () =>
+                                              listUser.any(
+                                                (element) =>
+                                                    element.$1.id == data.id,
+                                              )
+                                              ? customSnackBar(
+                                                  context,
+                                                  "${data.name} was added!",
+                                                  top: true,
+                                                )
+                                              : () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return Dialog(
+                                                        backgroundColor:
+                                                            AppPropertyColor
+                                                                .white,
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                15,
+                                                              ),
+                                                        ),
+                                                        child: ListView(
+                                                          padding:
+                                                              const EdgeInsets.all(
+                                                                10,
+                                                              ),
+                                                          shrinkWrap: true,
+                                                          children: [
+                                                            Text(
+                                                              "Member Role",
+                                                              style:
+                                                                  titleTextStyle,
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            Expanded(
+                                                              child: ListView.builder(
+                                                                shrinkWrap:
+                                                                    true,
+                                                                itemCount:
+                                                                    EnumWorkspaceRole
+                                                                        .values
+                                                                        .length,
+                                                                itemBuilder: (context, index) => CustomButtonIcon(
+                                                                  left: true,
+                                                                  icon: Icon(
+                                                                    Icons
+                                                                        .admin_panel_settings_rounded,
+                                                                  ),
+                                                                  backgroundColor:
+                                                                      AppPropertyColor
+                                                                          .white,
+                                                                  label: Text(
+                                                                    EnumWorkspaceRole
+                                                                        .values[index]
+                                                                        .text,
+                                                                  ),
+                                                                  onPressed: () {
+                                                                    listUser.add((
+                                                                      data,
+                                                                      EnumWorkspaceRole
+                                                                          .values[index],
+                                                                    ));
+                                                                    Navigator.pop(
+                                                                      context,
+                                                                    );
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                }(),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  data.name,
+                                                  style: lv05TextStyle,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                Obx(
+                                                  () =>
+                                                      listUser.any(
+                                                        (element) =>
+                                                            element.$1.id ==
+                                                            data.id,
+                                                      )
+                                                      ? Icon(
+                                                          Icons
+                                                              .check_circle_outline_rounded,
+                                                          size: lv2IconSize,
+                                                          color:
+                                                              AppPropertyColor
+                                                                  .primary,
+                                                        )
+                                                      : Icon(
+                                                          Icons
+                                                              .radio_button_unchecked_rounded,
+                                                          size: lv2IconSize,
+                                                        ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                  ),
-                                  Expanded(
-                                    child: ListView.builder(
-                                      controller: widget.scrollController,
-                                      shrinkWrap: true,
-                                      itemCount: state.length,
-                                      itemBuilder: (context, index) {
-                                        final data = state.elementAt(index);
-                                        return Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              data.name,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            Obx(
-                                              () => CustomButton(
-                                                backgroundColor:
-                                                    AppPropertyColor.white,
-                                                onPressed: () =>
-                                                    listUser.any(
-                                                      (element) =>
-                                                          element.$1.id ==
-                                                          data.id,
-                                                    )
-                                                    ? customSnackBar(
-                                                        context,
-                                                        "${data.name} was added!",
-                                                        top: true,
-                                                      )
-                                                    : listUser.add((
-                                                        data,
-                                                        EnumWorkspaceRole
-                                                            .member,
-                                                      )),
-                                                child:
-                                                    listUser.any(
-                                                      (element) =>
-                                                          element.$1.id ==
-                                                          data.id,
-                                                    )
-                                                    ? Icon(
-                                                        Icons
-                                                            .check_circle_outline_rounded,
-                                                        size: lv2IconSize,
-                                                        color: AppPropertyColor
-                                                            .primary,
-                                                      )
-                                                    : Icon(
-                                                        Icons
-                                                            .radio_button_unchecked_rounded,
-                                                        size: lv2IconSize,
-                                                      ),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -244,7 +437,7 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            if (data != null)
+                            if (data.$1 != null)
                               Expanded(
                                 child: CustomButtonIcon(
                                   icon: Icon(
@@ -270,7 +463,7 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                                 ),
                                 backgroundColor: AppPropertyColor.primary,
                                 label: Text(
-                                  data != null ? "Update" : "Add",
+                                  data.$1 != null ? "Update" : "Add",
                                   style: lv1TextStyleWhite,
                                 ),
                                 padding: true,
@@ -278,7 +471,7 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                                   if (!_keyForm.currentState!.validate()) {
                                     return;
                                   }
-                                  data != null
+                                  data.$1 != null
                                       ? context.read<WorkspaceBloc>().add(
                                           WorkspaceEventUpdateWorkspace(
                                             name: nameController.text,
@@ -295,9 +488,6 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                                             contributor: listUser.toSet(),
                                           ),
                                         );
-                                  nameController.clear();
-                                  descriptionController.clear();
-                                  searchController.clear();
                                 },
                               ),
                             ),

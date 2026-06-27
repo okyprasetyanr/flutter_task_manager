@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/routes/routes_navigator.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/shared_component/widget/member_list/widget_member_list.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_bloc.dart';
@@ -23,11 +24,11 @@ class WorkspaceListWorkspace extends StatelessWidget {
     return BlocSelector<
       WorkspaceBloc,
       WorkspaceState,
-      (Set<ModelWorkspaceMerge>, EnumStatusState)
+      (Set<ModelWorkspaceMerge>, EnumStatusState, Set<ModelUser>)
     >(
       selector: (state) => state is WorkspaceStateLoaded
-          ? (state.dataWorkspace, state.status)
-          : (const {}, EnumStatusState.loading),
+          ? (state.dataWorkspace, state.status, state.dataUser)
+          : (const {}, EnumStatusState.loading, const {}),
       builder: (context, state) {
         return CustomListViewBuilderV<ModelWorkspaceMerge>(
           data: state.$1.toList(),
@@ -42,14 +43,19 @@ class WorkspaceListWorkspace extends StatelessWidget {
             SizedBox(
               height: 30,
               child:
-                  data.dataWorkspaceMember.isEmpty &&
+                  data.dataMember.isEmpty &&
                       status == EnumStatusState.synchronize
                   ? const CustomLoading()
-                  : data.dataWorkspaceMember.isEmpty &&
-                        status == EnumStatusState.none
+                  : data.dataMember.isEmpty && status == EnumStatusState.none
                   ? const CustomTextEmpty()
                   : SharedWidgetMemberList(
-                      data: data.dataWorkspaceMember,
+                      data: state.$3
+                          .where(
+                            (element) => data.dataMember
+                                .map((e) => e.userId)
+                                .contains(element.id),
+                          )
+                          .toSet(),
                       status: status,
                     ),
             ),

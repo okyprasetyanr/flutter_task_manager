@@ -121,9 +121,23 @@ class WorkspaceRemote {
           .delete()
           .eq(EnumWorkspaceMember.workspaceId.value, workspaceId)
           .inFilter(EnumWorkspaceMember.userId.value, userId)
-          .select()
-          .maybeSingle(),
+          .select(),
     );
+  }
+
+  Future<Map<String, dynamic>> updateWorkspaceMember(
+    Set<Map<String, dynamic>> data,
+  ) async {
+    final result = await responseWrapper.wrap(
+      getData: () async => await supabaseClient
+          .from(EnumTable.workspaceMembers.value)
+          .upsert(data.toList())
+          .select(),
+    );
+
+    devLog("Log WorkspaceRemote: updateMember: $result");
+
+    return result;
   }
 
   void removeWorkspaceChannel(RealtimeChannel workspaceChannel) {

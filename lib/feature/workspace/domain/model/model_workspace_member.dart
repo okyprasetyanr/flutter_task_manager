@@ -43,7 +43,7 @@ class ModelWorkspaceMember extends Equatable {
       EnumWorkspaceMember.companyId.value: companyId,
       EnumWorkspaceMember.id.value: id,
       EnumWorkspaceMember.userId.value: userId,
-      EnumWorkspaceMember.role.value: role.name,
+      EnumWorkspaceMember.role.value: role.text,
     };
   }
 
@@ -52,10 +52,11 @@ class ModelWorkspaceMember extends Equatable {
     required String companyId,
     required String userId,
     required EnumWorkspaceRole role,
+    String? id,
   }) {
     return ModelWorkspaceMember(
       workspaceId: workspaceId,
-      id: "PRJM${Uuid().v4().substring(0, 6)}",
+      id: id ?? "PRJM${Uuid().v4().substring(0, 6)}",
       companyId: companyId,
       userId: userId,
       role: role,

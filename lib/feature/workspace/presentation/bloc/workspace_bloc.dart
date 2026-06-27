@@ -6,6 +6,7 @@ import 'package:task_manager/feature/workspace/presentation/bloc/workspace_event
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/debounce/debounce_event_bloc.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
   final WorkspaceRepository repo;
@@ -101,12 +102,18 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
         name: event.name,
         description: event.description,
       ),
-      dataWorkspaceMember: event.contributor.isEmpty
-          ? original.dataWorkspaceMember
-          : event.contributor.map((e) => e.$1).toSet(),
     );
-    if (original != edited) {
+    final editedContributors = event.contributor
+        .map((e) => (e.$1.id, e.$2))
+        .toSet();
+
+    if (original != edited ||
+        original.dataMember.any(
+          (element) =>
+              !editedContributors.contains((element.userId, element.role)),
+        )) {
       add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
+      devLog("Log WorkspaceBloc: update: ${event.contributor}");
       final data = await repo.updateWorkspace(
         original: currentState.selectedWorkspace!,
         edited: edited,
@@ -126,6 +133,7 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
         currentState.copyWith(
           status: EnumStatusState.none,
           error: "Nothing changed!",
+          selectedWorkspace: currentState.selectedWorkspace!,
         ),
       );
     }

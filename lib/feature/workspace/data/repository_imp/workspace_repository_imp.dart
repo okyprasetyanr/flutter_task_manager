@@ -216,15 +216,11 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
       final dataWorkspace = workspaceList.map((workspace) {
         final members = memberList
             .where((m) => m.workspaceId == workspace.id)
-            .toList();
-
-        final matchedUsers = a
-            .where((u) => members.any((m) => m.userId == u.id))
             .toSet();
 
         return ModelWorkspaceMerge(
           dataWorkspace: workspace,
-          dataWorkspaceMember: matchedUsers,
+          dataMember: members,
         );
       }).toSet();
 
@@ -309,57 +305,104 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
       original: original.dataWorkspace.toJson(),
       edited: edited.dataWorkspace.toJson(),
     );
+
     final data = await helper.collectDataRemote(
       remoteFunc: () async =>
           await remote.workspaceRemote.updateWorkspace(finalUpdated),
       localFunc: ({required dataToCache}) async => {},
     );
 
+    devLog("Log WorkspaceRepositoryImp: update: data: $data");
     if (data.containsKey(EnumFetchApiStatus.success)) {
-      final originalIds = original.dataWorkspaceMember.map((e) => e.id).toSet();
-      final editedIds = edited.dataWorkspaceMember.map((e) => e.id).toSet();
+      final String workspaceId = original.dataWorkspace.id;
 
-      final Set<String> usersToCreate = edited.dataWorkspaceMember
-          .where((user) => !originalIds.contains(user.id))
-          .map((e) => e.id)
+      final Map<String, EnumWorkspaceRole> contributorMap = {
+        for (final c in contributor) c.$1: c.$2,
+      };
+
+      final Map<String, ModelWorkspaceMember> originalMemberMap = {
+        for (final member in original.dataMember) member.userId: member,
+      };
+
+      final Set<String> currentContributorIds = contributor
+          .map((c) => c.$1)
           .toSet();
 
-      final Set<String> usersToDelete = original.dataWorkspaceMember
-          .where((user) => !editedIds.contains(user.id))
-          .map((e) => e.id)
+      final Set<String> usersToCreate = currentContributorIds
+          .where((userId) => !originalMemberMap.containsKey(userId))
           .toSet();
+
+      final Set<String> usersToDelete = originalMemberMap.keys
+          .where((userId) => !currentContributorIds.contains(userId))
+          .toSet();
+
+      final Set<String> usersToUpdate = currentContributorIds
+          .where(
+            (userId) =>
+                originalMemberMap.containsKey(userId) &&
+                originalMemberMap[userId]!.role != contributorMap[userId],
+          )
+          .toSet();
+
+      devLog(
+        "Log WorkspaceRepositoryImp: update: checked: "
+        "Create: ${usersToCreate.length}, "
+        "Delete: ${usersToDelete.length}, "
+        "Update: ${usersToUpdate.length}",
+      );
 
       if (usersToCreate.isNotEmpty) {
-        await helper.collectDataRemote(
+        final dataMemberCreate = await helper.collectDataRemote(
           remoteFunc: () => remote.workspaceRemote.createWorkspaceMember(
             usersToCreate
                 .map(
-                  (e) => ModelWorkspaceMember.createWorkspaceMember(
-                    workspaceId:
-                        data[EnumFetchApiStatus.success][EnumWorkspaceMember
-                            .id
-                            .value],
+                  (userId) => ModelWorkspaceMember.createWorkspaceMember(
+                    workspaceId: workspaceId,
                     companyId: userSession.getCompanyId(),
-                    userId: e,
-                    role: contributor
-                        .firstWhere((element) => element.$1 == e)
-                        .$2,
+                    userId: userId,
+                    role: contributorMap[userId] ?? EnumWorkspaceRole.member,
                   ).toJson(),
                 )
                 .toSet(),
           ),
           localFunc: ({required dataToCache}) async => {},
         );
+
+        devLog("Log WorkspaceRepositoryImp: update: create: $dataMemberCreate");
       }
 
-      if (usersToDelete.isNotEmpty) {
-        await helper.collectDataRemote(
-          remoteFunc: () => remote.workspaceRemote.deleteWorkspaceMember(
-            userId: usersToDelete.map((e) => e).toList(),
-            workspaceId: original.dataWorkspace.id,
+      if (usersToUpdate.isNotEmpty) {
+        final dataMemberUpdate = await helper.collectDataRemote(
+          remoteFunc: () => remote.workspaceRemote.updateWorkspaceMember(
+            usersToUpdate
+                .map(
+                  (userId) => ModelWorkspaceMember.createWorkspaceMember(
+                    id: originalMemberMap[userId]!.id,
+                    workspaceId: workspaceId,
+                    companyId: userSession.getCompanyId(),
+                    userId: userId,
+                    role: contributorMap[userId] ?? EnumWorkspaceRole.member,
+                  ).toJson(),
+                )
+                .toSet(),
           ),
           localFunc: ({required dataToCache}) async => {},
         );
+
+        devLog(
+          "Log WorkspaceRepositoryImp: update: update_member: $dataMemberUpdate",
+        );
+      }
+
+      if (usersToDelete.isNotEmpty) {
+        final dataMemberDelete = await helper.collectDataRemote(
+          remoteFunc: () => remote.workspaceRemote.deleteWorkspaceMember(
+            userId: usersToDelete.toList(),
+            workspaceId: workspaceId,
+          ),
+          localFunc: ({required dataToCache}) async => {},
+        );
+        devLog("Log WorkspaceRepositoryImp: update: delete: $dataMemberDelete");
       }
     }
 
