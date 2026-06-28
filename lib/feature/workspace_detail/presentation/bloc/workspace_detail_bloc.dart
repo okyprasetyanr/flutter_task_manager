@@ -110,11 +110,16 @@ class WorkspaceDetailBloc
         totalContribut: event.contributor.length,
         status: event.status,
       ),
-      dataMember: event.contributor.isEmpty
-          ? currentState.selectedProject!.dataMember
-          : event.contributor.map((e) => e.$1).toSet(),
     );
-    if (original != edited) {
+    final editedContributors = event.contributor
+        .map((e) => (e.$1.id, e.$2))
+        .toSet();
+
+    if (original != edited ||
+        original.dataMember.any(
+          (element) =>
+              !editedContributors.contains((element.userId, element.role)),
+        )) {
       final data = await repo.updateProject(
         original: currentState.selectedProject!,
         edited: edited,

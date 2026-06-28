@@ -109,6 +109,20 @@ class WorkspaceDetailRemote {
     );
   }
 
+  Future<Map<String, dynamic>> updateProjectMember(
+    Set<Map<String, dynamic>> data,
+  ) async {
+    devLog(
+      "Log WorkspaceDetailRemote: updateProject: data: ${data.toString()}",
+    );
+    return await responseWrapper.wrap(
+      getData: () async => supabaseClient
+          .from(EnumTable.projectMembers.value)
+          .upsert(data.toList())
+          .select(),
+    );
+  }
+
   Future<Map<String, dynamic>> deleteProject(String idProject) async {
     return await responseWrapper.wrap(
       getData: () => supabaseClient

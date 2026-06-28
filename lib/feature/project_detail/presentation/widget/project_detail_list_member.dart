@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
+import 'package:task_manager/feature/workspace_detail/domain/model/model_project_member.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/shared/style/text_size.dart';
@@ -20,15 +21,23 @@ class ProjectDetailListMember extends StatelessWidget {
           BlocSelector<
             ProjectDetailBloc,
             ProjectDetailState,
-            (Set<ModelUser>, EnumStatusState)
+            (Set<ModelProjectMember>, EnumStatusState, Set<ModelUser>)
           >(
             selector: (state) => state is ProjectDetailStateLoaded
-                ? (state.dataProject?.dataMember ?? const {}, state.status)
-                : (const {}, EnumStatusState.loading),
+                ? (
+                    state.dataProject?.dataMember ?? const {},
+                    state.status,
+                    state.dataUser,
+                  )
+                : (const {}, EnumStatusState.loading, const {}),
             builder: (context, state) {
+              final userId = state.$1.map((e) => e.userId);
+              final dataUser = state.$3
+                  .where((element) => userId.contains(element.id))
+                  .toSet();
               return CustomListViewBuilderV<ModelUser>(
                 status: state.$2,
-                data: state.$1.toList(),
+                data: dataUser.toList(),
                 content: (data, _) => [
                   Text(data.name, style: lv05TextStyle),
                   Text(data.email, style: lv05TextStyle),
