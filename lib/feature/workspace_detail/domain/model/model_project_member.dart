@@ -59,13 +59,14 @@ class ModelProjectMember extends Equatable {
     required String workspaceId,
     required String userId,
     required EnumProjectRole role,
+    String? id,
   }) {
     return ModelProjectMember(
       projectId: projectId,
       workspaceId: workspaceId,
       userId: userId,
       role: role,
-      id: "USR${Uuid().v4().substring(0, 6)}",
+      id: id ?? "USR${Uuid().v4().substring(0, 6)}",
     );
   }
 

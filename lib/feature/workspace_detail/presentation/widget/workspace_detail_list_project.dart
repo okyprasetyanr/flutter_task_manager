@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/routes/routes_navigator.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/shared_component/widget/member_list/widget_member_list.dart';
 import 'package:task_manager/feature/workspace_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
@@ -25,11 +26,11 @@ class WorkspaceDetailListProject extends StatelessWidget {
     return BlocSelector<
       WorkspaceDetailBloc,
       WorkspaceDetailState,
-      (Set<ModelProjectMerge>, EnumStatusState)
+      (Set<ModelProjectMerge>, EnumStatusState, Set<ModelUser>)
     >(
       selector: (state) => state is WorkspaceDetailStateLoaded
-          ? (state.dataProject, state.status)
-          : (const {}, EnumStatusState.loading),
+          ? (state.dataProject, state.status, state.dataUser)
+          : (const {}, EnumStatusState.loading, const {}),
       builder: (context, state) => CustomListViewBuilderV<ModelProjectMerge>(
         status: state.$2,
         data: state.$1.toList(),
@@ -62,14 +63,18 @@ class WorkspaceDetailListProject extends StatelessWidget {
           SizedBox(
             height: 30,
             child:
-                data.dataProjectMember.isEmpty &&
-                    status == EnumStatusState.synchronize
+                data.dataMember.isEmpty && status == EnumStatusState.synchronize
                 ? const CustomLoading()
-                : data.dataProjectMember.isEmpty &&
-                      status == EnumStatusState.none
+                : data.dataMember.isEmpty && status == EnumStatusState.none
                 ? const CustomTextEmpty()
                 : SharedWidgetMemberList(
-                    data: data.dataProjectMember,
+                    data: state.$3
+                        .where(
+                          (element) => data.dataMember
+                              .map((e) => e.userId)
+                              .contains(element.id),
+                        )
+                        .toSet(),
                     status: status,
                   ),
           ),

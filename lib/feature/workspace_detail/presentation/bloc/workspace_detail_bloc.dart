@@ -110,8 +110,8 @@ class WorkspaceDetailBloc
         totalContribut: event.contributor.length,
         status: event.status,
       ),
-      dataProjectMember: event.contributor.isEmpty
-          ? currentState.selectedProject!.dataProjectMember
+      dataMember: event.contributor.isEmpty
+          ? currentState.selectedProject!.dataMember
           : event.contributor.map((e) => e.$1).toSet(),
     );
     if (original != edited) {

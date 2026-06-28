@@ -222,15 +222,8 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
               .where((e) => e.projectId == project.id)
               .toSet();
 
-          final matchedUsers = a
-              .where((user) => members.any((e) => e.userId == user.id))
-              .toSet();
-
-          devLog("Log watchDashboard: projectMember: data: $matchedUsers");
-          return ModelProjectMerge(
-            dataProject: project,
-            dataProjectMember: matchedUsers,
-          );
+          devLog("Log watchDashboard: projectMember: data: $members");
+          return ModelProjectMerge(dataProject: project, dataMember: members);
         }).toSet();
 
         return WorkspaceDetailStateLoaded(
@@ -315,19 +308,29 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     );
 
     if (data.containsKey(EnumFetchApiStatus.success)) {
-      final originalIds = original.dataProjectMember.map((e) => e.id).toSet();
-      final editedIds = edited.dataProjectMember.map((e) => e.id).toSet();
+      final contributorMap = {for (final c in contributor) c.$1: c.$2};
 
-      final Set<String> usersToCreate = edited.dataProjectMember
-          .where((user) => !originalIds.contains(user.id))
-          .map((e) => e.id)
+      final originalMemberMap = {
+        for (final member in original.dataMember) member.id: member,
+      };
+
+      final currentContributorIds = contributorMap.keys.toSet();
+
+      final Set<String> usersToCreate = currentContributorIds
+          .where((userId) => !originalMemberMap.containsKey(userId))
           .toSet();
 
-      final Set<String> usersToDelete = original.dataProjectMember
-          .where((user) => !editedIds.contains(user.id))
-          .map((e) => e.id)
+      final Set<String> usersToDelete = originalMemberMap.keys
+          .where((userId) => !currentContributorIds.contains(userId))
           .toSet();
 
+      final Set<String> usersToUpdate = currentContributorIds
+          .where(
+            (userId) =>
+                originalMemberMap.containsKey(userId) &&
+                originalMemberMap[userId]!.role != contributorMap[userId],
+          )
+          .toSet();
       if (usersToCreate.isNotEmpty) {
         final dataMember = await helper.collectDataRemote(
           remoteFunc: () => remote.workspaceDetailRemote.createProjectMember(
@@ -353,6 +356,34 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
 
         devLog(
           "Log WorkspaceRepositoryImp: updateProject: dataMember: $dataMember",
+        );
+      }
+
+      if (usersToUpdate.isNotEmpty) {
+        final dataDelete = await helper.collectDataRemote(
+          remoteFunc: () => remote.workspaceDetailRemote.createProjectMember(
+            usersToCreate
+                .map(
+                  (e) => ModelProjectMember.createProjectMember(
+                    id: originalMemberMap[e]!.id,
+                    projectId:
+                        data[EnumFetchApiStatus.success][EnumProject.id.value],
+                    workspaceId:
+                        data[EnumFetchApiStatus.success][EnumProject
+                            .workspaceId
+                            .value],
+                    userId: e,
+                    role: contributor
+                        .firstWhere((element) => element.$1 == e)
+                        .$2,
+                  ).toJson(),
+                )
+                .toSet(),
+          ),
+          localFunc: ({required dataToCache}) async => {},
+        );
+        devLog(
+          "Log WorkspaceRepositoryImp: updateProject: dataMember: delete: $dataDelete",
         );
       }
 
