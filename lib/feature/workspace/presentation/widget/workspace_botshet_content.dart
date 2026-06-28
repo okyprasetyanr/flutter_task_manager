@@ -198,57 +198,100 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                                                 },
                                               ),
                                               child: Padding(
-                                                padding: const EdgeInsets.all(
-                                                  6,
+                                                padding: const EdgeInsets.only(
+                                                  left: 6,
+                                                  top: 6,
+                                                  bottom: 6,
                                                 ),
                                                 child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
                                                   children: [
-                                                    Text(
-                                                      data.$1.name,
-                                                      style: lv05TextStyle,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                    Material(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            6,
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons.person,
+                                                                color:
+                                                                    AppPropertyColor
+                                                                        .black,
+                                                                size:
+                                                                    lv1IconSize,
+                                                              ),
+                                                              Text(
+                                                                data.$1.name,
+                                                                style:
+                                                                    lv05TextStyle,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ],
                                                           ),
-                                                      elevation: 3,
-                                                      color: AppPropertyColor
-                                                          .white,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets.all(
-                                                              5,
+                                                          Material(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  6,
+                                                                ),
+                                                            elevation: 3,
+                                                            color:
+                                                                AppPropertyColor
+                                                                    .white,
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets.all(
+                                                                    5,
+                                                                  ),
+                                                              child: Row(
+                                                                children: [
+                                                                  Icon(
+                                                                    Icons
+                                                                        .admin_panel_settings_rounded,
+                                                                    color: AppPropertyColor
+                                                                        .black,
+                                                                    size:
+                                                                        lv1IconSize,
+                                                                  ),
+                                                                  Text(
+                                                                    data
+                                                                        .$2
+                                                                        .text,
+                                                                    style:
+                                                                        lv05TextStyle,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
-                                                        child: Text(
-                                                          data.$2.text,
-                                                          style: lv05TextStyle,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    CustomButton(
+                                                      backgroundColor:
+                                                          AppPropertyColor
+                                                              .white,
+                                                      onPressed: () =>
+                                                          listUser.removeWhere(
+                                                            (element) =>
+                                                                element.$1.id ==
+                                                                data.$1.id,
+                                                          ),
+                                                      child: Icon(
+                                                        Icons.close_rounded,
+                                                        color: AppPropertyColor
+                                                            .red,
                                                       ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                        CustomButton(
-                                          backgroundColor:
-                                              AppPropertyColor.white,
-                                          onPressed: () => listUser.removeWhere(
-                                            (element) =>
-                                                element.$1.id == data.$1.id,
-                                          ),
-                                          child: Icon(
-                                            Icons.close_rounded,
-                                            color: AppPropertyColor.red,
                                           ),
                                         ),
                                       ],
