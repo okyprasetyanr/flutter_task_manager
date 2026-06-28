@@ -42,7 +42,7 @@ enum EnumProjectRole {
 extension EnumProjectRoleX on EnumProjectRole {
   static EnumProjectRole fromServer(String value) =>
       EnumProjectRole.values.firstWhere(
-        (e) => e.value == value,
+        (e) => e.text == value,
         orElse: () => EnumProjectRole.mobileDeveloper,
       );
 

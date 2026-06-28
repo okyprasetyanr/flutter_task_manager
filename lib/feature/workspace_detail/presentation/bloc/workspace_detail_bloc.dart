@@ -111,6 +111,7 @@ class WorkspaceDetailBloc
         status: event.status,
       ),
     );
+
     final editedContributors = event.contributor
         .map((e) => (e.$1.id, e.$2))
         .toSet();

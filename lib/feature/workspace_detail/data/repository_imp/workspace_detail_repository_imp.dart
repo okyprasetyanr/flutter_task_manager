@@ -308,13 +308,17 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     );
 
     if (data.containsKey(EnumFetchApiStatus.success)) {
-      final contributorMap = {for (final c in contributor) c.$1: c.$2};
-
-      final originalMemberMap = {
-        for (final member in original.dataMember) member.id: member,
+      final Map<String, EnumProjectRole> contributorMap = {
+        for (final c in contributor) c.$1: c.$2,
       };
 
-      final currentContributorIds = contributorMap.keys.toSet();
+      final Map<String, ModelProjectMember> originalMemberMap = {
+        for (final member in original.dataMember) member.userId: member,
+      };
+
+      final Set<String> currentContributorIds = contributor
+          .map((c) => c.$1)
+          .toSet();
 
       final Set<String> usersToCreate = currentContributorIds
           .where((userId) => !originalMemberMap.containsKey(userId))
@@ -331,6 +335,9 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
                 originalMemberMap[userId]!.role != contributorMap[userId],
           )
           .toSet();
+      devLog(
+        "Log WorkspaceDetailRepositoryImp: UpdateProject: dataMember: userToCreate:${usersToCreate.length}, userToUpdate:${usersToUpdate.length}, userToDelete:${usersToDelete.length}",
+      );
       if (usersToCreate.isNotEmpty) {
         final dataMember = await helper.collectDataRemote(
           remoteFunc: () => remote.workspaceDetailRemote.createProjectMember(
@@ -355,35 +362,34 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
         );
 
         devLog(
-          "Log WorkspaceRepositoryImp: updateProject: dataMember: $dataMember",
+          "Log WorkspaceDetailRepositoryImp: UpdateProject: dataMember: create: $dataMember",
         );
       }
 
       if (usersToUpdate.isNotEmpty) {
         final dataDelete = await helper.collectDataRemote(
-          remoteFunc: () => remote.workspaceDetailRemote.createProjectMember(
-            usersToCreate
-                .map(
-                  (e) => ModelProjectMember.createProjectMember(
-                    id: originalMemberMap[e]!.id,
-                    projectId:
-                        data[EnumFetchApiStatus.success][EnumProject.id.value],
-                    workspaceId:
-                        data[EnumFetchApiStatus.success][EnumProject
-                            .workspaceId
-                            .value],
-                    userId: e,
-                    role: contributor
-                        .firstWhere((element) => element.$1 == e)
-                        .$2,
-                  ).toJson(),
-                )
-                .toSet(),
+          remoteFunc: () => remote.workspaceDetailRemote.updateProjectMember(
+            usersToUpdate.map((e) {
+              devLog(
+                "Log WorkspaceRepositoryImp: updateProject: dataMember: update: id: ${originalMemberMap[e]!.id}",
+              );
+              return ModelProjectMember.createProjectMember(
+                id: originalMemberMap[e]!.id,
+                projectId:
+                    data[EnumFetchApiStatus.success][EnumProject.id.value],
+                workspaceId:
+                    data[EnumFetchApiStatus.success][EnumProject
+                        .workspaceId
+                        .value],
+                userId: e,
+                role: contributor.firstWhere((element) => element.$1 == e).$2,
+              ).toJson();
+            }).toSet(),
           ),
           localFunc: ({required dataToCache}) async => {},
         );
         devLog(
-          "Log WorkspaceRepositoryImp: updateProject: dataMember: delete: $dataDelete",
+          "Log WorkspaceRepositoryImp: updateProject: dataMember: update: $dataDelete",
         );
       }
 
@@ -396,7 +402,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
           localFunc: ({required dataToCache}) async => {},
         );
         devLog(
-          "Log WorkspaceRepositoryImp: updateProject: dataMember: delete: $dataDelete",
+          "Log WorkspaceDetailRepositoryImp: updateProject: dataMember: delete: $dataDelete",
         );
       }
     }

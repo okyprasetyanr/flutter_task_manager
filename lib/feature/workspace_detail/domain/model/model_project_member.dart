@@ -66,7 +66,7 @@ class ModelProjectMember extends Equatable {
       workspaceId: workspaceId,
       userId: userId,
       role: role,
-      id: id ?? "USR${Uuid().v4().substring(0, 6)}",
+      id: id ?? "PRJM${Uuid().v4().substring(0, 6)}",
     );
   }
 

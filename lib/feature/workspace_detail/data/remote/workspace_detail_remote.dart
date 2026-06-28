@@ -144,8 +144,7 @@ class WorkspaceDetailRemote {
           .delete()
           .eq(EnumProjectMember.projectId.value, projectId)
           .inFilter(EnumProjectMember.userId.value, userId)
-          .select()
-          .maybeSingle(),
+          .select(),
     );
   }
 
