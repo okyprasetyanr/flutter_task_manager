@@ -1,14 +1,18 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, collection_methods_unrelated_type
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:task_manager/core/services/collector/collector_data.dart';
+import 'package:task_manager/core/services/local_database/enum/enum.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/login/data/local/login_local.dart';
-import 'package:task_manager/feature/login/domain/enum/enum.dart';
 import 'package:task_manager/feature/login/domain/repository/login_repository.dart';
+import 'package:task_manager/feature/shared_component/user/domain/enum/enum.dart';
 import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class LoginRepositoryImp implements LoginRepository {
   final CollectData helper;
@@ -30,29 +34,35 @@ class LoginRepositoryImp implements LoginRepository {
     required String email,
     required String password,
   }) async {
-    final data = await helper.collectDataRemote(
+    final dataAccount = await helper.collectDataRemote(
       remoteFunc: () async =>
           await remote.loginRemote.login(email: email, password: password),
       localFunc: ({required dataToCache}) async => {},
       pageName: "Login",
     );
-    if (data.containsKey(EnumFetchApiStatus.success)) {
+    devLog("Log LoginRepositoryImp: dataAccount: $dataAccount");
+    final dataCompany = await helper.collectDataRemote(
+      remoteFunc: () async => await remote.loginRemote.getCompany(
+        companyId:
+            dataAccount[EnumFetchApiStatus.success][EnumUser.companyId.value],
+      ),
+      localFunc: ({required dataToCache}) async => {},
+      pageName: "Company",
+    );
+    if (dataAccount.containsKey(EnumFetchApiStatus.success) &&
+        dataCompany.containsKey(EnumFetchApiStatus.success)) {
       final pref = await SharedPreferences.getInstance();
       await pref.setString(
-        EnumCompany.companyId.value,
-        data[EnumFetchApiStatus.success][EnumCompany.companyId.value],
+        EnumTable.companies.value,
+        jsonEncode(dataCompany[EnumFetchApiStatus.success]),
       );
       await pref.setString(
-        EnumCompany.companyName.value,
-        data[EnumFetchApiStatus.success][EnumCompany.companyName.value],
-      );
-      await pref.setString(
-        EnumCompany.userId.value,
-        data[EnumFetchApiStatus.success][EnumCompany.userId.value],
+        EnumTable.users.value,
+        jsonEncode(dataAccount[EnumFetchApiStatus.success]),
       );
       await userSession.init();
       userRepository.watchUser();
     }
-    return data;
+    return dataAccount;
   }
 }

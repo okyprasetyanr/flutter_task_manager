@@ -1,6 +1,6 @@
 enum EnumCompany {
   companyName('company_name'),
-  companyId('company_id'),
+  companyId('id'),
   companyJoin('company_join'),
   userId('user_id');
 

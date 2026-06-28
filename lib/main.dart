@@ -168,7 +168,10 @@ Future<void> main() async {
                 supabaseClient: client,
                 responseWrapper: wrapper,
               ),
-              loginRemote: LoginRemote(responseWrapper: wrapper),
+              loginRemote: LoginRemote(
+                responseWrapper: wrapper,
+                supabaseClient: client,
+              ),
               projectDetailRemote: ProjectDetailRemote(
                 label: LabelRemoteSource(
                   responseWrapper: wrapper,
