@@ -3,7 +3,7 @@ import 'package:task_manager/feature/activity/data/remote/activity_remote.dart';
 import 'package:task_manager/feature/history_task/data/remote/history_task_remote.dart';
 import 'package:task_manager/feature/login/data/remote/login_remote.dart';
 import 'package:task_manager/feature/project_detail/data/remote/project_detail_remote.dart';
-import 'package:task_manager/feature/shared_component/notification/data/remote/notification_remote.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/data/remote/not_log_remote.dart';
 import 'package:task_manager/feature/shared_component/user/data/remote/user_remote.dart';
 import 'package:task_manager/feature/task_detail/data/remote/task_detail_remote.dart';
 import 'package:task_manager/feature/workspace/data/remote/workspace_remote.dart';
@@ -17,7 +17,7 @@ class RemoteServices {
   final HistoryTaskRemote historyTaskRemote;
   final TaskDetailRemote taskDetailRemote;
   final ActivityRemote activityRemote;
-  final NotificationRemote notificationRemote;
+  final NotLogRemote notificationRemote;
   final UserRemote userRemote;
 
   RemoteServices({

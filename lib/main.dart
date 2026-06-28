@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_manager/core/app_properties/app_properties.dart';
+import 'package:task_manager/core/cache/notification_cache.dart';
 import 'package:task_manager/core/cache/user_cache.dart';
 import 'package:task_manager/core/root_scaffold_messenger_key/root_scaffold_message_key.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
@@ -12,7 +13,6 @@ import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_local.dart';
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
-import 'package:task_manager/core/stream_manager/stream_manager.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/activity/data/local/activity_local.dart';
 import 'package:task_manager/feature/activity/data/remote/activity_remote.dart';
@@ -30,11 +30,11 @@ import 'package:task_manager/feature/project_detail/data/remote/source/subtask_r
 import 'package:task_manager/feature/project_detail/data/remote/source/task_label_remote_source.dart';
 import 'package:task_manager/feature/project_detail/data/remote/source/task_remote_source.dart';
 import 'package:task_manager/feature/shared_component/helper/sync_table.dart';
-import 'package:task_manager/feature/shared_component/notification/data/local/notification_local.dart';
-import 'package:task_manager/feature/shared_component/notification/data/remote/notification_remote.dart';
-import 'package:task_manager/feature/shared_component/notification/data/repository_imp/notification_repository_imp.dart';
-import 'package:task_manager/feature/shared_component/notification/domain/repository/notification_repository.dart';
-import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_bloc.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/data/local/not_log_local.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/data/remote/not_log_remote.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/data/repository_imp/not_log_repository_imp.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/domain/repository/not_log_repository.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/presentation/bloc/not_log_bloc.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/feature/shared_component/user/data/local/user_local.dart';
@@ -60,7 +60,7 @@ Future<void> main() async {
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider(create: (context) => UserCache()),
-        RepositoryProvider(create: (context) => StreamManager()),
+        RepositoryProvider(create: (context) => NotificationCache()),
         RepositoryProvider(lazy: false, create: (context) => UserSession()),
         RepositoryProvider(
           lazy: false,
@@ -92,7 +92,7 @@ Future<void> main() async {
             final syncTable = context.read<SyncTable>();
             final wrapper = context.read<ResponseWrapperLocal>();
             return LocalServices(
-              notificationLocal: NotificationLocal(
+              notificationLocal: NotLogLocal(
                 responseWrapper: wrapper,
                 localDatabase: local,
                 syncTable: syncTable,
@@ -202,25 +202,15 @@ Future<void> main() async {
                 responseWrapper: wrapper,
                 supabaseClient: client,
               ),
-              notificationRemote: NotificationRemote(
+              notificationRemote: NotLogRemote(
                 responseWrapper: wrapper,
                 supabaseClient: client,
               ),
             );
           },
         ),
-        RepositoryProvider<NotificationRepository>(
-          create: (context) => NotificationRepositoryImp(
-            remote: context.read<RemoteServices>(),
-            local: context.read<LocalServices>(),
-            userSession: context.read<UserSession>(),
-            helper: context.read<CollectData>(),
-            messageCollector: context.read<CollectorMessage>(),
-          ),
-        ),
         RepositoryProvider<UserRepository>(
           create: (context) => UserRepositoryImp(
-            streamSubsc: context.read<StreamManager>(),
             remote: context.read<RemoteServices>(),
             local: context.read<LocalServices>(),
             userSession: context.read<UserSession>(),
@@ -229,10 +219,21 @@ Future<void> main() async {
             userCache: context.read<UserCache>(),
           ),
         ),
+
+        RepositoryProvider<NotLogRepository>(
+          create: (context) => NotLogRepositoryImp(
+            notificationCache: context.read<NotificationCache>(),
+            userRepo: context.read<UserRepository>(),
+            remote: context.read<RemoteServices>(),
+            local: context.read<LocalServices>(),
+            userSession: context.read<UserSession>(),
+            helper: context.read<CollectData>(),
+            messageCollector: context.read<CollectorMessage>(),
+          ),
+        ),
       ],
       child: BlocProvider(
-        create: (context) =>
-            NotificationBloc(context.read<NotificationRepository>()),
+        create: (context) => NotLogBloc(context.read<NotLogRepository>()),
         child: MaterialApp(
           scaffoldMessengerKey: rootScaffoldMessengerKey,
           home: MainApp(),

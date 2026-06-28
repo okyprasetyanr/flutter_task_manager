@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/feature/shared_component/notification/presentation/page/notification_widget.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/presentation/page/not_log_widget.dart';
 
 class CustomRowHeader extends StatelessWidget {
   final Widget widgetLeft;
@@ -17,7 +17,7 @@ class CustomRowHeader extends StatelessWidget {
         Expanded(child: widgetLeft),
         widgetRight,
         const SizedBox(width: 10),
-        NotificationWidget(),
+        NotLogWidget(),
       ],
     );
   }

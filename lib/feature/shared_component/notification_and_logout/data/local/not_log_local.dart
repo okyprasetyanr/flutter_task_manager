@@ -1,13 +1,13 @@
 import 'package:task_manager/core/services/local_database/local_database.dart';
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_local.dart';
 import 'package:task_manager/feature/shared_component/helper/sync_table.dart';
-import 'package:task_manager/feature/shared_component/notification/domain/model/model_notification.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/domain/model/model_notification.dart';
 
-class NotificationLocal {
+class NotLogLocal {
   ResponseWrapperLocal responseWrapper;
   LocalDatabase localDatabase;
   SyncTable syncTable;
-  NotificationLocal({
+  NotLogLocal({
     required this.responseWrapper,
     required this.localDatabase,
     required this.syncTable,

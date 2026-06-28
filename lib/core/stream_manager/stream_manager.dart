@@ -2,20 +2,22 @@ import 'dart:async';
 
 import 'package:task_manager/core/services/local_database/enum/enum.dart';
 
-class StreamManager {
-  final Map<EnumTable, StreamSubscription> streamSubsc = {};
+mixin StreamSubscriptionManager {
+  final Map<EnumTable, StreamSubscription> _streamSubscriptions = {};
 
-  void addStreamSubsc(EnumTable key, StreamSubscription value) {
-    if (streamSubsc.containsKey(key)) {
-      streamSubsc[key]?.cancel();
-    }
-    streamSubsc[key] = value;
+  void addStreamSubscription(EnumTable key, StreamSubscription subscription) {
+    _streamSubscriptions[key]?.cancel();
+    _streamSubscriptions[key] = subscription;
   }
 
-  void clearStreamSubsc() {
-    for (var sub in streamSubsc.values) {
+  void cancelStreamSubscription(EnumTable key) {
+    _streamSubscriptions.remove(key)?.cancel();
+  }
+
+  void clearStreamSubscriptions() {
+    for (final sub in _streamSubscriptions.values) {
       sub.cancel();
     }
-    streamSubsc.clear();
+    _streamSubscriptions.clear();
   }
 }

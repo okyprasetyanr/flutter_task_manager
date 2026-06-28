@@ -1,19 +1,19 @@
 import 'package:equatable/equatable.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
-import 'package:task_manager/feature/shared_component/notification/domain/model/model_notification.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/domain/model/model_notification.dart';
 
-class NotificationState {}
+class NotLogState {}
 
-class NotificationStateInitial extends NotificationState {}
+class NotLogStateInitial extends NotLogState {}
 
-class NotificationStateLoaded extends NotificationState with EquatableMixin {
+class NotLogStateLoaded extends NotLogState with EquatableMixin {
   final Set<ModelNotification> dataNotification;
   final EnumStatusState status;
   final String? error;
   final String? noconnection;
   final String? failed;
 
-  NotificationStateLoaded({
+  NotLogStateLoaded({
     this.dataNotification = const {},
     this.status = EnumStatusState.none,
     this.error,
@@ -21,14 +21,14 @@ class NotificationStateLoaded extends NotificationState with EquatableMixin {
     this.failed,
   });
 
-  NotificationStateLoaded copyWith({
+  NotLogStateLoaded copyWith({
     Set<ModelNotification>? dataNotification,
     EnumStatusState? status,
     String? error,
     String? failed,
     String? noconnection,
   }) {
-    return NotificationStateLoaded(
+    return NotLogStateLoaded(
       dataNotification: dataNotification ?? this.dataNotification,
       error: error ?? this.error,
       failed: failed ?? this.failed,

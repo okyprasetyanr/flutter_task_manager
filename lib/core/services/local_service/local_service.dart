@@ -2,7 +2,7 @@
 import 'package:task_manager/feature/activity/data/local/activity_local.dart';
 import 'package:task_manager/feature/history_task/data/local/history_task_local.dart';
 import 'package:task_manager/feature/project_detail/data/local/project_detail_local.dart';
-import 'package:task_manager/feature/shared_component/notification/data/local/notification_local.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/data/local/not_log_local.dart';
 import 'package:task_manager/feature/shared_component/user/data/local/user_local.dart';
 import 'package:task_manager/feature/task_detail/data/local/task_detail_local.dart';
 import 'package:task_manager/feature/workspace/data/local/workspace_local.dart';
@@ -16,7 +16,7 @@ class LocalServices {
   final HistoryTaskLocal historyTaskLocal;
   final TaskDetailLocal taskDetailLocal;
   final ActivityLocal activityLocal;
-  final NotificationLocal notificationLocal;
+  final NotLogLocal notificationLocal;
 
   LocalServices({
     required this.workspaceLocal,

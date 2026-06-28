@@ -3,17 +3,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_manager/core/services/local_database/enum/enum.dart';
 
 import 'package:task_manager/core/services/response_wrapper/response_wrapper_remote.dart';
-import 'package:task_manager/feature/shared_component/notification/domain/enum/enum.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/domain/enum/enum.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
-class NotificationRemote {
+class NotLogRemote {
   final ResponseWrapperRemote responseWrapper;
   final SupabaseClient supabaseClient;
 
-  NotificationRemote({
-    required this.responseWrapper,
-    required this.supabaseClient,
-  });
+  NotLogRemote({required this.responseWrapper, required this.supabaseClient});
 
   Future<List<Map<String, dynamic>>> getAllNotification({
     required String userId,

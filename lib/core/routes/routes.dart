@@ -20,6 +20,7 @@ import 'package:task_manager/feature/project_detail/domain/repository/project_de
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_event.dart';
 import 'package:task_manager/feature/project_detail/presentation/page/project_detail_page.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/domain/repository/not_log_repository.dart';
 import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
 import 'package:task_manager/feature/task_detail/data/repository_imp/task_detail_repository_imp.dart';
 import 'package:task_manager/feature/task_detail/domain/repository/task_detail_repository.dart';
@@ -55,6 +56,7 @@ final routes = {
     providers: [
       RepositoryProvider<LoginRepository>(
         create: (context) => LoginRepositoryImp(
+          notLogRepository: context.read<NotLogRepository>(),
           userRepository: context.read<UserRepository>(),
           userSession: context.read<UserSession>(),
           helper: context.read<CollectData>(),

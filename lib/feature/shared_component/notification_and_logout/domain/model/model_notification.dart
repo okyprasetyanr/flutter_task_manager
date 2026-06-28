@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:task_manager/feature/shared_component/notification/domain/enum/enum.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/domain/enum/enum.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 
 class ModelNotification extends Equatable {

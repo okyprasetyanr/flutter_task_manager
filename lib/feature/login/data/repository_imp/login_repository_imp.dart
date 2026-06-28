@@ -9,6 +9,7 @@ import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
 import 'package:task_manager/feature/login/data/local/login_local.dart';
 import 'package:task_manager/feature/login/domain/repository/login_repository.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/domain/repository/not_log_repository.dart';
 import 'package:task_manager/feature/shared_component/user/domain/enum/enum.dart';
 import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
@@ -20,6 +21,7 @@ class LoginRepositoryImp implements LoginRepository {
   final LoginLocal local;
   final UserSession userSession;
   final UserRepository userRepository;
+  final NotLogRepository notLogRepository;
 
   LoginRepositoryImp({
     required this.helper,
@@ -27,6 +29,7 @@ class LoginRepositoryImp implements LoginRepository {
     required this.local,
     required this.userSession,
     required this.userRepository,
+    required this.notLogRepository,
   });
 
   @override
@@ -62,6 +65,7 @@ class LoginRepositoryImp implements LoginRepository {
       );
       await userSession.init();
       userRepository.watchUser();
+      notLogRepository.watchNotification();
     }
     return dataAccount;
   }

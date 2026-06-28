@@ -161,6 +161,12 @@ final lv1TextStyle = GoogleFonts.poppins(
   fontSize: 12,
 );
 
+final lv1TextStyleRed = GoogleFonts.poppins(
+  color: AppPropertyColor.red,
+  fontWeight: FontWeight.w300,
+  fontSize: 12,
+);
+
 final lv1TextStyleBold = GoogleFonts.poppins(
   color: AppPropertyColor.black,
   fontWeight: FontWeight.w500,

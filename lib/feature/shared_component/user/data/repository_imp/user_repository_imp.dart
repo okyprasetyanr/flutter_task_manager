@@ -17,16 +17,15 @@ import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/shared/common_widget/snackbar/custom_snackbar_root.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
-class UserRepositoryImp implements UserRepository {
+class UserRepositoryImp
+    with StreamSubscriptionManager
+    implements UserRepository {
   final RemoteServices remote;
   final LocalServices local;
   final UserSession userSession;
   final CollectData helper;
   final CollectorMessage messageCollector;
   final UserCache userCache;
-  final StreamManager streamSubsc;
-
-  StreamSubscription? _sub;
 
   UserRepositoryImp({
     required this.remote,
@@ -35,32 +34,32 @@ class UserRepositoryImp implements UserRepository {
     required this.helper,
     required this.messageCollector,
     required this.userCache,
-    required this.streamSubsc,
   });
 
   RealtimeChannel? _userChannel;
 
   @override
   Future<void> watchUser() async {
-    _sub?.cancel();
     await initUserRealtime();
-    _sub = local.userLocal
-        .watchUser(companyId: userSession.getCompanyId())
-        .listen((event) {
-          final data = helper.collectDataLocal(fetchResult: event);
 
-          devLog("Log UserRepositoryImp: initData: $data");
-          if (data.containsKey(EnumFetchApiStatus.success)) {
-            final users = (data[EnumFetchApiStatus.success] as List)
-                .map((e) => ModelUser.fromDrift(e))
-                .toSet();
-            userCache.setUsers(users);
-          } else {
-            customRootSnackBar(messageCollector.getMessage(data));
-          }
-        });
+    addStreamSubscription(
+      EnumTable.users,
+      local.userLocal.watchUser(companyId: userSession.getCompanyId()).listen((
+        event,
+      ) {
+        final data = helper.collectDataLocal(fetchResult: event);
 
-    streamSubsc.addStreamSubsc(EnumTable.users, _sub!);
+        devLog("Log UserRepositoryImp: initData: $data");
+        if (data.containsKey(EnumFetchApiStatus.success)) {
+          final users = (data[EnumFetchApiStatus.success] as List)
+              .map((e) => ModelUser.fromDrift(e))
+              .toSet();
+          userCache.setUsers(users);
+        } else {
+          customRootSnackBar(messageCollector.getMessage(data));
+        }
+      }),
+    );
   }
 
   Future<void> initUserRealtime() async {
@@ -76,6 +75,7 @@ class UserRepositoryImp implements UserRepository {
 
     if (_userChannel != null) {
       remote.userRemote.removeUserChannel(_userChannel!);
+      _userChannel = null;
     }
     _userChannel = remote.userRemote.buildUserChannel(companyId);
 
@@ -102,13 +102,13 @@ class UserRepositoryImp implements UserRepository {
                 await local.userLocal.syncUser(remoteResults: [data]);
               }
             } catch (e) {
-              devLog("Log UsereRepositoryImp: error: $e");
+              devLog("Log UserRepositoryImp: error: $e");
             }
           },
         )
         .subscribe((state, error) {
           if (error != null) {
-            devLog("Log UsereRepositoryImp: error Supabase: $error");
+            devLog("Log UserRepositoryImp: error Supabase: $error");
           }
         });
   }
@@ -121,9 +121,12 @@ class UserRepositoryImp implements UserRepository {
 
   @override
   void disposeUserRealtime() {
+    clearStreamSubscriptions();
     if (_userChannel != null) {
       remote.userRemote.removeUserChannel(_userChannel!);
       _userChannel = null;
     }
+
+    userCache.clear();
   }
 }

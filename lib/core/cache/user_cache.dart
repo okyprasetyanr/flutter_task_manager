@@ -14,7 +14,13 @@ class UserCache {
 
   void setUsers(Set<ModelUser> data) {
     devLog("Log UserCache: setUser: data: ${data.length}");
-    _controller.add(data);
+    if (!_controller.isClosed) {
+      _controller.add(data);
+    }
+  }
+
+  void clear() {
+    _controller.add({});
   }
 
   void dispose() {

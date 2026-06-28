@@ -7,8 +7,8 @@ import 'package:task_manager/feature/login/presentation/bloc/login_bloc.dart';
 import 'package:task_manager/feature/login/presentation/bloc/login_state.dart';
 import 'package:task_manager/feature/login/presentation/widget/login_button.dart';
 import 'package:task_manager/feature/login/presentation/widget/login_form.dart';
-import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_bloc.dart';
-import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_event.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/presentation/bloc/not_log_bloc.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/presentation/bloc/not_log_event.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/snackbar/custom_snackbar.dart';
 
@@ -42,9 +42,7 @@ class _LoginPageState extends State<LoginPage> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is LoginStateSuccess) {
-          context.read<NotificationBloc>().add(
-            NotificationEventWatchWorkspace(),
-          );
+          context.read<NotLogBloc>().add(NotLogEventWatchWorkspace());
           customSnackBar(context, "Login Success");
           RoutesNavigator(
             context: context,

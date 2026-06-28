@@ -1,21 +1,21 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_bloc.dart';
-import 'package:task_manager/feature/shared_component/notification/presentation/bloc/notification_event.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/presentation/bloc/not_log_bloc.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/presentation/bloc/not_log_event.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
-import 'package:task_manager/feature/shared_component/notification/domain/model/model_notification.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/domain/model/model_notification.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
 import 'package:task_manager/shared/common_widget/text/custom_text_empty.dart';
 
-class NotificationListNotification extends StatelessWidget {
+class NotLogListNotification extends StatelessWidget {
   final Set<ModelNotification> data;
   final EnumStatusState status;
   final ScrollController controller;
-  const NotificationListNotification({
+  const NotLogListNotification({
     super.key,
     required this.data,
     required this.status,
@@ -60,8 +60,8 @@ class NotificationListNotification extends StatelessWidget {
                 }
                 return [CustomTextEmpty()];
               },
-              onPressed: (data) => context.read<NotificationBloc>().add(
-                NotificationEventUpdateIsRead(notificationId: data.id),
+              onPressed: (data) => context.read<NotLogBloc>().add(
+                NotLogEventUpdateIsRead(notificationId: data.id),
               ),
             ),
           ),
