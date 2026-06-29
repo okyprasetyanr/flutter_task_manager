@@ -13,7 +13,7 @@ class TaskDetailHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomRowHeader(
-      widgetLeft: Text('Task Detail', style: titleTextStyle),
+      widgetLeft: Text('Task Detail', style: titleTextStyleWhite),
       widgetRight:
           BlocSelector<
             TaskDetailBloc,
@@ -27,7 +27,7 @@ class TaskDetailHeader extends StatelessWidget {
                 ? SizedBox(height: 20, width: 20, child: const CustomLoading())
                 : Text(
                     "${state.$1} Task",
-                    style: lv1TextStyle,
+                    style: lv1TextStyleWhite,
                     textAlign: TextAlign.end,
                   ),
           ),

@@ -10,8 +10,6 @@ import 'package:task_manager/feature/history_task/presentation/widget/history_ta
 import 'package:task_manager/feature/shared_component/navigator_content/navigator_content.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/shared/style/icon_size.dart';
-import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart';
 import 'package:task_manager/shared/common_widget/navigation_gesture/widget_navigation_gesture.dart';
 
 class HistoryTaskPage extends StatefulWidget {
@@ -33,24 +31,26 @@ class _HistoryTaskPageState extends State<HistoryTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(uiPage: uiPage(), widgetNavigation: navigationGesture());
+    return BaseLayout(
+      uiPage: uiPage(),
+      widgetNavigation: navigationGesture(),
+      fab: FloatingActionButton(
+        backgroundColor: AppPropertyColor.primary,
+        onPressed: () {
+          isOpen.value = !isOpen.value;
+        },
+        child: const Icon(
+          Icons.menu_rounded,
+          color: AppPropertyColor.white,
+          size: lv2IconSize,
+        ),
+      ),
+    );
   }
 
   Widget uiPage() {
     return Column(
       children: [
-        CustomButtonIcon(
-          backgroundColor: AppPropertyColor.primary,
-          icon: const Icon(
-            Icons.menu_rounded,
-            color: AppPropertyColor.white,
-            size: lv2IconSize,
-          ),
-          label: Text("Menu", style: lv05TextStyleWhite),
-          onPressed: () {
-            isOpen.value = !isOpen.value;
-          },
-        ),
         HistoryTaskHeader(),
         Expanded(child: HistoryTaskListHistory()),
       ],

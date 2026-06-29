@@ -10,6 +10,7 @@ import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helpe
 import 'package:task_manager/feature/history_task/domain/model/model_task_history.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
+import 'package:task_manager/shared/style/text_size.dart';
 
 class HistoryTaskListHistory extends StatelessWidget {
   const HistoryTaskListHistory({super.key});
@@ -42,58 +43,49 @@ class HistoryTaskListHistory extends StatelessWidget {
                       data.changedBy;
                   devLog("Log HistoryTaskUI: listData: dataUser: ${state.$3}");
                   return [
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              style: DefaultTextStyle.of(context).style,
-                              children: [
-                                TextSpan(
-                                  text: actor,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const TextSpan(text: ' changed '),
-                                TextSpan(
-                                  text: data.field.text,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            style: lv1TextStyle,
+                            children: [
+                              TextSpan(text: actor, style: lv1TextStyleBold),
+                              TextSpan(text: ' changed ', style: lv1TextStyle),
+                              TextSpan(
+                                text: data.field.text,
+                                style: lv1TextStyleBold,
+                              ),
+                            ],
                           ),
+                        ),
 
-                          const SizedBox(height: 4),
+                        const SizedBox(height: 5),
 
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              '${display.oldValue.isEmpty ? "-" : display.oldValue}'
-                              ' → '
-                              '${display.newValue.isEmpty ? "-" : display.newValue}',
-                            ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 6,
                           ),
-
-                          const SizedBox(height: 6),
-
-                          Text(
-                            HelperDateConvert.toDisplayUI(date: data.changedAt),
-                            style: Theme.of(context).textTheme.bodySmall,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        ],
-                      ),
+                          child: Text(
+                            '${display.oldValue.isEmpty ? "-" : display.oldValue}'
+                            ' → '
+                            '${display.newValue.isEmpty ? "-" : display.newValue}',
+                            style: lv1TextStyleBoldItalic,
+                          ),
+                        ),
+
+                        const SizedBox(height: 5),
+
+                        Text(
+                          HelperDateConvert.toDisplayUI(date: data.changedAt),
+                          style: lv05TextStyle,
+                        ),
+                      ],
                     ),
                   ];
                 },

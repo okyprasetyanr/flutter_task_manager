@@ -3,7 +3,7 @@ import 'package:task_manager/feature/project_detail/presentation/bloc/project_de
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_botshet_content.dart';
 import 'package:task_manager/feature/shared_component/widget/base_layout/base_layout.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_header.dart';
-import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_list_member.dart';
+import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_member_progress.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_list_task.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_project.dart';
 import 'package:task_manager/feature/shared_component/widget/floating_button_add/floating_button_add.dart';
@@ -36,11 +36,12 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ProjectDetailHeader(),
+        const SizedBox(height: 10),
         ProjectDetailProject(),
         const SizedBox(height: 10),
         Text("Member", style: lv1TextStyleBold),
         const SizedBox(height: 5),
-        Expanded(flex: 1, child: ProjectDetailListMember()),
+        Expanded(flex: 2, child: ProjectDetailListMember()),
         const SizedBox(height: 10),
         Text("Task", style: lv1TextStyleBold),
         const SizedBox(height: 5),

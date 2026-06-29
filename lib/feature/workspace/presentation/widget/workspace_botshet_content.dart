@@ -157,39 +157,40 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                                                           ),
                                                       shrinkWrap: true,
                                                       children: [
-                                                        Text("Member Role"),
-                                                        Expanded(
-                                                          child: ListView.builder(
-                                                            shrinkWrap: true,
-                                                            itemCount:
-                                                                EnumWorkspaceRole
-                                                                    .values
-                                                                    .length,
-                                                            itemBuilder: (context, index) => CustomButtonIcon(
-                                                              left: true,
-                                                              icon: Icon(
-                                                                Icons
-                                                                    .admin_panel_settings_rounded,
-                                                              ),
-                                                              backgroundColor:
-                                                                  AppPropertyColor
-                                                                      .white,
-                                                              label: Text(
-                                                                EnumWorkspaceRole
-                                                                    .values[index]
-                                                                    .text,
-                                                              ),
-                                                              onPressed: () {
-                                                                listUser[listMemberIndex] = (
-                                                                  data.$1,
-                                                                  EnumWorkspaceRole
-                                                                      .values[index],
-                                                                );
-                                                                Navigator.pop(
-                                                                  context,
-                                                                );
-                                                              },
+                                                        Text(
+                                                          "Member Role",
+                                                          style: titleTextStyle,
+                                                        ),
+                                                        ListView.builder(
+                                                          shrinkWrap: true,
+                                                          itemCount:
+                                                              EnumWorkspaceRole
+                                                                  .values
+                                                                  .length,
+                                                          itemBuilder: (context, index) => CustomButtonIcon(
+                                                            left: true,
+                                                            icon: Icon(
+                                                              Icons
+                                                                  .admin_panel_settings_rounded,
                                                             ),
+                                                            backgroundColor:
+                                                                AppPropertyColor
+                                                                    .white,
+                                                            label: Text(
+                                                              EnumWorkspaceRole
+                                                                  .values[index]
+                                                                  .text,
+                                                            ),
+                                                            onPressed: () {
+                                                              listUser[listMemberIndex] = (
+                                                                data.$1,
+                                                                EnumWorkspaceRole
+                                                                    .values[index],
+                                                              );
+                                                              Navigator.pop(
+                                                                context,
+                                                              );
+                                                            },
                                                           ),
                                                         ),
                                                       ],

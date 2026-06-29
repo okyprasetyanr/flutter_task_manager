@@ -28,6 +28,7 @@ class TaskDetailListComment extends StatelessWidget {
           ? (state.dataComment, state.status, state.dataUser)
           : (const {}, EnumStatusState.loading, const {}),
       builder: (context, state) => CustomListViewBuilderV<ModelComment>(
+        changeColor: AppPropertyColor.primary,
         controller: scrollController,
         status: state.$2,
         data: state.$1.toList(),
@@ -54,26 +55,34 @@ class TaskDetailListComment extends StatelessWidget {
                 : Alignment.centerLeft,
             child: Text(
               state.$3.firstWhere((element) => element.id == data.userId).name,
-              style: lv05TextStyle,
+              style: lv1TextStyleWhiteBold,
             ),
           ),
-          Align(
-            alignment: data.isOwned!
-                ? Alignment.centerRight
-                : Alignment.centerLeft,
-            child: Text(data.content, style: lv1TextStyle),
+          const SizedBox(height: 5),
+          Material(
+            color: AppPropertyColor.white,
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: Align(
+                alignment: data.isOwned!
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
+                child: Text(data.content, style: lv1TextStyle),
+              ),
+            ),
           ),
-
+          const SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 HelperDateConvert.toDisplayUI(date: data.createdAt),
-                style: lv05TextStyle,
+                style: lv05TextStyleWhite,
               ),
               Text(
                 HelperDateConvert.toDisplayUI(date: data.createdAt),
-                style: lv05TextStyle,
+                style: lv05TextStyleWhite,
               ),
             ],
           ),

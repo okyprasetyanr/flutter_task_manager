@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/shared_component/widget/base_layout/base_layout.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
-import 'package:task_manager/feature/shared_component/widget/floating_button_add/floating_button_add.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
@@ -12,9 +10,9 @@ import 'package:task_manager/feature/workspace_detail/presentation/widget/worksp
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_list_project.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/shared_component/navigator_content/navigator_content.dart';
-import 'package:task_manager/shared/style/icon_size.dart';
-import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart';
+import 'package:task_manager/shared/common_widget/multi_fab/custom_multi_fab.dart';
+import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
+import 'package:task_manager/shared/model/model_fab.dart';
 import 'package:task_manager/shared/common_widget/navigation_gesture/widget_navigation_gesture.dart';
 
 class WorkspaceDetailPage extends StatefulWidget {
@@ -39,9 +37,30 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
     return BaseLayout(
       uiPage: uiPage(),
       widgetNavigation: navigationGesture(),
-      fab: FloatingButtonAdd<WorkspaceDetailBloc>(
-        content: (scrollController) =>
-            WorkspaceDetailBotshetContent(scrollController: scrollController),
+      fab: CustomMultiFab(
+        items: [
+          CustomFabItem(
+            icon: Icons.menu_rounded,
+            title: "Menu",
+            onTap: () => isOpen.value = !isOpen.value,
+          ),
+          CustomFabItem(
+            icon: Icons.add,
+            title: "Add",
+            onTap: () => customBottomSheet(
+              context: context,
+              resetItemForm: () {},
+              content: (scrollController) {
+                return BlocProvider.value(
+                  value: context.read<WorkspaceDetailBloc>(),
+                  child: WorkspaceDetailBotshetContent(
+                    scrollController: scrollController,
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -49,18 +68,6 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
   Widget uiPage() {
     return Column(
       children: [
-        CustomButtonIcon(
-          backgroundColor: AppPropertyColor.primary,
-          icon: const Icon(
-            Icons.menu_rounded,
-            color: AppPropertyColor.white,
-            size: lv2IconSize,
-          ),
-          label: Text("Menu", style: lv05TextStyleWhite),
-          onPressed: () {
-            isOpen.value = !isOpen.value;
-          },
-        ),
         WorkspaceDetailHeader(),
         Expanded(child: WorkspaceDetailListProject()),
       ],

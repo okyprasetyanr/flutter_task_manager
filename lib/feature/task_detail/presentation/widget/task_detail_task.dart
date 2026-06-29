@@ -37,23 +37,25 @@ class TaskDetailTask extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(data.title, style: lv05TextStyle),
-                  Text(data.priority.text, style: lv05TextStyle),
+                  Text(data.title, style: lv1TextStyleBold),
+                  Text(data.priority.text, style: lv1TextStyleBold),
                 ],
               ),
+              const SizedBox(height: 3),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    HelperDateConvert.toDisplayUI(date: data.createdAt),
-                    style: lv05TextStyle,
+                    "Start: ${HelperDateConvert.toDisplayUI(date: data.createdAt)}",
+                    style: lv05TextStyleBold,
                   ),
                   Text(
-                    HelperDateConvert.toDisplayUI(date: data.dueDate),
-                    style: lv05TextStyle,
+                    "Due: ${HelperDateConvert.toDisplayUI(date: data.dueDate)}",
+                    style: lv05TextStyleBoldRed,
                   ),
                 ],
               ),
+              const SizedBox(height: 3),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -66,7 +68,7 @@ class TaskDetailTask extends StatelessWidget {
                       ),
                     ],
                   ),
-
+                  const SizedBox(height: 3),
                   Text(data.status.text, style: lv05TextStyle),
                 ],
               ),

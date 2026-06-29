@@ -13,7 +13,7 @@ class WorkspaceDetailHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomRowHeader(
-      widgetLeft: Text('Workspace Detail', style: titleTextStyle),
+      widgetLeft: Text('Workspace Detail', style: titleTextStyleWhite),
       widgetRight:
           BlocSelector<
             WorkspaceDetailBloc,
@@ -27,7 +27,7 @@ class WorkspaceDetailHeader extends StatelessWidget {
                 ? SizedBox(height: 20, width: 20, child: const CustomLoading())
                 : Text(
                     "${state.$1} Company",
-                    style: lv1TextStyle,
+                    style: lv1TextStyleWhite,
                     textAlign: TextAlign.end,
                   ),
           ),

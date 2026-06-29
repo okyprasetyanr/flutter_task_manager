@@ -13,7 +13,7 @@ class ActivityHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomRowHeader(
-      widgetLeft: Text('Activity Task', style: titleTextStyle),
+      widgetLeft: Text('Activity Task', style: titleTextStyleWhite),
       widgetRight:
           BlocSelector<ActivityBloc, ActivityState, (String?, EnumStatusState)>(
             selector: (state) => state is ActivityStateLoaded
@@ -23,7 +23,7 @@ class ActivityHeader extends StatelessWidget {
                 ? SizedBox(height: 20, width: 20, child: const CustomLoading())
                 : Text(
                     "${state.$1} Company",
-                    style: lv1TextStyle,
+                    style: lv1TextStyleWhite,
                     textAlign: TextAlign.end,
                   ),
           ),

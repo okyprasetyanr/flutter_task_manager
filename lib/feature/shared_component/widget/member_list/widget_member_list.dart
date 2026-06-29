@@ -24,11 +24,14 @@ class SharedWidgetMemberList extends StatelessWidget {
           child: Material(
             borderRadius: BorderRadius.circular(6),
             elevation: 3,
-            color: AppPropertyColor.white,
+            color: AppPropertyColor.primary,
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(5),
-                child: Text(data.elementAt(index).name, style: lv05TextStyle),
+                child: Text(
+                  data.elementAt(index).name,
+                  style: lv05TextStyleWhite,
+                ),
               ),
             ),
           ),

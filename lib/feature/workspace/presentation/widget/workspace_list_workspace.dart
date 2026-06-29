@@ -34,12 +34,9 @@ class WorkspaceListWorkspace extends StatelessWidget {
           data: state.$1.toList(),
           status: state.$2,
           content: (data, status) => [
-            Text(data.dataWorkspace.name, style: lv05TextStyle),
+            Text(data.dataWorkspace.name, style: lv1TextStyleBold),
             const SizedBox(height: 4),
-            Text(
-              data.dataWorkspace.description,
-              style: lv05TextStyle.copyWith(color: Colors.grey),
-            ),
+            Text(data.dataWorkspace.description, style: lv05TextStyle),
             SizedBox(
               height: 30,
               child:
@@ -47,7 +44,7 @@ class WorkspaceListWorkspace extends StatelessWidget {
                       status == EnumStatusState.synchronize
                   ? const CustomLoading()
                   : data.dataMember.isEmpty && status == EnumStatusState.none
-                  ? const CustomTextEmpty()
+                  ? CustomTextEmpty()
                   : SharedWidgetMemberList(
                       data: state.$3
                           .where(

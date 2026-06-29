@@ -159,6 +159,7 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
     TaskDetailEventUpdateSubtask event,
     Emitter<TaskDetailState> emit,
   ) async {
+    add(TaskDetailEventChangeStatus(status: EnumStatusState.synchronize));
     final currentState = state as TaskDetailStateLoaded;
     final original = currentState.selectedSubtask!;
     final edited = original.copyWith(title: event.title, isDone: event.isDone);

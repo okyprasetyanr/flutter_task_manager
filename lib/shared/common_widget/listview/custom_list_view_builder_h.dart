@@ -30,11 +30,16 @@ class CustomListViewBuilderH<T> extends StatelessWidget {
         child: Row(
           children: data
               .map(
-                (e) => Card(
-                  color: AppPropertyColor.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Text(getName(e), style: lv05TextStyle),
+                (e) => Padding(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: Material(
+                    elevation: 2,
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppPropertyColor.primary,
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(getName(e), style: lv05TextStyleWhite),
+                    ),
                   ),
                 ),
               )

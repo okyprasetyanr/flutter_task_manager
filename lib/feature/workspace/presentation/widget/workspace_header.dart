@@ -12,14 +12,15 @@ class WorkspaceHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomRowHeader(
-      widgetLeft: Text('Workspace', style: titleTextStyle),
+      logoutIcon: true,
+      widgetLeft: Text('Workspace', style: titleTextStyleWhite),
       widgetRight: BlocSelector<WorkspaceBloc, WorkspaceState, String?>(
         selector: (state) =>
             state is WorkspaceStateLoaded ? state.companyName : null,
         builder: (context, state) => state != null
             ? Text(
                 "$state Company",
-                style: lv1TextStyle,
+                style: lv1TextStyleWhite,
                 textAlign: TextAlign.end,
               )
             : SizedBox(height: 20, width: 20, child: const CustomLoading()),

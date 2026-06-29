@@ -35,28 +35,46 @@ class WorkspaceDetailListProject extends StatelessWidget {
         status: state.$2,
         data: state.$1.toList(),
         content: (data, status) => [
-          Text(data.dataProject.name, style: lv05TextStyle),
-          const SizedBox(height: 4),
-          Text(data.dataProject.type, style: lv05TextStyle),
-          const SizedBox(height: 4),
-          Text(
-            data.dataProject.status.text,
-            style: lv05TextStyle.copyWith(color: Colors.grey),
-          ),
-          Text(data.dataProject.createdBy, style: lv05TextStyle),
-          const SizedBox(height: 4),
-          Text(
-            HelperDateConvert.toDisplayUI(date: data.dataProject.start),
-            style: lv05TextStyle,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(data.dataProject.name, style: lv1TextStyleBold),
+              Text(data.dataProject.type, style: lv1TextStyleBold),
+            ],
           ),
           const SizedBox(height: 4),
-          Text(
-            HelperDateConvert.toDisplayUI(date: data.dataProject.end),
-            style: lv05TextStyle,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Start: ${HelperDateConvert.toDisplayUI(date: data.dataProject.start)}",
+                style: lv05TextStyleBold,
+              ),
+              Text(
+                "Due: ${HelperDateConvert.toDisplayUI(date: data.dataProject.end)}",
+                style: lv05TextStyleBoldRed,
+              ),
+            ],
           ),
           const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(data.dataProject.status.text, style: lv05TextStyle),
+              Text(
+                state.$3
+                    .firstWhere(
+                      (element) => element.id == data.dataProject.createdBy,
+                    )
+                    .name,
+                style: lv05TextStyle,
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 4),
           Text(
-            data.dataProject.totalContribut.toString(),
+            "Contributor: ${data.dataProject.totalContribut.toString()}",
             style: lv05TextStyle,
           ),
           const SizedBox(height: 4),

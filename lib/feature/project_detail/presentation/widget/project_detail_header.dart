@@ -12,7 +12,7 @@ class ProjectDetailHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomRowHeader(
-      widgetLeft: Text('Project Detail', style: titleTextStyle),
+      widgetLeft: Text('Project Detail', style: titleTextStyleWhite),
       widgetRight: BlocSelector<ProjectDetailBloc, ProjectDetailState, String?>(
         selector: (state) => state is ProjectDetailStateLoaded
             ? state.dataProject?.dataProject.name
@@ -20,7 +20,7 @@ class ProjectDetailHeader extends StatelessWidget {
         builder: (context, state) => state != null
             ? Text(
                 "Project $state",
-                style: lv1TextStyle,
+                style: lv1TextStyleWhite,
                 textAlign: TextAlign.end,
               )
             : SizedBox(height: 20, width: 20, child: const CustomLoading()),

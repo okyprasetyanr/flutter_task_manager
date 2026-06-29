@@ -24,6 +24,7 @@ class _TaskDetailBotshetContentState extends State<TaskDetailBotshetContent> {
   final titleController = TextEditingController();
   final isDone = ValueNotifier<bool>(false);
   final _keyForm = GlobalKey<FormState>();
+  bool _initialized = false;
   @override
   void dispose() {
     titleController.dispose();
@@ -50,6 +51,11 @@ class _TaskDetailBotshetContentState extends State<TaskDetailBotshetContent> {
                 ? (state.selectedSubtask, state.status)
                 : (null, EnumStatusState.none),
             builder: (context, state) {
+              if (state.$1 != null && !_initialized) {
+                _initialized = true;
+                titleController.text = state.$1!.title;
+                isDone.value = state.$1!.isDone;
+              }
               return Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(

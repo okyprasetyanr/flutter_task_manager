@@ -13,7 +13,7 @@ class HistoryTaskHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomRowHeader(
-      widgetLeft: Text('History Task', style: titleTextStyle),
+      widgetLeft: Text('History Task', style: titleTextStyleWhite),
       widgetRight:
           BlocSelector<
             HistoryTaskBloc,
@@ -27,7 +27,7 @@ class HistoryTaskHeader extends StatelessWidget {
                 ? SizedBox(height: 20, width: 20, child: const CustomLoading())
                 : Text(
                     "${state.$1} Company",
-                    style: lv1TextStyle,
+                    style: lv1TextStyleWhite,
                     textAlign: TextAlign.end,
                   ),
           ),

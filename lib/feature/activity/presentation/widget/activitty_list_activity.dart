@@ -9,6 +9,7 @@ import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helpe
 import 'package:task_manager/feature/activity/domain/model/model_activity.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
+import 'package:task_manager/shared/style/text_size.dart';
 
 class ActivittyListActivity extends StatelessWidget {
   const ActivittyListActivity({super.key});
@@ -53,26 +54,20 @@ class ActivittyListActivity extends StatelessWidget {
                   List<TextSpan> buildTextSpans() {
                     if (isModifierAction) {
                       return [
-                        TextSpan(
-                          text: actor,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const TextSpan(text: ' changed '),
+                        TextSpan(text: actor, style: lv1TextStyleBold),
+                        TextSpan(text: ' changed ', style: lv1TextStyle),
                         TextSpan(
                           text: data.action.text.toLowerCase(),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: lv1TextStyleBold,
                         ),
                       ];
                     } else {
                       return [
-                        TextSpan(
-                          text: actor,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                        TextSpan(text: actor, style: lv1TextStyleBold),
                         const TextSpan(text: ' '),
                         TextSpan(
                           text: data.action.text,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: lv1TextStyleBold,
                         ),
                       ];
                     }
@@ -81,11 +76,11 @@ class ActivittyListActivity extends StatelessWidget {
                   return [
                     RichText(
                       text: TextSpan(
-                        style: DefaultTextStyle.of(context).style,
+                        style: lv1TextStyleBold,
                         children: buildTextSpans(),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 5),
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
@@ -98,28 +93,23 @@ class ActivittyListActivity extends StatelessWidget {
                       child: isModifierAction
                           ? Text(
                               '${display.oldValue.isEmpty ? "-" : display.oldValue}  →  ${display.newValue.isEmpty ? "-" : display.newValue}',
-                              style: const TextStyle(fontSize: 13),
+                              style: lv1TextStyleBold,
                             )
                           : Text(
                               display.newValue.isEmpty
                                   ? display.oldValue
                                   : display.newValue,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontStyle: FontStyle.italic,
-                              ),
+                              style: lv1TextStyleBoldItalic,
                             ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 5),
 
                     Text(
                       HelperDateConvert.toDisplayUI(
                         date: data.createdAt,
                         withMinute: true,
                       ),
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                      style: lv05TextStyle,
                     ),
                   ];
                 },

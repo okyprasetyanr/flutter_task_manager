@@ -71,27 +71,28 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(data.dataTask.title, style: lv05TextStyle),
-                      Text(data.dataTask.priority.text, style: lv05TextStyle),
+                      Text(data.dataTask.title, style: lv1TextStyleBold),
+                      Text(
+                        data.dataTask.priority.text,
+                        style: lv1TextStyleBold,
+                      ),
                     ],
                   ),
+                  const SizedBox(height: 3),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        HelperDateConvert.toDisplayUI(
-                          date: data.dataTask.createdAt,
-                        ),
-                        style: lv05TextStyle,
+                        "Start: ${HelperDateConvert.toDisplayUI(date: data.dataTask.createdAt)}",
+                        style: lv05TextStyleBold,
                       ),
                       Text(
-                        HelperDateConvert.toDisplayUI(
-                          date: data.dataTask.dueDate,
-                        ),
-                        style: lv05TextStyle,
+                        "Due: ${HelperDateConvert.toDisplayUI(date: data.dataTask.dueDate)}",
+                        style: lv05TextStyleBoldRed,
                       ),
                     ],
                   ),
+                  const SizedBox(height: 3),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -109,6 +110,7 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
                       Text(data.dataTask.status.text, style: lv05TextStyle),
                     ],
                   ),
+                  const SizedBox(height: 3),
                   BlocSelector<
                     ProjectDetailBloc,
                     ProjectDetailState,
@@ -122,11 +124,13 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
                       style: lv05TextStyle,
                     ),
                   ),
+                  const SizedBox(height: 5),
                   CustomListViewBuilderH<ModelLabel>(
                     data: data.dataTaskLabel.toList(),
                     status: status,
                     getName: (data) => data.name,
                   ),
+                  const SizedBox(height: 5),
                   ProjectDetailListSubTask(
                     data: data.dataSubTask,
                     status: status,

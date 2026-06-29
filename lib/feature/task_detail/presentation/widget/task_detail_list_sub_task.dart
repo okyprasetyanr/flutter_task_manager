@@ -43,31 +43,39 @@ class TaskDetailListSubTask extends StatelessWidget {
         content: (data, _) => [
           Card(
             elevation: 2,
-            color: AppPropertyColor.white,
+            color: AppPropertyColor.primary,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-              child: Column(
+              child: Row(
                 children: [
-                  Row(
-                    children: [
-                      Text(data.title, style: lv05TextStyle),
-                      const Spacer(),
-                      Text(
-                        data.isDone ? "Done" : "On Progress",
-                        style: lv05TextStyle,
+                  Text(data.title, style: lv05TextStyleWhite),
+                  const Spacer(),
+                  Material(
+                    elevation: 2,
+                    color: AppPropertyColor.white,
+                    borderRadius: BorderRadius.circular(8),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Row(
+                        children: [
+                          Text(
+                            data.isDone ? "Done" : "On Progress",
+                            style: lv05TextStyle,
+                          ),
+                          const SizedBox(width: 10),
+                          data.isDone
+                              ? Icon(
+                                  Icons.check_circle_outline_rounded,
+                                  size: lv2IconSize,
+                                  color: AppPropertyColor.primary,
+                                )
+                              : Icon(
+                                  Icons.radio_button_unchecked_rounded,
+                                  size: lv2IconSize,
+                                ),
+                        ],
                       ),
-                      const SizedBox(width: 10),
-                      data.isDone
-                          ? Icon(
-                              Icons.check_circle_outline_rounded,
-                              size: lv2IconSize,
-                              color: AppPropertyColor.primary,
-                            )
-                          : Icon(
-                              Icons.radio_button_unchecked_rounded,
-                              size: lv2IconSize,
-                            ),
-                    ],
+                    ),
                   ),
                 ],
               ),

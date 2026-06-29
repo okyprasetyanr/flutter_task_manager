@@ -15,7 +15,8 @@ import 'package:task_manager/shared/common_widget/button/custom_button.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
 class NotLogWidget extends StatefulWidget {
-  const NotLogWidget({super.key});
+  final bool logoutIcon;
+  const NotLogWidget({super.key, required this.logoutIcon});
 
   @override
   State<NotLogWidget> createState() => _NotLogWidgetState();
@@ -24,7 +25,7 @@ class NotLogWidget extends StatefulWidget {
 class _NotLogWidgetState extends State<NotLogWidget> {
   @override
   Widget build(BuildContext context) {
-    return BlocListener(
+    return BlocListener<NotLogBloc, NotLogState>(
       listener: (context, state) {
         if (state is NotLogStateLogout) {
           RoutesNavigator(
@@ -132,56 +133,61 @@ class _NotLogWidgetState extends State<NotLogWidget> {
               );
             },
           ),
-          SizedBox(
-            height: 40,
-            width: 50,
-            child: CustomButton(
-              padding: false,
-              backgroundColor: AppPropertyColor.white,
-              child: Icon(
-                Icons.power_settings_new,
-                color: AppPropertyColor.red,
-              ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return BlocSelector(
-                      selector: (state) => state is NotLogStateLoaded
-                          ? state.status
-                          : EnumStatusState.none,
-                      builder: (context, state) =>
-                          state == EnumStatusState.logout
-                          ? CustomLoading()
-                          : AlertDialog(
-                              title: Text("Logout", style: titleTextStyle),
-                              content: Text(
-                                "Are you sure to Logout?",
-                                style: lv05TextStyle,
+          if (widget.logoutIcon)
+            SizedBox(
+              height: 40,
+              width: 50,
+              child: CustomButton(
+                padding: false,
+                backgroundColor: AppPropertyColor.white,
+                child: Icon(
+                  Icons.power_settings_new,
+                  color: AppPropertyColor.red,
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return BlocSelector<
+                        NotLogBloc,
+                        NotLogState,
+                        EnumStatusState
+                      >(
+                        selector: (state) => state is NotLogStateLoaded
+                            ? state.status
+                            : EnumStatusState.none,
+                        builder: (context, state) =>
+                            state == EnumStatusState.logout
+                            ? CustomLoading()
+                            : AlertDialog(
+                                title: Text("Logout", style: titleTextStyle),
+                                content: Text(
+                                  "Are you sure to Logout?",
+                                  style: lv05TextStyle,
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text("No", style: lv1TextStyle),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      context.read<NotLogBloc>().add(
+                                        NotLogEventLogout(),
+                                      );
+                                    },
+                                    child: Text("Yes", style: lv1TextStyleRed),
+                                  ),
+                                ],
                               ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text("No", style: lv1TextStyle),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    context.read<NotLogBloc>().add(
-                                      NotLogEventLogout(),
-                                    );
-                                  },
-                                  child: Text("Yes", style: lv1TextStyleRed),
-                                ),
-                              ],
-                            ),
-                    );
-                  },
-                );
-              },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
         ],
       ),
     );

@@ -1,12 +1,14 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 import 'package:task_manager/core/app_properties/app_properties.dart';
-import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button.dart';
 import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
 import 'package:task_manager/shared/common_widget/text/custom_text_empty.dart';
+import 'package:task_manager/shared/enum/enum_status_state.dart';
 
 class CustomListViewBuilderV<T> extends StatelessWidget {
+  final bool smallSpace;
   final EnumStatusState status;
   final ScrollController? controller;
   final List<T> data;
@@ -16,18 +18,25 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
   final Function(T data)? onOption;
   final bool Function(T data)? specificOption;
   final Widget? Function(T data)? changeOptionIcon;
+  final String? dataName;
+  final Color? changeColor;
+  final bool allowScroll;
 
   const CustomListViewBuilderV({
     super.key,
-    this.limit,
-    this.controller,
+    this.smallSpace = false,
     required this.status,
+    this.controller,
     required this.data,
     required this.content,
+    this.limit,
     this.onPressed,
     this.onOption,
-    this.changeOptionIcon,
     this.specificOption,
+    this.changeOptionIcon,
+    this.dataName,
+    this.changeColor,
+    this.allowScroll = true,
   });
 
   @override
@@ -35,12 +44,15 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
     if (status == EnumStatusState.loading && data.isEmpty) {
       return const CustomLoading();
     } else if (status != EnumStatusState.loading && data.isEmpty) {
-      return const CustomTextEmpty();
+      return CustomTextEmpty(text: dataName);
     } else {
       final bool hasOverflow = limit != null && data.length > limit!;
       final int displayCount = hasOverflow ? limit! + 1 : data.length;
 
       return ListView.builder(
+        physics: allowScroll
+            ? AlwaysScrollableScrollPhysics()
+            : NeverScrollableScrollPhysics(),
         controller: controller,
         shrinkWrap: true,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -69,7 +81,7 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
               (specificOption == null || specificOption!(finalData));
 
           return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: EdgeInsets.only(bottom: smallSpace ? 0 : 12),
             child: Card(
               color: AppPropertyColor.white,
               elevation: 3,
@@ -77,7 +89,7 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Material(
-                      color: AppPropertyColor.white,
+                      color: changeColor ?? AppPropertyColor.white,
                       borderRadius: BorderRadius.circular(8),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(8),
@@ -87,7 +99,7 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
                               }
                             : null,
                         child: Padding(
-                          padding: const EdgeInsets.all(12),
+                          padding: EdgeInsets.all(smallSpace ? 8 : 12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: content(finalData, status),

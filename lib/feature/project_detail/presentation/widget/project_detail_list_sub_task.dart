@@ -17,30 +17,35 @@ class ProjectDetailListSubTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomListViewBuilderV<ModelSubTask>(
+      allowScroll: false,
+      changeColor: AppPropertyColor.primary,
+      smallSpace: true,
+      dataName: "Subtask",
       limit: 3,
       status: status,
       data: data.toList(),
       content: (data, _) => [
-        Card(
-          elevation: 2,
-          color: AppPropertyColor.white,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-            child: Column(
+        Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(data.title, style: lv05TextStyle),
-                    Text(
+                Text(data.title, style: lv05TextStyleWhite),
+                Material(
+                  color: AppPropertyColor.white,
+                  borderRadius: BorderRadius.circular(8),
+                  elevation: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Text(
                       data.isDone ? "Done" : "On Progress",
                       style: lv05TextStyle,
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ],
     );

@@ -209,6 +209,7 @@ Future<void> main() async {
             );
           },
         ),
+
         RepositoryProvider<UserRepository>(
           create: (context) => UserRepositoryImp(
             remote: context.read<RemoteServices>(),
@@ -232,6 +233,7 @@ Future<void> main() async {
           ),
         ),
       ],
+
       child: BlocProvider(
         create: (context) => NotLogBloc(context.read<NotLogRepository>()),
         child: MaterialApp(
