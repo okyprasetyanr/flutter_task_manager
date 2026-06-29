@@ -31,4 +31,13 @@ class UserSession {
   String getUserId() {
     return user!.id;
   }
+
+  Future<void> clear() async {
+    final pref = await SharedPreferences.getInstance();
+
+    await pref.remove(EnumTable.users.value);
+    await pref.remove(EnumTable.companies.value);
+
+    await init();
+  }
 }

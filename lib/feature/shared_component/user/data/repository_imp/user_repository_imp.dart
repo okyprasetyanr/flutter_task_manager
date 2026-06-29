@@ -120,7 +120,7 @@ class UserRepositoryImp
   }
 
   @override
-  void disposeUserRealtime() {
+  Future<void> disposeUserRealtime() async {
     clearStreamSubscriptions();
     if (_userChannel != null) {
       remote.userRemote.removeUserChannel(_userChannel!);

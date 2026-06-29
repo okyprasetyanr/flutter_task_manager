@@ -73,13 +73,12 @@ class NotLogBloc extends Bloc<NotLogEvent, NotLogState> {
     }
   }
 
-  FutureOr<void> _onLogout(NotLogEventLogout event, Emitter<NotLogState> emit) {
-    repo.logout();
-  }
-
-  @override
-  Future<void> close() {
-    repo.disposeRealtime();
-    return super.close();
+  Future<void> _onLogout(
+    NotLogEventLogout event,
+    Emitter<NotLogState> emit,
+  ) async {
+    add(NotLogEventChangeStatus(status: EnumStatusState.logout));
+    await repo.logout();
+    emit(NotLogStateLogout());
   }
 }

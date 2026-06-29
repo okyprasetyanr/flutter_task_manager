@@ -1,1 +1,1 @@
-enum EnumStatusState { loading, none, synchronize }
+enum EnumStatusState { loading, none, synchronize, logout }

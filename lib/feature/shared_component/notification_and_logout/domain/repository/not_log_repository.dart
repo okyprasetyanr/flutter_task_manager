@@ -6,11 +6,11 @@ abstract class NotLogRepository {
 
   Future<void> initNotificationRealtime();
 
-  void disposeRealtime();
+  Future<void> disposeRealtime();
 
   Future<CollectorMessage?> updateIsRead({required String notificationId});
 
-  void logout();
+  Future<void> logout();
 
   void watchNotification();
 }

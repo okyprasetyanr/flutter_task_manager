@@ -143,7 +143,7 @@ class NotLogRepositoryImp
   }
 
   @override
-  void disposeRealtime() {
+  Future<void> disposeRealtime() async {
     clearStreamSubscriptions();
     if (notificationChannel != null) {
       remote.notificationRemote.removeNotificationChannel(notificationChannel!);
@@ -153,8 +153,10 @@ class NotLogRepositoryImp
   }
 
   @override
-  void logout() {
-    disposeRealtime();
-    userRepo.disposeUserRealtime();
+  Future<void> logout() async {
+    await disposeRealtime();
+    await userRepo.disposeUserRealtime();
+    await remote.loginRemote.logout();
+    await userSession.clear();
   }
 }

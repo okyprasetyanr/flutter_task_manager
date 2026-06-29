@@ -49,4 +49,8 @@ class LoginRemote {
     );
     return data;
   }
+
+  Future<void> logout() async {
+    await supabaseClient.auth.signOut();
+  }
 }

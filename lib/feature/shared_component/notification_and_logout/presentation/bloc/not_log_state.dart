@@ -6,6 +6,8 @@ class NotLogState {}
 
 class NotLogStateInitial extends NotLogState {}
 
+class NotLogStateLogout extends NotLogState {}
+
 class NotLogStateLoaded extends NotLogState with EquatableMixin {
   final Set<ModelNotification> dataNotification;
   final EnumStatusState status;
