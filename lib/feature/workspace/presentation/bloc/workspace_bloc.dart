@@ -111,7 +111,8 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
         original.dataMember.any(
           (element) =>
               !editedContributors.contains((element.userId, element.role)),
-        )) {
+        ) ||
+        (original.dataMember.isEmpty && editedContributors.isNotEmpty)) {
       add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
       devLog("Log WorkspaceBloc: update: ${event.contributor}");
       final data = await repo.updateWorkspace(
@@ -129,6 +130,7 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
         );
       }
     } else {
+      devLog("Log WorkspaceBloc: update: checked");
       emit(
         currentState.copyWith(
           status: EnumStatusState.none,

@@ -120,7 +120,8 @@ class WorkspaceDetailBloc
         original.dataMember.any(
           (element) =>
               !editedContributors.contains((element.userId, element.role)),
-        )) {
+        ) ||
+        (original.dataMember.isEmpty && editedContributors.isNotEmpty)) {
       final data = await repo.updateProject(
         original: currentState.selectedProject!,
         edited: edited,
