@@ -145,34 +145,37 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
           final dataLabel = rawLabel
               .map((e) => ModelLabel.fromDrift(e))
               .toSet();
-          final mergedTasks = rawTasks.map((e) {
-            final task = ModelTask.fromDrift(e);
-            final taskLabelId = dataTaskLabel
-                .where((element) => element.taskId == task.id)
-                .map((e) => e.labelId);
-            final taskLabel = dataLabel
-                .where((element) => taskLabelId.contains(element.id))
-                .toSet();
-            final subTask = dataSubTask
-                .where((element) => element.taskId == task.id)
-                .toSet();
-            devLog(
-              "Log ProjectDetailRepositoryImp: watchDashboard: taskMerge: $taskLabel",
-            );
+          final mergedTasks =
+              rawTasks.map((e) {
+                final task = ModelTask.fromDrift(e);
+                final taskLabelId = dataTaskLabel
+                    .where((element) => element.taskId == task.id)
+                    .map((e) => e.labelId);
+                final taskLabel = dataLabel
+                    .where((element) => taskLabelId.contains(element.id))
+                    .toSet();
+                final subTask = dataSubTask
+                    .where((element) => element.taskId == task.id)
+                    .toSet();
+                devLog(
+                  "Log ProjectDetailRepositoryImp: watchDashboard: taskMerge: $taskLabel",
+                );
 
-            return ModelTaskMerge(
-              dataTask: task,
-              dataSubTask: subTask,
-              dataTaskLabel: taskLabel,
-            );
-          }).toSet();
+                return ModelTaskMerge(
+                  dataTask: task,
+                  dataSubTask: subTask,
+                  dataTaskLabel: taskLabel,
+                );
+              }).toList()..sort(
+                (a, b) => a.dataTask.dueDate.compareTo(b.dataTask.dueDate),
+              );
 
           return ProjectDetailStateLoaded(
             dataUser: a,
             filteredUser: a,
             dataLabel: dataLabel,
             dataProject: project,
-            dataTask: mergedTasks,
+            dataTask: mergedTasks.toSet(),
             filteredLabel: dataLabel,
             status: EnumStatusState.none,
             error: b.$2.error ?? c.$2.error ?? d.$2.error,
