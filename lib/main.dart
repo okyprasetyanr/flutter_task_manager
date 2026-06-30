@@ -18,6 +18,7 @@ import 'package:task_manager/feature/activity/data/local/activity_local.dart';
 import 'package:task_manager/feature/activity/data/remote/activity_remote.dart';
 import 'package:task_manager/feature/history_task/data/local/history_task_local.dart';
 import 'package:task_manager/feature/history_task/data/remote/history_task_remote.dart';
+import 'package:task_manager/feature/login/data/local/login_local.dart';
 import 'package:task_manager/feature/login/data/remote/login_remote.dart';
 import 'package:task_manager/feature/project_detail/data/local/project_detail_local.dart';
 import 'package:task_manager/feature/project_detail/data/local/source/label_local_source.dart';
@@ -92,6 +93,7 @@ Future<void> main() async {
             final syncTable = context.read<SyncTable>();
             final wrapper = context.read<ResponseWrapperLocal>();
             return LocalServices(
+              loginLocal: LoginLocal(localDatabase: local),
               notificationLocal: NotLogLocal(
                 responseWrapper: wrapper,
                 localDatabase: local,

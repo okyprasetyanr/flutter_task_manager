@@ -50,6 +50,23 @@ class LoginRemote {
     return data;
   }
 
+  Future<Map<String, dynamic>> autoLogin() async {
+    final dataLogin = Supabase.instance.client.auth.currentUser;
+
+    devLog("Log LoginRemote: autoLogin: dataAuth: $dataLogin");
+    final data = await responseWrapper.wrap(
+      getData: () async {
+        return await supabaseClient
+            .from(EnumTable.users.value)
+            .select()
+            .eq(EnumUser.id.value, dataLogin!.id)
+            .single();
+      },
+    );
+    devLog("Log LoginRemote: autoLogin: fetchData: $data");
+    return data;
+  }
+
   Future<void> logout() async {
     await supabaseClient.auth.signOut();
   }

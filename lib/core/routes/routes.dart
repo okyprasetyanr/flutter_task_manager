@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
+import 'package:task_manager/core/services/local_database/local_database.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
@@ -14,6 +15,7 @@ import 'package:task_manager/feature/history_task/domain/repository/history_task
 import 'package:task_manager/feature/history_task/presentation/bloc/history_task_bloc.dart';
 import 'package:task_manager/feature/history_task/presentation/bloc/history_task_event.dart';
 import 'package:task_manager/feature/history_task/presentation/page/history_task_page.dart';
+import 'package:task_manager/feature/login/presentation/bloc/login_event.dart';
 import 'package:task_manager/feature/project_detail/data/repository_imp/project_detail_repository_imp.dart';
 import 'package:task_manager/feature/project_detail/domain/model/model_task_merge.dart';
 import 'package:task_manager/feature/project_detail/domain/repository/project_detail_repository.dart';
@@ -61,14 +63,15 @@ final routes = {
           userSession: context.read<UserSession>(),
           helper: context.read<CollectData>(),
           remote: context.read<RemoteServices>(),
-          local: LoginLocal(localService: context.read<LocalServices>()),
+          local: LoginLocal(localDatabase: context.read<LocalDatabase>()),
         ),
       ),
     ],
 
     child: BlocProvider(
-      create: (context) => LoginBloc(context.read<LoginRepository>()),
-
+      create: (context) =>
+          LoginBloc(context.read<LoginRepository>())
+            ..add(LoginEventAutoLogin()),
       child: LoginPage(),
     ),
   ),

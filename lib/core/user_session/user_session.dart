@@ -38,6 +38,7 @@ class UserSession {
     await pref.remove(EnumTable.users.value);
     await pref.remove(EnumTable.companies.value);
 
-    await init();
+    company = null;
+    user = null;
   }
 }

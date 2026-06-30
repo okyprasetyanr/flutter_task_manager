@@ -1,7 +1,11 @@
-import 'package:task_manager/core/services/local_service/local_service.dart';
+import 'package:task_manager/core/services/local_database/local_database.dart';
 
 class LoginLocal {
-  final LocalServices localService;
+  final LocalDatabase localDatabase;
 
-  LoginLocal({required this.localService});
+  LoginLocal({required this.localDatabase});
+
+  Future<void> clearTable() async {
+    await localDatabase.clearAll();
+  }
 }

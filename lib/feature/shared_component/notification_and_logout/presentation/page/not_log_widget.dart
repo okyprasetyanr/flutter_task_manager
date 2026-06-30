@@ -12,6 +12,7 @@ import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:task_manager/feature/shared_component/notification_and_logout/domain/model/model_notification.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button.dart';
+import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
 class NotLogWidget extends StatefulWidget {
@@ -28,12 +29,13 @@ class _NotLogWidgetState extends State<NotLogWidget> {
     return BlocListener<NotLogBloc, NotLogState>(
       listener: (context, state) {
         if (state is NotLogStateLogout) {
+          devLog("Log NotLogUI: logout: checked");
           RoutesNavigator(
             context: context,
             routeName: RoutesEnum.login,
             replace: true,
             arguments: null,
-          );
+          ).navigate();
         }
       },
       child: Row(

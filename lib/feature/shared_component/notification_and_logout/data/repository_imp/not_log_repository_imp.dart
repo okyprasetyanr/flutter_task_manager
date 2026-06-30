@@ -157,6 +157,7 @@ class NotLogRepositoryImp
     await disposeRealtime();
     await userRepo.disposeUserRealtime();
     await remote.loginRemote.logout();
+    await local.loginLocal.clearTable();
     await userSession.clear();
   }
 }

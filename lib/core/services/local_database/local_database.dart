@@ -47,23 +47,30 @@ class LocalDatabase extends _$LocalDatabase {
 
   @override
   int get schemaVersion => version;
-}
-
-@override
-MigrationStrategy get migration {
-  return MigrationStrategy(
-    onCreate: (Migrator m) async {
-      await m.createAll();
-    },
-    onUpgrade: (Migrator m, int from, int to) async {
-      if (from < version) {
-        for (final table in EnumTable.values) {
-          await m.deleteTable(table.name);
-        }
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) async {
         await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        if (from < version) {
+          for (final table in EnumTable.values) {
+            await m.deleteTable(table.name);
+          }
+          await m.createAll();
+        }
+      },
+    );
+  }
+
+  Future<void> clearAll() async {
+    await transaction(() async {
+      for (final table in allTables) {
+        await delete(table).go();
       }
-    },
-  );
+    });
+  }
 }
 
 LazyDatabase _openConnection() {

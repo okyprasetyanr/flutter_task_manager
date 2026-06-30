@@ -8,3 +8,5 @@ class LoginEventLogin extends LoginEvent {
 }
 
 class LoginEventLoading extends LoginEvent {}
+
+class LoginEventAutoLogin extends LoginEvent {}

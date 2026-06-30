@@ -12,6 +12,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc(this.repo) : super(LoginStateInitial()) {
     on<LoginEventLogin>(_onLogin);
     on<LoginEventLoading>(_onLoading);
+    on<LoginEventAutoLogin>(_onAutoLogin);
   }
 
   Future<void> _onLogin(LoginEventLogin event, Emitter<LoginState> emit) async {
@@ -39,5 +40,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   FutureOr<void> _onLoading(LoginEventLoading event, Emitter<LoginState> emit) {
     emit(LoginStateLoading());
+  }
+
+  Future<void> _onAutoLogin(
+    LoginEventAutoLogin event,
+    Emitter<LoginState> emit,
+  ) async {
+    add(LoginEventLoading());
+    final data = await repo.autoLogin();
+    devLog("Log LoginBloc: autoLogin: $data");
+    if (data) {
+      devLog("Log LoginBloc: autoLogin: checked");
+      emit(LoginStateSuccess());
+    } else {
+      emit(LoginStateInitial());
+    }
   }
 }

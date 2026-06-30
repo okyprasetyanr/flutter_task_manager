@@ -43,30 +43,57 @@ class LoginRepositoryImp implements LoginRepository {
       localFunc: ({required dataToCache}) async => {},
       pageName: "Login",
     );
-    devLog("Log LoginRepositoryImp: dataAccount: $dataAccount");
+
+    if (dataAccount.containsKey(EnumFetchApiStatus.success)) {
+      await _initData(dataAccount[EnumFetchApiStatus.success]);
+    }
+
+    return dataAccount;
+  }
+
+  Future<void> _initData(Map<String, dynamic> account) async {
     final dataCompany = await helper.collectDataRemote(
       remoteFunc: () async => await remote.loginRemote.getCompany(
-        companyId:
-            dataAccount[EnumFetchApiStatus.success][EnumUser.companyId.value],
+        companyId: account[EnumUser.companyId.value],
       ),
       localFunc: ({required dataToCache}) async => {},
       pageName: "Company",
     );
-    if (dataAccount.containsKey(EnumFetchApiStatus.success) &&
-        dataCompany.containsKey(EnumFetchApiStatus.success)) {
-      final pref = await SharedPreferences.getInstance();
-      await pref.setString(
-        EnumTable.companies.value,
-        jsonEncode(dataCompany[EnumFetchApiStatus.success]),
-      );
-      await pref.setString(
-        EnumTable.users.value,
-        jsonEncode(dataAccount[EnumFetchApiStatus.success]),
-      );
-      await userSession.init();
-      userRepository.watchUser();
-      notLogRepository.watchNotification();
+
+    if (!dataCompany.containsKey(EnumFetchApiStatus.success)) {
+      return;
     }
-    return dataAccount;
+
+    final pref = await SharedPreferences.getInstance();
+
+    await pref.setString(EnumTable.users.value, jsonEncode(account));
+
+    await pref.setString(
+      EnumTable.companies.value,
+      jsonEncode(dataCompany[EnumFetchApiStatus.success]),
+    );
+
+    await userSession.init();
+
+    userRepository.watchUser();
+    notLogRepository.watchNotification();
+  }
+
+  @override
+  Future<bool> autoLogin() async {
+    final dataAccount = await helper.collectDataRemote(
+      remoteFunc: () async => await remote.loginRemote.autoLogin(),
+      localFunc: ({required dataToCache}) async => {},
+      pageName: "User",
+    );
+
+    devLog("Log LoginRepositoryImp: autoLogin: data: $dataAccount");
+    if (!dataAccount.containsKey(EnumFetchApiStatus.success)) {
+      return false;
+    }
+
+    await _initData(dataAccount[EnumFetchApiStatus.success]);
+
+    return true;
   }
 }
