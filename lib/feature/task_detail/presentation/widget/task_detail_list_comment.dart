@@ -80,10 +80,11 @@ class TaskDetailListComment extends StatelessWidget {
                 HelperDateConvert.toDisplayUI(date: data.createdAt),
                 style: lv05TextStyleWhite,
               ),
-              Text(
-                HelperDateConvert.toDisplayUI(date: data.createdAt),
-                style: lv05TextStyleWhite,
-              ),
+              if (data.createdAt != data.updatedAt)
+                Text(
+                  "Updated: ${HelperDateConvert.toDisplayUI(date: data.createdAt)}",
+                  style: lv05TextStyleWhite,
+                ),
             ],
           ),
         ],

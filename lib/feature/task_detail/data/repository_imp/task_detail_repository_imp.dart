@@ -125,14 +125,17 @@ class TaskDetailRepositoryImp implements TaskDetailRepository {
       watchUser(),
       watchComment(taskId: task.dataTask.id),
       (a, b) {
-        final comment = (b.$1[EnumFetchApiStatus.success] as List)
-            .map(
-              (e) => ModelComment.fromDrift(
-                data: e,
-                isOwned: userSession.getUserId() == e[EnumComment.userId.name],
-              ),
-            )
-            .toSet();
+        final comment =
+            (b.$1[EnumFetchApiStatus.success] as List)
+                .map(
+                  (e) => ModelComment.fromDrift(
+                    data: e,
+                    isOwned:
+                        userSession.getUserId() == e[EnumComment.userId.name],
+                  ),
+                )
+                .toList()
+              ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
         devLog(
           "Log TaskDetailRepositoryImp: watchDashboard: data: isOwned ${comment.map((e) => e.isOwned)}",
@@ -142,7 +145,7 @@ class TaskDetailRepositoryImp implements TaskDetailRepository {
           dataTaskLabel: task.dataTaskLabel,
           dataUser: a,
           task: task,
-          dataComment: comment,
+          dataComment: comment.toSet(),
           status: EnumStatusState.none,
           error: b.$2.error,
           failed: b.$2.failed,
