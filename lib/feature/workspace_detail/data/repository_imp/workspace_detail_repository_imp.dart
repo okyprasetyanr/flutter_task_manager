@@ -217,20 +217,25 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
                   .toSet()
             : <ModelProjectMember>[];
 
-        final dataProject = projectList.map((project) {
-          final members = memberList
-              .where((e) => e.projectId == project.id)
-              .toSet();
+        final dataProject =
+            projectList.map((project) {
+                final members = memberList
+                    .where((e) => e.projectId == project.id)
+                    .toSet();
 
-          devLog("Log watchDashboard: projectMember: data: $members");
-          return ModelProjectMerge(dataProject: project, dataMember: members);
-        }).toSet();
+                devLog("Log watchDashboard: projectMember: data: $members");
+                return ModelProjectMerge(
+                  dataProject: project,
+                  dataMember: members,
+                );
+              }).toList()
+              ..sort((a, b) => a.dataProject.end.compareTo(b.dataProject.end));
 
         return WorkspaceDetailStateLoaded(
           workspace: workspace,
           dataUser: a,
           filteredUser: a,
-          dataProject: dataProject,
+          dataProject: dataProject.toSet(),
           status: EnumStatusState.none,
           error: b.$2.error,
           failed: b.$2.failed,
