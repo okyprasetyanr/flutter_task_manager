@@ -29,9 +29,16 @@ class NotLogBloc extends Bloc<NotLogEvent, NotLogState> {
       repo.getNotification(),
       onData: (data) {
         devLog("Log NotificationBloc: watchNotification: $data");
+        final sortedList = data.toList()
+          ..sort((a, b) {
+            int readCompare = (a.isRead ? 1 : 0).compareTo(b.isRead ? 1 : 0);
+            if (readCompare != 0) return readCompare;
+            return b.createdAt.compareTo(a.createdAt);
+          });
+
         return currentState.copyWith(
           status: EnumStatusState.none,
-          dataNotification: data,
+          dataNotification: sortedList.toSet(),
         );
       },
       onError: (error, stackTrace) {
