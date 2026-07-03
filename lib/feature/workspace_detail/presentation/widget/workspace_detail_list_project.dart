@@ -79,7 +79,7 @@ class WorkspaceDetailListProject extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           SizedBox(
-            height: 30,
+            height: 40,
             child:
                 data.dataMember.isEmpty && status == EnumStatusState.synchronize
                 ? const CustomLoading()

@@ -38,7 +38,7 @@ class WorkspaceListWorkspace extends StatelessWidget {
             const SizedBox(height: 4),
             Text(data.dataWorkspace.description, style: lv05TextStyle),
             SizedBox(
-              height: 30,
+              height: 40,
               child:
                   data.dataMember.isEmpty &&
                       status == EnumStatusState.synchronize
