@@ -1,3 +1,4 @@
+**Note:** This project is currently **under active development**. Some features might change, and new components are still being added.
 # Ringkas Task
 
 > A Clean Architecture Task Management App Built with Flutter & BLOC
