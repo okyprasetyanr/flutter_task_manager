@@ -34,6 +34,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  void initState() {
+    email.text = "okyprasetya89@gmail.com";
+    password.text = "123456";
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BaseLayout(uiPage: uiPage());
   }
