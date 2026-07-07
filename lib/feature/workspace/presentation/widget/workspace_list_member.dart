@@ -96,6 +96,7 @@ class WorkspaceListMember extends StatelessWidget {
                     Icons.person_add_alt_1,
                     color: AppPropertyColor.primary,
                   ),
+                  onPressed: () {},
                 ),
               ],
             ),
