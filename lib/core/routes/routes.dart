@@ -78,6 +78,7 @@ final routes = {
   '/${RoutesEnum.workspace}': (context) =>
       RepositoryProvider<WorkspaceRepository>(
         create: (context) => WorkspaceRepositoryImp(
+          notLogRepo: context.read<NotLogRepository>(),
           userRepo: context.read<UserRepository>(),
           messageCollector: context.read<CollectorMessage>(),
           remote: context.read<RemoteServices>(),

@@ -99,9 +99,9 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
 
   @override
   Future<void> initLabelRealtime() async {
-    final companyId = userSession.getCompanyId();
+    final companyId = userSession.getCompany();
     labelHandler = LabelHandler(
-      companyId: companyId,
+      companyId: companyId.companyId,
       local: local,
       remote: remote,
       messageCollector: messageCollector,
@@ -124,7 +124,7 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
       taskHandler.watchTask(projectId: project.dataProject.id),
       taskLabelHandler.watchTaskLabel(projectId: project.dataProject.id),
       subTaskHandler.watchSubTask(projectId: project.dataProject.id),
-      labelHandler.watchlabel(companyId: userSession.getCompanyId()),
+      labelHandler.watchlabel(companyId: userSession.getCompany().companyId),
       (a, b, c, d, e) {
         try {
           final rawTasks =
@@ -212,7 +212,7 @@ class ProjectDetailRepositoryImp implements ProjectDetailRepository {
       status: status,
       priority: priority,
       storyPoint: storyPoint,
-      reporterId: userSession.getUserId(),
+      reporterId: userSession.getUser().id,
       assigneeId: assigneeId,
       startDate: startDate,
       dueDate: dueDate,

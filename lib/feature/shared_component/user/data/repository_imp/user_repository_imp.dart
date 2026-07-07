@@ -44,26 +44,26 @@ class UserRepositoryImp
 
     addStreamSubscription(
       EnumTable.users,
-      local.userLocal.watchUser(companyId: userSession.getCompanyId()).listen((
-        event,
-      ) {
-        final data = helper.collectDataLocal(fetchResult: event);
+      local.userLocal
+          .watchUser(companyId: userSession.getCompany().companyId)
+          .listen((event) {
+            final data = helper.collectDataLocal(fetchResult: event);
 
-        devLog("Log UserRepositoryImp: initData: $data");
-        if (data.containsKey(EnumFetchApiStatus.success)) {
-          final users = (data[EnumFetchApiStatus.success] as List)
-              .map((e) => ModelUser.fromDrift(e))
-              .toSet();
-          userCache.setUsers(users);
-        } else {
-          customRootSnackBar(messageCollector.getMessage(data));
-        }
-      }),
+            devLog("Log UserRepositoryImp: initData: $data");
+            if (data.containsKey(EnumFetchApiStatus.success)) {
+              final users = (data[EnumFetchApiStatus.success] as List)
+                  .map((e) => ModelUser.fromDrift(e))
+                  .toSet();
+              userCache.setUsers(users);
+            } else {
+              customRootSnackBar(messageCollector.getMessage(data));
+            }
+          }),
     );
   }
 
   Future<void> initUserRealtime() async {
-    final companyId = userSession.getCompanyId();
+    final companyId = userSession.getCompany().companyId;
     try {
       final List<Map<String, dynamic>> rawRemoteData = await remote.userRemote
           .getAllUser(companyId: companyId);

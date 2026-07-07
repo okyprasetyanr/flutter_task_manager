@@ -44,7 +44,7 @@ class NotLogRepositoryImp
 
   @override
   Future<void> initNotificationRealtime() async {
-    final userId = userSession.getUserId();
+    final userId = userSession.getUser().id;
     try {
       final List<Map<String, dynamic>> rawRemoteData = await remote
           .notificationRemote
@@ -119,16 +119,22 @@ class NotLogRepositoryImp
     addStreamSubscription(
       EnumTable.notifications,
       local.notificationLocal
-          .watchNotification(userId: userSession.getUserId())
+          .watchNotification(userId: userSession.getUser().id)
           .listen((event) {
             final data = helper.collectDataLocal(fetchResult: event);
-
-            if (data.containsKey(EnumFetchApiStatus.success)) {
-              notificationCache.setNotification(
+            final sortedData =
                 (data[EnumFetchApiStatus.success] as List)
                     .map((e) => ModelNotification.fromDrift(e))
-                    .toSet(),
-              );
+                    .toList()
+                  ..sort((a, b) {
+                    int readCompare = (a.isRead ? 1 : 0).compareTo(
+                      b.isRead ? 1 : 0,
+                    );
+                    if (readCompare != 0) return readCompare;
+                    return b.createdAt.compareTo(a.createdAt);
+                  });
+            if (data.containsKey(EnumFetchApiStatus.success)) {
+              notificationCache.setNotification(sortedData.toSet());
             } else {
               customRootSnackBar(messageCollector.getMessage(data));
             }

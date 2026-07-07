@@ -131,7 +131,7 @@ class TaskDetailRepositoryImp implements TaskDetailRepository {
                   (e) => ModelComment.fromDrift(
                     data: e,
                     isOwned:
-                        userSession.getUserId() == e[EnumComment.userId.name],
+                        userSession.getUser() == e[EnumComment.userId.name],
                   ),
                 )
                 .toList()
@@ -166,7 +166,7 @@ class TaskDetailRepositoryImp implements TaskDetailRepository {
           content: content,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
-          userId: userSession.getUserId(),
+          userId: userSession.getUser().id,
         ).toJson(),
       ),
       localFunc: ({required dataToCache}) async => {},

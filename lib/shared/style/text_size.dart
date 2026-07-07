@@ -173,6 +173,12 @@ final lv1TextStyle = GoogleFonts.poppins(
   fontSize: 12,
 );
 
+final lv1TextStylePrimary = GoogleFonts.poppins(
+  color: AppPropertyColor.primary,
+  fontWeight: FontWeight.w300,
+  fontSize: 12,
+);
+
 final lv1TextStyleRed = GoogleFonts.poppins(
   color: AppPropertyColor.red,
   fontWeight: FontWeight.w300,
@@ -266,6 +272,42 @@ final lv3TextStyleWhiteBold = GoogleFonts.poppins(
 
 final lv4TextStyle = GoogleFonts.poppins(
   color: AppPropertyColor.black,
-  fontWeight: FontWeight.w600,
+  fontWeight: FontWeight.w400,
   fontSize: 16,
+);
+
+final lv4TextStylePrimary = GoogleFonts.poppins(
+  color: AppPropertyColor.primary,
+  fontWeight: FontWeight.w400,
+  fontSize: 16,
+);
+
+final lv4TextStyleWhite = GoogleFonts.poppins(
+  color: AppPropertyColor.white,
+  fontWeight: FontWeight.w400,
+  fontSize: 16,
+);
+
+final lvMediumstyleWhite = GoogleFonts.poppins(
+  color: AppPropertyColor.white,
+  fontWeight: FontWeight.w300,
+  fontSize: 20,
+);
+
+final lvMediumstyle = GoogleFonts.poppins(
+  color: AppPropertyColor.black,
+  fontWeight: FontWeight.w300,
+  fontSize: 20,
+);
+
+final lvLargestyle = GoogleFonts.poppins(
+  color: AppPropertyColor.black,
+  fontWeight: FontWeight.w300,
+  fontSize: 30,
+);
+
+final lvLargeststyleWhite = GoogleFonts.poppins(
+  color: AppPropertyColor.white,
+  fontWeight: FontWeight.w300,
+  fontSize: 30,
 );

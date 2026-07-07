@@ -264,7 +264,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
           type: type,
           status: EnumProjectStatus.todo,
           workspaceId: workspaceId,
-          createdBy: userSession.getUserId(),
+          createdBy: userSession.getUser().id,
         ).toJson(),
       ),
       localFunc: ({required dataToCache}) async => {},

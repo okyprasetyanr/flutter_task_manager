@@ -20,7 +20,7 @@ class WorkspaceHeader extends StatelessWidget {
         builder: (context, state) => state != null
             ? Text(
                 "$state Company",
-                style: lv1TextStyleWhite,
+                style: lv1TextStyleWhiteBold,
                 textAlign: TextAlign.end,
               )
             : SizedBox(height: 20, width: 20, child: const CustomLoading()),

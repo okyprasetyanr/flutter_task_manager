@@ -10,6 +10,9 @@ import 'package:task_manager/core/services/local_database/enum/enum.dart';
 import 'package:task_manager/core/services/local_service/local_service.dart';
 import 'package:task_manager/core/services/remote_service/remote_service.dart';
 import 'package:task_manager/core/user_session/user_session.dart';
+import 'package:task_manager/feature/login/domain/model/model_company.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/domain/model/model_notification.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/domain/repository/not_log_repository.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/shared_component/user/domain/repository/user_repository.dart';
 import 'package:task_manager/feature/workspace/domain/enum/enum.dart';
@@ -29,6 +32,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   final CollectData helper;
   final CollectorMessage messageCollector;
   final UserRepository userRepo;
+  final NotLogRepository notLogRepo;
 
   WorkspaceRepositoryImp({
     required this.remote,
@@ -37,19 +41,24 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
     required this.helper,
     required this.messageCollector,
     required this.userRepo,
+    required this.notLogRepo,
   });
 
   RealtimeChannel? _workspaceChannel;
   RealtimeChannel? _memberChannel;
 
   @override
-  String getCompanyName() {
-    return userSession.getCompanyName();
+  ModelCompany getCompanyName() {
+    return userSession.getCompany();
+  }
+
+  ModelUser getAccount() {
+    return userSession.getUser();
   }
 
   @override
   Future<void> initWorkspaceRealtime() async {
-    final companyId = userSession.getCompanyId();
+    final companyId = userSession.getCompany().companyId;
 
     try {
       final List<Map<String, dynamic>> rawRemoteData = await remote
@@ -106,7 +115,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
 
   @override
   Future<void> initMemberRealtime() async {
-    final companyId = userSession.getCompanyId();
+    final companyId = userSession.getCompany().companyId;
 
     try {
       final List<Map<String, dynamic>> rawRemoteData = await remote
@@ -173,7 +182,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
 
   Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)> watchMember() {
     return local.workspaceLocal
-        .watchMember(companyId: userSession.getCompanyId())
+        .watchMember(companyId: userSession.getCompany().companyId)
         .map((event) {
           final data = helper.collectDataLocal(fetchResult: event);
           final collectorMessage = messageCollector.getMessage(data);
@@ -189,7 +198,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   Stream<(Map<EnumFetchApiStatus, dynamic>, CollectorMessage)>
   watchWorkspace() {
     return local.workspaceLocal
-        .watchWorkspace(companyId: userSession.getCompanyId())
+        .watchWorkspace(companyId: userSession.getCompany().companyId)
         .map((event) {
           final data = helper.collectDataLocal(fetchResult: event);
           return (data, messageCollector.getMessage(data));
@@ -198,42 +207,46 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
 
   @override
   Stream<WorkspaceStateLoaded> watchDashboard() {
-    return Rx.combineLatest3(watchUser(), watchWorkspace(), watchMember(), (
-      a,
-      b,
-      c,
-    ) {
-      final workspaceList = (b.$1[EnumFetchApiStatus.success] as List)
-          .map((e) => ModelWorkspace.fromDrift(e))
-          .toList();
+    return Rx.combineLatest4(
+      watchUser(),
+      watchWorkspace(),
+      watchMember(),
+      getNotification(),
+      (a, b, c, d) {
+        final workspaceList = (b.$1[EnumFetchApiStatus.success] as List)
+            .map((e) => ModelWorkspace.fromDrift(e))
+            .toList();
 
-      final memberList = c.$1.containsKey(EnumFetchApiStatus.success)
-          ? (c.$1[EnumFetchApiStatus.success] as List)
-                .map((e) => ModelWorkspaceMember.fromDrift(e))
-                .toList()
-          : <ModelWorkspaceMember>[];
+        final memberList = c.$1.containsKey(EnumFetchApiStatus.success)
+            ? (c.$1[EnumFetchApiStatus.success] as List)
+                  .map((e) => ModelWorkspaceMember.fromDrift(e))
+                  .toList()
+            : <ModelWorkspaceMember>[];
 
-      final dataWorkspace = workspaceList.map((workspace) {
-        final members = memberList
-            .where((m) => m.workspaceId == workspace.id)
-            .toSet();
+        final dataWorkspace = workspaceList.map((workspace) {
+          final members = memberList
+              .where((m) => m.workspaceId == workspace.id)
+              .toSet();
 
-        return ModelWorkspaceMerge(
-          dataWorkspace: workspace,
-          dataMember: members,
+          return ModelWorkspaceMerge(
+            dataWorkspace: workspace,
+            dataMember: members,
+          );
+        }).toSet();
+
+        return WorkspaceStateLoaded(
+          dataNotification: d,
+          dataAccount: getAccount(),
+          dataUser: a,
+          filteredUser: a,
+          dataWorkspace: dataWorkspace,
+          companyName: getCompanyName().companyName,
+          status: EnumStatusState.none,
+          error: b.$2.error,
+          failed: b.$2.failed,
         );
-      }).toSet();
-
-      return WorkspaceStateLoaded(
-        dataUser: a,
-        filteredUser: a,
-        dataWorkspace: dataWorkspace,
-        companyName: getCompanyName(),
-        status: EnumStatusState.none,
-        error: b.$2.error,
-        failed: b.$2.failed,
-      );
-    });
+      },
+    );
   }
 
   @override
@@ -247,8 +260,8 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
         ModelWorkspace.createWorkspace(
           name: name,
           description: description,
-          companyId: userSession.getCompanyId(),
-          userId: userSession.getUserId(),
+          companyId: userSession.getCompany().companyId,
+          userId: userSession.getUser().id,
         ).toJson(),
       ),
       localFunc: ({required dataToCache}) async => {},
@@ -264,7 +277,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
                       data[EnumFetchApiStatus.success][EnumWorkspace.id.value],
                   userId: e.$1,
                   role: e.$2,
-                  companyId: userSession.getCompanyId(),
+                  companyId: userSession.getCompany().companyId,
                 ).toJson(),
               )
               .toSet(),
@@ -358,7 +371,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
                 .map(
                   (userId) => ModelWorkspaceMember.createWorkspaceMember(
                     workspaceId: workspaceId,
-                    companyId: userSession.getCompanyId(),
+                    companyId: userSession.getCompany().companyId,
                     userId: userId,
                     role: contributorMap[userId] ?? EnumWorkspaceRole.member,
                   ).toJson(),
@@ -379,7 +392,7 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
                   (userId) => ModelWorkspaceMember.createWorkspaceMember(
                     id: originalMemberMap[userId]!.id,
                     workspaceId: workspaceId,
-                    companyId: userSession.getCompanyId(),
+                    companyId: userSession.getCompany().companyId,
                     userId: userId,
                     role: contributorMap[userId] ?? EnumWorkspaceRole.member,
                   ).toJson(),
@@ -409,6 +422,11 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
     return data.containsKey(EnumFetchApiStatus.success)
         ? null
         : messageCollector.getMessage(data);
+  }
+
+  @override
+  Stream<Set<ModelNotification>> getNotification() {
+    return notLogRepo.getNotification();
   }
 
   // @override

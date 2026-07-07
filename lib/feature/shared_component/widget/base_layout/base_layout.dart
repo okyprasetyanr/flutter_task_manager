@@ -7,11 +7,13 @@ class BaseLayout extends StatelessWidget {
   final Widget uiPage;
   final Widget? widgetNavigation;
   final Widget? fab;
+  final Widget? background;
   const BaseLayout({
     super.key,
     required this.uiPage,
     this.widgetNavigation,
     this.fab,
+    this.background,
   });
 
   @override
@@ -22,14 +24,22 @@ class BaseLayout extends StatelessWidget {
       child: Scaffold(
         floatingActionButton: fab,
         backgroundColor: AppPropertyColor.white,
-        body: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Stack(
-            children: [
-              Positioned(top: 0, bottom: 0, left: 0, right: 0, child: uiPage),
-              if (widgetNavigation != null) widgetNavigation!,
-            ],
-          ),
+        body: Stack(
+          children: [
+            if (background != null)
+              Positioned(top: 0, left: 0, right: 0, child: background!),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Positioned(
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: uiPage,
+              ),
+            ),
+            if (widgetNavigation != null) widgetNavigation!,
+          ],
         ),
       ),
     );

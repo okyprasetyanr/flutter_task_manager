@@ -13,7 +13,7 @@ class FloatingButtonAdd<T extends StateStreamableSource<Object?>>
     return Padding(
       padding: const EdgeInsets.all(10),
       child: FloatingActionButton(
-        backgroundColor: AppPropertyColor.primary,
+        backgroundColor: AppPropertyColor.secondPrimary,
         elevation: 3,
         child: const Icon(Icons.add_rounded, color: AppPropertyColor.white),
         onPressed: () {

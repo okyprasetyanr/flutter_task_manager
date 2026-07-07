@@ -20,16 +20,12 @@ class UserSession {
     return true;
   }
 
-  String getCompanyId() {
-    return company!.companyId;
+  ModelCompany getCompany() {
+    return company!;
   }
 
-  String getCompanyName() {
-    return company!.companyName;
-  }
-
-  String getUserId() {
-    return user!.id;
+  ModelUser getUser() {
+    return user!;
   }
 
   Future<void> clear() async {

@@ -38,7 +38,7 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
       },
       onError: (error, stackTrace) {
         return WorkspaceStateLoaded(
-          companyName: repo.getCompanyName(),
+          companyName: repo.getCompanyName().companyName,
           status: EnumStatusState.none,
           error: error.toString(),
         );

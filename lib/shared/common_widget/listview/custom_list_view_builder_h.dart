@@ -11,11 +11,13 @@ class CustomListViewBuilderH<T> extends StatelessWidget {
   final List<T> data;
   final EnumStatusState status;
   final Function(T data) getName;
+  final Widget? leftWidget;
   const CustomListViewBuilderH({
     super.key,
     required this.status,
     required this.data,
     required this.getName,
+    this.leftWidget,
   });
 
   @override
@@ -25,25 +27,50 @@ class CustomListViewBuilderH<T> extends StatelessWidget {
     } else if (status != EnumStatusState.loading && data.isEmpty) {
       return const CustomTextEmpty();
     } else {
-      return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: data
-              .map(
-                (e) => Padding(
-                  padding: const EdgeInsets.only(right: 5),
-                  child: Material(
-                    elevation: 2,
-                    borderRadius: BorderRadius.circular(8),
-                    color: AppPropertyColor.primary,
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Text(getName(e), style: lv05TextStyleWhite),
+      return ShaderMask(
+        shaderCallback: (bounds) {
+          return LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              AppPropertyColor.black,
+              AppPropertyColor.black,
+              AppPropertyColor.black,
+              AppPropertyColor.transparent,
+            ],
+            stops: [0, 0.02, 0.98, 1],
+          ).createShader(bounds);
+        },
+        blendMode: BlendMode.dstIn,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: data
+                .map(
+                  (e) => Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: Material(
+                      elevation: 2,
+                      borderRadius: BorderRadius.circular(8),
+                      color: AppPropertyColor.primary,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (leftWidget != null) ...[
+                              leftWidget!,
+                              const SizedBox(width: 5),
+                            ],
+                            Text(getName(e), style: lv05TextStyleWhite),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              )
-              .toList(),
+                )
+                .toList(),
+          ),
         ),
       );
     }

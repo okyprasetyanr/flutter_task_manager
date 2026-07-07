@@ -29,6 +29,7 @@ dependencies:
   path: ^1.9.1
   get: ^4.6.6
   stream_transform: ^2.1.1
+  cached_network_image: any
 
 dev_dependencies:
   flutter_test:

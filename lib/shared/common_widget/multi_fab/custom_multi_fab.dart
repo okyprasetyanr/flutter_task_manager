@@ -117,7 +117,7 @@ class _CustomMultiFabState extends State<CustomMultiFab>
           }),
 
           FloatingActionButton(
-            backgroundColor: AppPropertyColor.primary,
+            backgroundColor: AppPropertyColor.secondPrimary,
             heroTag: "main_fab",
             onPressed: toggle,
             child: AnimatedRotation(

@@ -6,17 +6,19 @@ class CustomRowHeader extends StatelessWidget {
   final Widget widgetLeft;
   final Widget widgetRight;
   final bool logoutIcon;
+  final Color? color;
   const CustomRowHeader({
     super.key,
     required this.widgetLeft,
     required this.widgetRight,
     this.logoutIcon = false,
+    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppPropertyColor.primary,
+      color: color ?? AppPropertyColor.primary,
       elevation: 3,
       borderRadius: const BorderRadius.only(
         bottomLeft: Radius.circular(10),
