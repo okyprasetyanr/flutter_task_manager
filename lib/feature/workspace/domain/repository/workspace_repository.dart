@@ -1,12 +1,22 @@
 import 'package:task_manager/feature/login/domain/model/model_company.dart';
 import 'package:task_manager/feature/shared_component/notification_and_logout/domain/model/model_notification.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/workspace/domain/enum/enum.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
-import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 
 abstract class WorkspaceRepository {
-  Stream<WorkspaceStateLoaded> watchDashboard();
+  Stream<
+    (
+      Set<ModelNotification>,
+      ModelUser,
+      Set<ModelUser>,
+      Set<ModelWorkspaceMerge>,
+      String,
+      CollectorMessage,
+    )
+  >
+  watchDashboard();
 
   Future<void> initWorkspaceRealtime();
 
@@ -17,6 +27,16 @@ abstract class WorkspaceRepository {
   ModelCompany getCompanyName();
 
   Stream<Set<ModelNotification>> getNotification();
+
+  Future<CollectorMessage?> createMember({
+    required String name,
+    required String email,
+  });
+  Future<CollectorMessage?> updateMember({
+    required ModelUser original,
+    required ModelUser edited,
+  });
+  Future<CollectorMessage?> deleteMember({required String idMember});
 
   Future<CollectorMessage?> createWorkspace({
     required String name,

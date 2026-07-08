@@ -12,6 +12,41 @@ class UserRemote {
 
   UserRemote({required this.responseWrapper, required this.supabaseClient});
 
+  Future<Map<String, dynamic>> createMember(Map<String, dynamic> data) async {
+    return await responseWrapper.wrap(
+      getData: () async => supabaseClient
+          .from(EnumTable.users.value)
+          .insert(data)
+          .select()
+          .single(),
+    );
+  }
+
+  Future<Map<String, dynamic>> updatemember(Map<String, dynamic> data) async {
+    return await responseWrapper.wrap(
+      getData: () async => supabaseClient
+          .from(EnumTable.users.value)
+          .update(data)
+          .eq(EnumUser.id.value, data[EnumUser.id.value])
+          .select()
+          .single(),
+    );
+  }
+
+  Future<Map<String, dynamic>> deleteMember({
+    required String userId,
+    required String idCompany,
+  }) async {
+    return await responseWrapper.wrap(
+      getData: () async => supabaseClient
+          .from(EnumTable.users.value)
+          .delete()
+          .eq(EnumUser.companyId.value, idCompany)
+          .eq(EnumUser.id.value, userId)
+          .select(),
+    );
+  }
+
   Future<List<Map<String, dynamic>>> getAllUser({
     required String companyId,
   }) async {

@@ -29,7 +29,7 @@ class WorkspaceDetailListProject extends StatelessWidget {
       (Set<ModelProjectMerge>, EnumStatusState, Set<ModelUser>)
     >(
       selector: (state) => state is WorkspaceDetailStateLoaded
-          ? (state.dataProject, state.status, state.dataUser)
+          ? (state.filteredProject, state.status, state.dataUser)
           : (const {}, EnumStatusState.loading, const {}),
       builder: (context, state) => CustomListViewBuilderV<ModelProjectMerge>(
         status: state.$2,
@@ -39,7 +39,7 @@ class WorkspaceDetailListProject extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(data.dataProject.name, style: lv1TextStyleBold),
-              Text(data.dataProject.type, style: lv1TextStyleBold),
+              Text(data.dataProject.type.text, style: lv1TextStyleBold),
             ],
           ),
           const SizedBox(height: 4),

@@ -71,3 +71,9 @@ class WorkspaceDetailEventSearchMember extends WorkspaceDetailEvent {
 
   WorkspaceDetailEventSearchMember({required this.search});
 }
+
+class WorkspaceDetailEventSelectedFilterType extends WorkspaceDetailEvent {
+  final String? type;
+
+  WorkspaceDetailEventSelectedFilterType({required this.type});
+}

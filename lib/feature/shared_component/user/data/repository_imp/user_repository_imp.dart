@@ -51,10 +51,12 @@ class UserRepositoryImp
 
             devLog("Log UserRepositoryImp: initData: $data");
             if (data.containsKey(EnumFetchApiStatus.success)) {
-              final users = (data[EnumFetchApiStatus.success] as List)
-                  .map((e) => ModelUser.fromDrift(e))
-                  .toSet();
-              userCache.setUsers(users);
+              final users =
+                  (data[EnumFetchApiStatus.success] as List)
+                      .map((e) => ModelUser.fromDrift(e))
+                      .toList()
+                    ..sort((a, b) => a.name.compareTo(b.name));
+              userCache.setUsers(users.toSet());
             } else {
               customRootSnackBar(messageCollector.getMessage(data));
             }

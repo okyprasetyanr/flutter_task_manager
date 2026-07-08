@@ -13,25 +13,6 @@ class WorkspaceRemote {
     required this.supabaseClient,
   });
 
-  // Stream<Map<String, dynamic>> watchWorkspaces({required String companyId}) {
-  //   return responseWrapper.wrapStream(
-  //     getStream: () => supabaseClient
-  //         .from(EnumTable.workspaces.value)
-  //         .stream(primaryKey: [EnumWorkspace.id.value])
-  //         .eq(EnumWorkspace.companyId.value, companyId)
-  //         .order(EnumWorkspace.createdAt.value, ascending: false),
-  //   );
-  // }
-
-  // Stream<Map<String, dynamic>> watchMembers({required String companyId}) {
-  //   return responseWrapper.wrapStream(
-  //     getStream: () => supabaseClient
-  //         .from(EnumTable.workspaceMembers.value)
-  //         .stream(primaryKey: [EnumWorkspaceMember.id.value])
-  //         .eq(EnumWorkspaceMember.companyId.value, companyId),
-  //   );
-  // }
-
   Future<List<Map<String, dynamic>>> getAllWorkspaces({
     required String companyId,
   }) async {

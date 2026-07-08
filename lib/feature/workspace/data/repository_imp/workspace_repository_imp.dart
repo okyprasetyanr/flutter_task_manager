@@ -20,9 +20,7 @@ import 'package:task_manager/feature/workspace/domain/model/model_workspace.dart
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_member.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace/domain/repository/workspace_repository.dart';
-import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
-import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class WorkspaceRepositoryImp implements WorkspaceRepository {
@@ -206,7 +204,18 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
   }
 
   @override
-  Stream<WorkspaceStateLoaded> watchDashboard() {
+  Stream<
+    (
+      Set<ModelNotification>,
+      ModelUser,
+      Set<ModelUser>,
+      Set<ModelWorkspaceMerge>,
+      String,
+
+      CollectorMessage,
+    )
+  >
+  watchDashboard() {
     return Rx.combineLatest4(
       watchUser(),
       watchWorkspace(),
@@ -234,16 +243,13 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
           );
         }).toSet();
 
-        return WorkspaceStateLoaded(
-          dataNotification: d,
-          dataAccount: getAccount(),
-          dataUser: a,
-          filteredUser: a,
-          dataWorkspace: dataWorkspace,
-          companyName: getCompanyName().companyName,
-          status: EnumStatusState.none,
-          error: b.$2.error,
-          failed: b.$2.failed,
+        return (
+          d,
+          getAccount(),
+          a,
+          dataWorkspace,
+          getCompanyName().companyName,
+          b.$2,
         );
       },
     );
@@ -429,42 +435,62 @@ class WorkspaceRepositoryImp implements WorkspaceRepository {
     return notLogRepo.getNotification();
   }
 
-  // @override
-  // Stream<CollectorMessage> watchMessage() {
-  //   return remote.workspaceRemote
-  //       .watchWorkspaces(companyId: userSession.getCompanyId())
-  //       .asyncMap((event) async {
-  //         final data = await helper.collectDataRemote(
-  //           remoteFunc: () async => event,
-  //           localFunc: ({required dataToCache}) async {
-  //             devLog(
-  //               "Log WorkspaceRepositoryImp: messageWorkspace: data: ${dataToCache.toString()}",
-  //             );
+  @override
+  Future<CollectorMessage?> createMember({
+    required String name,
+    required String email,
+  }) async {
+    final data = await helper.collectDataRemote(
+      remoteFunc: () async => await remote.userRemote.createMember(
+        ModelUser.createUser(
+          companyId: userSession.getCompany().companyId,
+          email: email,
+          name: name,
+        ).toJson(),
+      ),
+      localFunc: ({required dataToCache}) async => {},
+    );
+    devLog("Log WorkspaceRepositoryImp: createMember: data: $data");
 
-  //             await local.workspaceLocal.syncWorkspace(
-  //               remoteResults: [dataToCache],
-  //             );
-  //           },
-  //         );
-  //         return messageCollector.getMessage(data);
-  //       });
-  // }
+    return data.containsKey(EnumFetchApiStatus.success)
+        ? null
+        : messageCollector.getMessage(data);
+  }
 
-  // @override
-  // Stream<CollectorMessage> watchMessageMember() {
-  //   return remote.workspaceRemote
-  //       .watchMembers(companyId: userSession.getCompanyId())
-  //       .asyncMap((event) async {
-  //         final data = await helper.collectDataRemote(
-  //           remoteFunc: () async => event,
-  //           localFunc: ({required dataToCache}) async {
-  //             devLog(
-  //               "Log WorkspaceRepositoryImp: watchWorkspaceMember: ${dataToCache.toString()}",
-  //             );
-  //             await local.workspaceLocal.syncMember(dataToCache);
-  //           },
-  //         );
-  //         return messageCollector.getMessage(data);
-  //       });
-  // }
+  @override
+  Future<CollectorMessage?> deleteMember({required String idMember}) async {
+    final data = await helper.collectDataRemote(
+      remoteFunc: () async => await remote.userRemote.deleteMember(
+        userId: idMember,
+        idCompany: userSession.company!.companyId,
+      ),
+      localFunc: ({required dataToCache}) async => {},
+    );
+    return data.containsKey(EnumFetchApiStatus.success)
+        ? null
+        : messageCollector.getMessage(data);
+  }
+
+  @override
+  Future<CollectorMessage?> updateMember({
+    required ModelUser original,
+    required ModelUser edited,
+  }) async {
+    final finalUpdated = ModelUser.userGetChangedData(
+      original: original.toJson(),
+      edited: edited.toJson(),
+    );
+
+    final data = await helper.collectDataRemote(
+      remoteFunc: () async =>
+          await remote.userRemote.updatemember(finalUpdated),
+      localFunc: ({required dataToCache}) async => {},
+    );
+
+    devLog("Log WorkspaceRepositoryImp: updateMember: data: $finalUpdated");
+
+    return data.containsKey(EnumFetchApiStatus.success)
+        ? null
+        : messageCollector.getMessage(data);
+  }
 }

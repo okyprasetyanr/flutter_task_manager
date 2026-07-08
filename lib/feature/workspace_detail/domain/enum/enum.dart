@@ -14,6 +14,49 @@ enum EnumProject {
   const EnumProject(this.value);
 }
 
+enum EnumProjectType {
+  mobileApp('mobile_app'),
+  flutterApp('flutter_app'),
+  webApp('web_app'),
+  adminPanel('admin_panel'),
+  desktopApp('desktop_app'),
+  backendService('backend_service');
+
+  final String value;
+  const EnumProjectType(this.value);
+}
+
+extension EnumProjectTypeX on EnumProjectType {
+  static EnumProjectType fromServer(String value) =>
+      EnumProjectType.values.firstWhere(
+        (e) => e.value == value,
+        orElse: () => EnumProjectType.mobileApp,
+      );
+
+  String get text {
+    switch (this) {
+      case EnumProjectType.mobileApp:
+        return "Mobile App";
+      case EnumProjectType.flutterApp:
+        return "Flutter App";
+      case EnumProjectType.webApp:
+        return "Web App";
+      case EnumProjectType.adminPanel:
+        return "Admin Panel";
+      case EnumProjectType.desktopApp:
+        return "Desktop App";
+      case EnumProjectType.backendService:
+        return "Backend Service";
+    }
+  }
+
+  static EnumProjectType fromText(String value) =>
+      EnumProjectType.values.firstWhere(
+        (e) => e.text == value,
+        orElse: () => EnumProjectType.mobileApp,
+      );
+}
+
 enum EnumProjectMember {
   projectId('project_id'),
   workspaceId('workspace_id'),

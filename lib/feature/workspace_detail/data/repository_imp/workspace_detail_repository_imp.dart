@@ -12,13 +12,11 @@ import 'package:task_manager/feature/workspace_detail/domain/model/model_project
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_member.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
-import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_fetch_api.dart';
 import 'package:task_manager/core/services/collector/collector_data.dart';
 import 'package:task_manager/core/services/collector/collector_message.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
-import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_filter/helper_date_filter.dart';
 
@@ -199,9 +197,10 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
   }
 
   @override
-  Stream<WorkspaceDetailStateLoaded> watchDashboard({
-    required ModelWorkspaceMerge workspace,
-  }) {
+  Stream<
+    (Set<ModelUser>, Set<ModelProjectMerge>, Set<String>, CollectorMessage)
+  >
+  watchDashboard({required ModelWorkspaceMerge workspace}) {
     return Rx.combineLatest3(
       watchUser(),
       watchProject(workspaceId: workspace.dataWorkspace.id),
@@ -223,7 +222,6 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
                     .where((e) => e.projectId == project.id)
                     .toSet();
 
-                devLog("Log watchDashboard: projectMember: data: $members");
                 return ModelProjectMerge(
                   dataProject: project,
                   dataMember: members,
@@ -231,15 +229,11 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
               }).toList()
               ..sort((a, b) => a.dataProject.end.compareTo(b.dataProject.end));
 
-        return WorkspaceDetailStateLoaded(
-          workspace: workspace,
-          dataUser: a,
-          filteredUser: a,
-          dataProject: dataProject.toSet(),
-          status: EnumStatusState.none,
-          error: b.$2.error,
-          failed: b.$2.failed,
-        );
+        devLog("Log watchDashboard: projectMember: data: $projectList");
+
+        final dataType = {"All", ...EnumProjectType.values.map((e) => e.text)};
+
+        return (a, dataProject.toSet(), dataType, b.$2);
       },
     );
   }
@@ -250,7 +244,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     required DateTime start,
     required DateTime end,
     required Set<(String userId, EnumProjectRole role)> contributor,
-    required String type,
+    required EnumProjectType type,
     required String workspaceId,
   }) async {
     final data = await helper.collectDataRemote(

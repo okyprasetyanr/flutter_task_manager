@@ -38,7 +38,7 @@ class ProjectDetailProject extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(data.name, style: lv1TextStyleBold),
-                Text(data.type, style: lv1TextStyleBold),
+                Text(data.type.text, style: lv1TextStyleBold),
               ],
             ),
             const SizedBox(height: 4),

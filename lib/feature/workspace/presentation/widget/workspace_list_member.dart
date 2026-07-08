@@ -4,10 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_bloc.dart';
+import 'package:task_manager/feature/workspace/presentation/bloc/workspace_event.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
+import 'package:task_manager/feature/workspace/presentation/widget/workspace_botshet_content_member.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_h.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
+import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
 class WorkspaceListMember extends StatelessWidget {
@@ -55,35 +58,49 @@ class WorkspaceListMember extends StatelessWidget {
                               selector: (state) => state is WorkspaceStateLoaded
                                   ? (state.status, state.dataUser)
                                   : (EnumStatusState.none, {}),
-                              builder: (context, state) =>
-                                  CustomListViewBuilderH(
-                                    status: state.$1,
-                                    data: state.$2.toList(),
-                                    getName: (data) => data.name,
-                                    leftWidget: SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircleAvatar(
-                                        radius: 50,
-                                        backgroundColor: AppPropertyColor.white,
-                                        child: ClipOval(
-                                          child: CachedNetworkImage(
-                                            imageUrl: "",
-                                            width: 30,
-                                            height: 30,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                CircularProgressIndicator(),
-                                            errorWidget:
-                                                (context, url, error) => Icon(
-                                                  Icons.person,
-                                                  size: 15,
-                                                ),
-                                          ),
+                              builder: (context, state) => CustomListViewBuilderH(
+                                status: state.$1,
+                                data: state.$2.toList(),
+                                getName: (data) => data.name,
+                                onPress: (data) {
+                                  final bloc = context.read<WorkspaceBloc>();
+                                  bloc.add(
+                                    WorkspaceEventSelectedMember(data: data),
+                                  );
+                                  customBottomSheet(
+                                    context: context,
+                                    resetItemForm: () => bloc.add(
+                                      WorkspaceEventResetSelectedMember(),
+                                    ),
+                                    content: (scrollController) =>
+                                        BlocProvider.value(
+                                          value: bloc,
+                                          child:
+                                              WorkspaceBotshetContentdMember(),
                                         ),
+                                  );
+                                },
+                                leftWidget: SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircleAvatar(
+                                    radius: 50,
+                                    backgroundColor: AppPropertyColor.white,
+                                    child: ClipOval(
+                                      child: CachedNetworkImage(
+                                        imageUrl: "",
+                                        width: 30,
+                                        height: 30,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.person, size: 15),
                                       ),
                                     ),
                                   ),
+                                ),
+                              ),
                             ),
                       ),
                     ],
@@ -96,7 +113,18 @@ class WorkspaceListMember extends StatelessWidget {
                     Icons.person_add_alt_1,
                     color: AppPropertyColor.primary,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    final bloc = context.read<WorkspaceBloc>();
+                    customBottomSheet(
+                      context: context,
+                      resetItemForm: () =>
+                          bloc.add(WorkspaceEventResetSelectedMember()),
+                      content: (scrollController) => BlocProvider.value(
+                        value: bloc,
+                        child: WorkspaceBotshetContentdMember(),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

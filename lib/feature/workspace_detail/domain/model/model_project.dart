@@ -6,7 +6,7 @@ import 'package:uuid/uuid.dart';
 class ModelProject extends Equatable {
   final String id;
   final String name;
-  final String type;
+  final EnumProjectType type;
   final EnumProjectStatus status;
   final String createdBy;
   final int totalContribut;
@@ -36,7 +36,7 @@ class ModelProject extends Equatable {
       workspaceId: data[EnumProject.workspaceId.value],
       id: data[EnumProject.id.value],
       name: data[EnumProject.name.value],
-      type: data[EnumProject.type.value],
+      type: EnumProjectTypeX.fromText(data[EnumProject.type.value]),
       status: EnumProjectStatusX.fromText(data[EnumProject.status.value]),
       createdBy: data[EnumProject.createdBy.value],
       totalContribut: data[EnumProject.totalContribut.value],
@@ -53,7 +53,7 @@ class ModelProject extends Equatable {
       workspaceId: data[EnumProject.workspaceId.name],
       id: data[EnumProject.id.name],
       name: data[EnumProject.name.name],
-      type: data[EnumProject.type.name],
+      type: EnumProjectTypeX.fromText(data[EnumProject.type.name]),
       status: EnumProjectStatusX.fromText(data[EnumProject.status.name]),
       createdBy: data[EnumProject.createdBy.name],
       totalContribut: data[EnumProject.totalContribut.name],
@@ -69,7 +69,7 @@ class ModelProject extends Equatable {
   ModelProject copyWith({
     String? id,
     String? name,
-    String? type,
+    EnumProjectType? type,
     EnumProjectStatus? status,
     String? createdBy,
     int? totalContribut,
@@ -101,7 +101,7 @@ class ModelProject extends Equatable {
       EnumProject.status.value: status.text,
       EnumProject.createdBy.value: createdBy,
       EnumProject.totalContribut.value: totalContribut,
-      EnumProject.type.value: type,
+      EnumProject.type.value: type.text,
       EnumProject.workspaceId.value: workspaceId,
     };
   }
@@ -112,7 +112,7 @@ class ModelProject extends Equatable {
     required DateTime end,
     required DateTime createdAt,
     required int totalContribut,
-    required String type,
+    required EnumProjectType type,
     required EnumProjectStatus status,
     required String workspaceId,
     required String createdBy,

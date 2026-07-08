@@ -22,8 +22,10 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
   final Set<ModelUser> filteredUser;
   final ModelWorkspaceMerge? selectedWorkspace;
   final Set<ModelNotification> dataNotification;
+  final ModelUser? selectedMember;
 
   WorkspaceStateLoaded({
+    this.selectedMember,
     this.dataAccount,
     this.status = EnumStatusState.none,
     this.companyName,
@@ -49,8 +51,10 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
     String? noconnection,
     ModelUser? dataAccount,
     Set<ModelNotification>? dataNotification,
+    ModelUser? selectedMember,
   }) {
     return WorkspaceStateLoaded(
+      selectedMember: selectedMember,
       dataNotification: dataNotification ?? this.dataNotification,
       dataAccount: dataAccount ?? this.dataAccount,
       filteredUser: filteredUser ?? this.filteredUser,
@@ -67,6 +71,7 @@ class WorkspaceStateLoaded extends WorkspaceState with EquatableMixin {
 
   @override
   List<Object?> get props => [
+    selectedMember,
     dataNotification,
     dataAccount,
     filteredUser,

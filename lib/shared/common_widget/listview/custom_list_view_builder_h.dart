@@ -11,13 +11,17 @@ class CustomListViewBuilderH<T> extends StatelessWidget {
   final List<T> data;
   final EnumStatusState status;
   final Function(T data) getName;
+  final Function(T data)? onPress;
   final Widget? leftWidget;
+  final bool Function(T data)? condition;
   const CustomListViewBuilderH({
     super.key,
     required this.status,
     required this.data,
     required this.getName,
     this.leftWidget,
+    this.onPress,
+    this.condition,
   });
 
   @override
@@ -52,18 +56,37 @@ class CustomListViewBuilderH<T> extends StatelessWidget {
                     child: Material(
                       elevation: 2,
                       borderRadius: BorderRadius.circular(8),
-                      color: AppPropertyColor.primary,
-                      child: Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (leftWidget != null) ...[
-                              leftWidget!,
-                              const SizedBox(width: 5),
+                      color: condition != null
+                          ? condition!(e)
+                                ? AppPropertyColor.primary
+                                : AppPropertyColor.greyLight
+                          : AppPropertyColor.primary,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(8),
+                        onTap: onPress != null
+                            ? () {
+                                onPress!(e);
+                              }
+                            : null,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (leftWidget != null) ...[
+                                leftWidget!,
+                                const SizedBox(width: 5),
+                              ],
+                              Text(
+                                getName(e),
+                                style: condition != null
+                                    ? condition!(e)
+                                          ? lv05TextStyleWhite
+                                          : lv05TextStyle
+                                    : lv05TextStyleWhite,
+                              ),
                             ],
-                            Text(getName(e), style: lv05TextStyleWhite),
-                          ],
+                          ),
                         ),
                       ),
                     ),

@@ -51,3 +51,27 @@ class WorkspaceEventSearchMember extends WorkspaceEvent {
 
   WorkspaceEventSearchMember({required this.search});
 }
+
+class WorkspaceEventCreateMember extends WorkspaceEvent {
+  final String name;
+  final String email;
+
+  WorkspaceEventCreateMember({required this.name, required this.email});
+}
+
+class WorkspaceEventUpdateMember extends WorkspaceEvent {
+  final String name;
+  final String email;
+
+  WorkspaceEventUpdateMember({required this.name, required this.email});
+}
+
+class WorkspaceEventDeleteMember extends WorkspaceEvent {}
+
+class WorkspaceEventResetSelectedMember extends WorkspaceEvent {}
+
+class WorkspaceEventSelectedMember extends WorkspaceEvent {
+  final ModelUser data;
+
+  WorkspaceEventSelectedMember({required this.data});
+}

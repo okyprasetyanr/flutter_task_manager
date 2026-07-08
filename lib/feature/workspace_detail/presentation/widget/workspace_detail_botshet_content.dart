@@ -85,7 +85,7 @@ class _WorkspaceDetailBotshetContentState
               if (!_initialized && data.$1 != null) {
                 _initialized = true;
                 nameController.text = data.$1!.dataProject.name;
-                typeController.text = data.$1!.dataProject.type;
+                typeController.text = data.$1!.dataProject.type.text;
                 projectStatus.value = data.$1!.dataProject.status;
                 pickedStart.value = data.$1!.dataProject.start;
                 pickedEnd.value = data.$1!.dataProject.end;

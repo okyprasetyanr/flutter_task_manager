@@ -58,7 +58,7 @@ class WorkspaceDetailLocal {
       modelData: (ModelProject model) => Project(
         id: model.id,
         name: model.name,
-        type: model.type,
+        type: model.type.text,
         status: model.status.text,
         createdBy: model.createdBy,
         totalContribut: model.totalContribut,

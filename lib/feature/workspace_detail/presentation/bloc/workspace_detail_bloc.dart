@@ -1,6 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/services/collector/collector_message.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
+import 'package:task_manager/feature/workspace_detail/domain/enum/enum.dart';
+import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 import 'package:task_manager/feature/workspace_detail/domain/repository/workspace_detail_repository.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_event.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
@@ -20,6 +24,7 @@ class WorkspaceDetailBloc
     on<WorkspaceDetailEventSelectedProject>(_onSelectedProject);
     on<WorkspaceDetailEventResetSelected>(_onResetSelected);
     on<WorkspaceDetailEventSearchMember>(_onSearchMember);
+    on<WorkspaceDetailEventSelectedFilterType>(_onSelectedFilterType);
   }
 
   FutureOr<void> _onChangeStatus(
@@ -45,10 +50,53 @@ class WorkspaceDetailBloc
     final workspace = event.data!;
     await repo.initProjectRealtime(workspaceId: event.data!.dataWorkspace.id);
     await repo.initMemberRealtime(workspaceId: event.data!.dataWorkspace.id);
-    await emit.forEach(
+    await emit.forEach<
+      (Set<ModelUser>, Set<ModelProjectMerge>, Set<String>, CollectorMessage)
+    >(
       repo.watchDashboard(workspace: workspace),
       onData: (data) {
-        return data;
+        final currentState = state is WorkspaceDetailStateLoaded
+            ? state as WorkspaceDetailStateLoaded
+            : WorkspaceDetailStateLoaded();
+        Set<ModelProjectMerge> filteredProject;
+        String selectedType;
+        if (currentState.selectedType == null) {
+          filteredProject = data.$2;
+          selectedType = "All";
+        } else {
+          selectedType = currentState.selectedType!;
+          filteredProject = data.$2
+              .where(
+                (element) =>
+                    element.dataProject.type ==
+                    EnumProjectTypeX.fromText(currentState.selectedType!),
+              )
+              .toSet();
+        }
+        devLog(
+          "Log WorkspaceDetailBloc: onWatch: selected: $selectedType, filteredProject: $filteredProject, selectedType: ${currentState.selectedType}",
+        );
+        final projectType = data.$2.map((e) => e.dataProject.type);
+        final dataType = {
+          "All",
+          ...EnumProjectType.values
+              .where((element) => projectType.contains(element))
+              .map((e) => e.text)
+              .toSet(),
+        };
+        return currentState.copyWith(
+          dataType: dataType,
+          workspace: workspace,
+          dataUser: data.$1,
+          filteredUser: data.$1,
+          dataProject: data.$2,
+          status: EnumStatusState.none,
+          filteredProject: filteredProject,
+          selectedType: selectedType,
+          selectedProject: currentState.selectedProject,
+          error: data.$4.error,
+          failed: data.$4.failed,
+        );
       },
       onError: (error, stackTrace) =>
           (state is WorkspaceDetailStateLoaded
@@ -86,7 +134,7 @@ class WorkspaceDetailBloc
       contributor: event.contributor.map((e) {
         return (e.$1.id, e.$2);
       }).toSet(),
-      type: event.type,
+      type: EnumProjectTypeX.fromText(event.type),
       workspaceId: currentState.workspace!.dataWorkspace.id,
     );
 
@@ -106,7 +154,7 @@ class WorkspaceDetailBloc
       dataProject: original.dataProject.copyWith(
         end: event.end,
         start: event.start,
-        type: event.type,
+        type: EnumProjectTypeX.fromText(event.type),
         totalContribut: event.contributor.length,
         status: event.status,
       ),
@@ -182,6 +230,37 @@ class WorkspaceDetailBloc
     emit(
       currentState.copyWith(
         filteredUser: event.search.isEmpty ? currentState.dataUser : data,
+      ),
+    );
+  }
+
+  FutureOr<void> _onSelectedFilterType(
+    WorkspaceDetailEventSelectedFilterType event,
+    Emitter<WorkspaceDetailState> emit,
+  ) {
+    final currentState = state as WorkspaceDetailStateLoaded;
+    Set<ModelProjectMerge> filteredProject;
+    String selectedType;
+    if (event.type == null || event.type == "All") {
+      filteredProject = currentState.dataProject;
+      selectedType = "All";
+    } else {
+      selectedType = event.type!;
+      filteredProject = currentState.dataProject
+          .where(
+            (element) =>
+                element.dataProject.type ==
+                EnumProjectTypeX.fromText(selectedType),
+          )
+          .toSet();
+    }
+    devLog(
+      "Log WorkspaceDetailBloc: selectedFilterType: selected: $selectedType, filteredProject: $filteredProject",
+    );
+    emit(
+      currentState.copyWith(
+        selectedType: selectedType,
+        filteredProject: filteredProject,
       ),
     );
   }

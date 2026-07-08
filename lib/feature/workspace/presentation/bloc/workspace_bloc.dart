@@ -1,6 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/services/collector/collector_message.dart';
+import 'package:task_manager/feature/shared_component/notification_and_logout/domain/model/model_notification.dart';
+import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
+import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace/domain/repository/workspace_repository.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_event.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
@@ -22,6 +25,11 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
       _onSearchMember,
       transformer: debounceRestartable(),
     );
+    on<WorkspaceEventDeleteMember>(_onDeleteMember);
+    on<WorkspaceEventCreateMember>(_onCreateMember);
+    on<WorkspaceEventUpdateMember>(_onUpdateMember);
+    on<WorkspaceEventResetSelectedMember>(_onResetSelectedMember);
+    on<WorkspaceEventSelectedMember>(_onSelectedMember);
   }
 
   Future<void> _onWatch(
@@ -31,10 +39,29 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
     add(WorkspaceEventChangeStatus(status: EnumStatusState.loading));
     await repo.initWorkspaceRealtime();
     await repo.initMemberRealtime();
-    await emit.forEach<WorkspaceStateLoaded>(
+    await emit.forEach<
+      (
+        Set<ModelNotification>,
+        ModelUser,
+        Set<ModelUser>,
+        Set<ModelWorkspaceMerge>,
+        String,
+        CollectorMessage,
+      )
+    >(
       repo.watchDashboard(),
       onData: (data) {
-        return data;
+        return WorkspaceStateLoaded(
+          dataNotification: data.$1,
+          dataAccount: data.$2,
+          dataUser: data.$3,
+          filteredUser: data.$3,
+          dataWorkspace: data.$4,
+          companyName: data.$5,
+          status: EnumStatusState.none,
+          error: data.$6.error,
+          failed: data.$6.failed,
+        );
       },
       onError: (error, stackTrace) {
         return WorkspaceStateLoaded(
@@ -187,5 +214,90 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
         filteredUser: event.search.isEmpty ? currentState.dataUser : data,
       ),
     );
+  }
+
+  Future<void> _onDeleteMember(
+    WorkspaceEventDeleteMember event,
+    Emitter<WorkspaceState> emit,
+  ) async {
+    add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
+    final currentState = state as WorkspaceStateLoaded;
+    final data = await repo.deleteMember(
+      idMember: currentState.selectedMember!.id,
+    );
+    if (data != null) {
+      emit(
+        currentState.copyWith(
+          error: data.error,
+          failed: data.failed,
+          status: EnumStatusState.none,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onCreateMember(
+    WorkspaceEventCreateMember event,
+    Emitter<WorkspaceState> emit,
+  ) async {
+    add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
+    final currentState = state as WorkspaceStateLoaded;
+    final data = await repo.createMember(email: event.email, name: event.name);
+
+    if (data != null) {
+      emit(
+        currentState.copyWith(
+          error: data.error,
+          failed: data.failed,
+          status: EnumStatusState.none,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onUpdateMember(
+    WorkspaceEventUpdateMember event,
+    Emitter<WorkspaceState> emit,
+  ) async {
+    add(WorkspaceEventChangeStatus(status: EnumStatusState.synchronize));
+    final currentState = state as WorkspaceStateLoaded;
+    final original = currentState.selectedMember;
+    final edited = original!.copyWith(email: event.email, name: event.name);
+
+    if (original != edited) {
+      final data = await repo.updateMember(original: original, edited: edited);
+      if (data != null) {
+        emit(
+          currentState.copyWith(
+            error: data.error,
+            failed: data.failed,
+            status: EnumStatusState.none,
+          ),
+        );
+      }
+    } else {
+      devLog("Log WorkspaceBloc: updateMember: checked");
+      emit(
+        currentState.copyWith(
+          status: EnumStatusState.none,
+          error: "Nothing changed!",
+          selectedWorkspace: currentState.selectedWorkspace!,
+        ),
+      );
+    }
+  }
+
+  FutureOr<void> _onResetSelectedMember(
+    WorkspaceEventResetSelectedMember event,
+    Emitter<WorkspaceState> emit,
+  ) {
+    emit((state as WorkspaceStateLoaded).copyWith(selectedMember: null));
+  }
+
+  FutureOr<void> _onSelectedMember(
+    WorkspaceEventSelectedMember event,
+    Emitter<WorkspaceState> emit,
+  ) {
+    emit((state as WorkspaceStateLoaded).copyWith(selectedMember: event.data));
   }
 }

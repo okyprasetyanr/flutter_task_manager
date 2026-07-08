@@ -6,6 +6,7 @@ import 'package:task_manager/feature/workspace/domain/model/model_workspace_merg
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_botshet_content.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_filter_type.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_header.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_list_project.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
@@ -67,8 +68,10 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
 
   Widget uiPage() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         WorkspaceDetailHeader(),
+        WorkspaceDetailFilterType(),
         Expanded(child: WorkspaceDetailListProject()),
       ],
     );
