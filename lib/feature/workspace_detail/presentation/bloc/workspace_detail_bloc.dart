@@ -78,7 +78,8 @@ class WorkspaceDetailBloc
             : WorkspaceDetailStateLoaded();
         Set<ModelProjectMerge> filteredProject;
         String selectedType;
-        if (currentState.selectedType == null) {
+        if (currentState.selectedType == null ||
+            currentState.selectedType == "All") {
           filteredProject = data.$2;
           selectedType = "All";
         } else {
