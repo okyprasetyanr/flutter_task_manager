@@ -28,7 +28,8 @@ class WorkspaceDetailEventCreateProject extends WorkspaceDetailEvent {
   final DateTime end;
   final DateTime createdAt;
   final Set<(ModelUser, EnumProjectRole)> contributor;
-  final String type;
+  final EnumProjectType type;
+  final EnumProjectStatus status;
 
   WorkspaceDetailEventCreateProject({
     required this.name,
@@ -37,6 +38,7 @@ class WorkspaceDetailEventCreateProject extends WorkspaceDetailEvent {
     required this.createdAt,
     required this.contributor,
     required this.type,
+    required this.status,
   });
 }
 
@@ -45,7 +47,7 @@ class WorkspaceDetailEventUpdateProject extends WorkspaceDetailEvent {
   final DateTime end;
   final DateTime createdAt;
   final Set<(ModelUser, EnumProjectRole)> contributor;
-  final String type;
+  final EnumProjectType type;
   final EnumProjectStatus status;
 
   WorkspaceDetailEventUpdateProject({

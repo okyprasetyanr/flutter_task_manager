@@ -9,7 +9,7 @@ import 'package:task_manager/feature/workspace_detail/domain/model/model_project
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_event.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
-import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_botshet_content.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/widget/botshet_content/workspace_detail_botshet_content.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';

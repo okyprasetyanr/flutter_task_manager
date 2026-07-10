@@ -36,6 +36,7 @@ abstract class WorkspaceDetailRepository {
     required Set<(String userId, EnumProjectRole role)> contributor,
     required EnumProjectType type,
     required String workspaceId,
+    required EnumProjectStatus status,
   });
 
   Future<CollectorMessage?> deleteProject(String idProject);

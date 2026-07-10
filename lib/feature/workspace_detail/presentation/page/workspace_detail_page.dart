@@ -5,7 +5,7 @@ import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
-import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_botshet_content.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/widget/botshet_content/workspace_detail_botshet_content.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_filter_type.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_header.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_list_project.dart';

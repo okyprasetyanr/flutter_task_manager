@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
-import 'package:task_manager/feature/shared_component/widget/drop_down/widget_drop_down.dart';
 import 'package:task_manager/feature/workspace_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_event.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/widget/botshet_content/botshet_form.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart';
 import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
@@ -39,12 +39,12 @@ class _WorkspaceDetailBotshetContentState
   final pickedStart = ValueNotifier<DateTime>(DateTime.now());
   final pickedEnd = ValueNotifier<DateTime>(DateTime.now());
   final nameController = TextEditingController();
-  final typeController = TextEditingController();
   final searchController = TextEditingController();
   final _keyForm = GlobalKey<FormState>();
   final projectStatus = ValueNotifier<EnumProjectStatus>(
-    EnumProjectStatus.unknown,
+    EnumProjectStatus.todo,
   );
+  final projectType = ValueNotifier<EnumProjectType>(EnumProjectType.mobileApp);
   bool _initialized = false;
   final listUser = <(ModelUser, EnumProjectRole)>[].obs;
 
@@ -54,7 +54,6 @@ class _WorkspaceDetailBotshetContentState
     pickedStart.dispose();
     pickedEnd.dispose();
     nameController.dispose();
-    typeController.dispose();
     super.dispose();
   }
 
@@ -85,8 +84,8 @@ class _WorkspaceDetailBotshetContentState
               if (!_initialized && data.$1 != null) {
                 _initialized = true;
                 nameController.text = data.$1!.dataProject.name;
-                typeController.text = data.$1!.dataProject.type.text;
                 projectStatus.value = data.$1!.dataProject.status;
+                projectType.value = data.$1!.dataProject.type;
                 pickedStart.value = data.$1!.dataProject.start;
                 pickedEnd.value = data.$1!.dataProject.end;
                 createdAt = data.$1!.dataProject.createdAt;
@@ -111,51 +110,11 @@ class _WorkspaceDetailBotshetContentState
                   children: [
                     Text("Project Form", style: titleTextStyle),
                     const SizedBox(height: 10),
-                    Form(
-                      key: _keyForm,
-                      child: Column(
-                        children: [
-                          CustomTextField(
-                            label: "Name",
-                            controller: nameController,
-                            enable: data.$1 == null,
-                            validator: (value) => value!.isEmpty
-                                ? "Project Name required!"
-                                : null,
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomTextField(
-                                  label: "Type",
-                                  controller: typeController,
-                                  validator: (value) =>
-                                      value!.isEmpty ? "Type required!" : null,
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child:
-                                    ValueListenableBuilder<EnumProjectStatus>(
-                                      valueListenable: projectStatus,
-                                      builder: (context, value, child) =>
-                                          WidgetDropDown<EnumProjectStatus>(
-                                            extension: (extension) =>
-                                                extension.text,
-                                            initialValue: value,
-                                            filters: EnumProjectStatus.values,
-                                            text: "Status",
-                                            selectedValue: (selectedEnum) =>
-                                                projectStatus.value =
-                                                    selectedEnum,
-                                          ),
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                    BotshetForm(
+                      nameController: nameController,
+                      keyForm: _keyForm,
+                      projectStatus: projectStatus,
+                      projectType: projectType,
                     ),
                     const SizedBox(height: 10),
                     Row(
@@ -278,6 +237,9 @@ class _WorkspaceDetailBotshetContentState
                                                             icon: Icon(
                                                               Icons
                                                                   .admin_panel_settings_rounded,
+                                                              color:
+                                                                  AppPropertyColor
+                                                                      .black,
                                                             ),
                                                             backgroundColor:
                                                                 AppPropertyColor
@@ -286,6 +248,8 @@ class _WorkspaceDetailBotshetContentState
                                                               EnumProjectRole
                                                                   .values[index]
                                                                   .text,
+                                                              style:
+                                                                  lv1TextStyle,
                                                             ),
                                                             onPressed: () {
                                                               listUser[listMemberIndex] = (
@@ -510,10 +474,12 @@ class _WorkspaceDetailBotshetContentState
                                                                               left: true,
                                                                               icon: Icon(
                                                                                 Icons.admin_panel_settings_rounded,
+                                                                                color: AppPropertyColor.black,
                                                                               ),
                                                                               backgroundColor: AppPropertyColor.white,
                                                                               label: Text(
                                                                                 EnumProjectRole.values[index].text,
+                                                                                style: lv1TextStyle,
                                                                               ),
                                                                               onPressed: () {
                                                                                 listUser.add(
@@ -662,7 +628,7 @@ class _WorkspaceDetailBotshetContentState
                                                       createdAt: createdAt,
                                                       contributor: listUser
                                                           .toSet(),
-                                                      type: typeController.text,
+                                                      type: projectType.value,
                                                       status:
                                                           projectStatus.value,
                                                     ),
@@ -677,7 +643,9 @@ class _WorkspaceDetailBotshetContentState
                                                       createdAt: createdAt,
                                                       contributor: listUser
                                                           .toSet(),
-                                                      type: typeController.text,
+                                                      type: projectType.value,
+                                                      status:
+                                                          projectStatus.value,
                                                     ),
                                                   );
                                       },

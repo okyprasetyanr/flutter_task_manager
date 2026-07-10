@@ -252,6 +252,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
     required Set<(String userId, EnumProjectRole role)> contributor,
     required EnumProjectType type,
     required String workspaceId,
+    required EnumProjectStatus status,
   }) async {
     final data = await helper.collectDataRemote(
       remoteFunc: () => remote.workspaceDetailRemote.createProject(
@@ -262,7 +263,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
           createdAt: dateNowYMDBLOC(),
           totalContribut: contributor.length,
           type: type,
-          status: EnumProjectStatus.todo,
+          status: status,
           workspaceId: workspaceId,
           createdBy: userSession.getUser().id,
         ).toJson(),

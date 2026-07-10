@@ -21,11 +21,15 @@ class WorkspaceNotification extends StatelessWidget {
                 final newNotification = state.where(
                   (element) => !element.isRead,
                 );
-                final lastNotification = state.reduce((value, element) {
-                  DateTime currentStyle = value.createdAt;
-                  DateTime nextStyle = element.createdAt;
-                  return currentStyle.isAfter(nextStyle) ? value : element;
-                });
+                final lastNotification = state.isNotEmpty
+                    ? state.reduce((value, element) {
+                        DateTime currentStyle = value.createdAt;
+                        DateTime nextStyle = element.createdAt;
+                        return currentStyle.isAfter(nextStyle)
+                            ? value
+                            : element;
+                      })
+                    : null;
                 if (state.isEmpty) {
                   return Text(
                     "You don't have any notifications.",
@@ -83,7 +87,7 @@ class WorkspaceNotification extends StatelessWidget {
                           style: lv1TextStyleWhite,
                         ),
                         TextSpan(
-                          text: lastNotification.title,
+                          text: lastNotification?.title ?? "",
                           style: lv1TextStyleWhiteBold,
                         ),
                       ],

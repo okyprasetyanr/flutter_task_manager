@@ -166,8 +166,9 @@ class WorkspaceDetailBloc
       contributor: event.contributor.map((e) {
         return (e.$1.id, e.$2);
       }).toSet(),
-      type: EnumProjectTypeX.fromText(event.type),
+      type: event.type,
       workspaceId: currentState.workspace!.dataWorkspace.id,
+      status: event.status,
     );
 
     if (data != null) {
@@ -186,7 +187,7 @@ class WorkspaceDetailBloc
       dataProject: original.dataProject.copyWith(
         end: event.end,
         start: event.start,
-        type: EnumProjectTypeX.fromText(event.type),
+        type: event.type,
         totalContribut: event.contributor.length,
         status: event.status,
       ),
