@@ -131,6 +131,13 @@ final lv05TextStyleBold = GoogleFonts.poppins(
   fontSize: 10,
 );
 
+final lv05TextStyleBoldItalic = GoogleFonts.poppins(
+  fontStyle: FontStyle.italic,
+  color: AppPropertyColor.black,
+  fontWeight: FontWeight.w600,
+  fontSize: 10,
+);
+
 final lv05TextStyleBoldWhite = GoogleFonts.poppins(
   color: AppPropertyColor.white,
   fontWeight: FontWeight.w600,

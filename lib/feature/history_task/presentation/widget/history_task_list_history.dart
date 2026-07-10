@@ -46,8 +46,8 @@ class HistoryTaskListHistory extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        RichText(
-                          text: TextSpan(
+                        Text.rich(
+                          TextSpan(
                             style: lv1TextStyle,
                             children: [
                               TextSpan(text: actor, style: lv1TextStyleBold),
@@ -75,7 +75,7 @@ class HistoryTaskListHistory extends StatelessWidget {
                             '${display.oldValue.isEmpty ? "-" : display.oldValue}'
                             ' → '
                             '${display.newValue.isEmpty ? "-" : display.newValue}',
-                            style: lv1TextStyleBoldItalic,
+                            style: lv05TextStyleBoldItalic,
                           ),
                         ),
 

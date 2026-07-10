@@ -74,8 +74,8 @@ class ActivittyListActivity extends StatelessWidget {
                   }
 
                   return [
-                    RichText(
-                      text: TextSpan(
+                    Text.rich(
+                      TextSpan(
                         style: lv1TextStyleBold,
                         children: buildTextSpans(),
                       ),
@@ -99,7 +99,7 @@ class ActivittyListActivity extends StatelessWidget {
                               display.newValue.isEmpty
                                   ? display.oldValue
                                   : display.newValue,
-                              style: lv1TextStyleBoldItalic,
+                              style: lv05TextStyleBoldItalic,
                             ),
                     ),
                     const SizedBox(height: 5),
