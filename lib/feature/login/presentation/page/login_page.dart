@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/feature/shared_component/widget/base_layout/base_layout.dart';
+import 'package:task_manager/feature/shared_component/helper/widget/base_layout/shared_base_layout.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/routes/routes_navigator.dart';
 import 'package:task_manager/feature/login/presentation/bloc/login_bloc.dart';
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(uiPage: uiPage());
+    return SharedBaseLayout(uiPage: uiPage());
   }
 
   Widget uiPage() {

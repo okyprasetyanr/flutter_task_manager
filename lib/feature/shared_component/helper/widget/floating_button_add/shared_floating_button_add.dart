@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
 
-class FloatingButtonAdd<T extends StateStreamableSource<Object?>>
+class SharedFloatingButtonAdd<T extends StateStreamableSource<Object?>>
     extends StatelessWidget {
   final Widget Function(ScrollController scrollController) content;
-  const FloatingButtonAdd({super.key, required this.content});
+  const SharedFloatingButtonAdd({super.key, required this.content});
 
   @override
   Widget build(BuildContext context) {

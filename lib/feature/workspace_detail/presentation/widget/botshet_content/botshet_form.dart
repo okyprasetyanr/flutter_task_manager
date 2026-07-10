@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/feature/shared_component/widget/drop_down/widget_drop_down.dart';
+import 'package:task_manager/feature/shared_component/helper/widget/drop_down/shared_widget_drop_down.dart';
 import 'package:task_manager/feature/workspace_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 import 'package:task_manager/shared/common_widget/text_field/custom_text_field.dart';
@@ -39,7 +39,7 @@ class BotshetForm extends StatelessWidget {
                 child: ValueListenableBuilder<EnumProjectType>(
                   valueListenable: projectType,
                   builder: (context, value, child) =>
-                      WidgetDropDown<EnumProjectType>(
+                      SharedWidgetDropDown<EnumProjectType>(
                         extension: (extension) => extension.text,
                         initialValue: value,
                         filters: EnumProjectType.values,
@@ -54,7 +54,7 @@ class BotshetForm extends StatelessWidget {
                 child: ValueListenableBuilder<EnumProjectStatus>(
                   valueListenable: projectStatus,
                   builder: (context, value, child) =>
-                      WidgetDropDown<EnumProjectStatus>(
+                      SharedWidgetDropDown<EnumProjectStatus>(
                         extension: (extension) => extension.text,
                         initialValue: value,
                         filters: EnumProjectStatus.values,

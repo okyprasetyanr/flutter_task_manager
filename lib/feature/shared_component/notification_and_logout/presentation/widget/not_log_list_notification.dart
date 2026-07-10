@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/feature/shared_component/notification_and_logout/presentation/bloc/not_log_bloc.dart';
 import 'package:task_manager/feature/shared_component/notification_and_logout/presentation/bloc/not_log_event.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_handler_list_v.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/feature/shared_component/notification_and_logout/domain/model/model_notification.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 import 'package:task_manager/shared/common_widget/text/custom_text_empty.dart';
 
@@ -33,12 +33,12 @@ class NotLogListNotification extends StatelessWidget {
             children: [
               Text("Notification List", style: titleTextStyle),
               if (status == EnumStatusState.synchronize)
-                const SizedBox(width: 50, child: const CustomLoadingLinear()),
+                const SizedBox(width: 50, child: CustomLoadingLinear()),
             ],
           ),
 
           Expanded(
-            child: CustomListViewBuilderV<ModelNotification>(
+            child: CustomHandlerList<ModelNotification>(
               controller: controller,
               status: status,
               data: data.toList(),

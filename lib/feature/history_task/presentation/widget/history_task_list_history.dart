@@ -4,12 +4,12 @@ import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/history_task/domain/enum/enum.dart';
 import 'package:task_manager/feature/history_task/presentation/bloc/history_task_bloc.dart';
 import 'package:task_manager/feature/history_task/presentation/bloc/history_task_state.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_handler_list_v.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/feature/history_task/domain/model/model_task_history.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
-import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
 class HistoryTaskListHistory extends StatelessWidget {
@@ -30,7 +30,7 @@ class HistoryTaskListHistory extends StatelessWidget {
                 ? (state.dataHistoryTask, state.status, state.dataUser)
                 : (const {}, EnumStatusState.loading, const {}),
             builder: (context, state) {
-              return CustomListViewBuilderV<ModelHistoryTask>(
+              return CustomHandlerList<ModelHistoryTask>(
                 status: state.$2,
                 data: state.$1.toList(),
                 content: (data, _) {

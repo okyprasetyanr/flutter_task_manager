@@ -131,7 +131,7 @@ class TaskDetailRepositoryImp implements TaskDetailRepository {
                   (e) => ModelComment.fromDrift(
                     data: e,
                     isOwned:
-                        userSession.getUser() == e[EnumComment.userId.name],
+                        userSession.getUser().id == e[EnumComment.userId.name],
                   ),
                 )
                 .toList()
@@ -186,6 +186,7 @@ class TaskDetailRepositoryImp implements TaskDetailRepository {
       localFunc: ({required dataToCache}) async => {},
     );
 
+    devLog("Log TaskDetailRepositoryImp: deleteComment: data: $data}");
     return data.containsKey(EnumFetchApiStatus.success)
         ? null
         : messageCollector.getMessage(data);

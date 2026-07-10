@@ -4,17 +4,18 @@ import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_bloc.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_event.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_state.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_handler_list_v.dart';
 import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/feature/task_detail/domain/model/model_comment.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 
 class TaskDetailListComment extends StatelessWidget {
-  final ScrollController scrollController;
-  const TaskDetailListComment({super.key, required this.scrollController});
+  final ScrollController? scrollController;
+  final int? limit;
+  const TaskDetailListComment({super.key, this.scrollController, this.limit});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,11 @@ class TaskDetailListComment extends StatelessWidget {
       selector: (state) => state is TaskDetailStateLoaded
           ? (state.dataComment, state.status, state.dataUser)
           : (const {}, EnumStatusState.loading, const {}),
-      builder: (context, state) => CustomListViewBuilderV<ModelComment>(
+      builder: (context, state) => CustomHandlerList<ModelComment>(
+        limit: limit,
+        reverse: limit != null,
+        isListView: limit == null,
+        smallSpace: true,
         changeColor: AppPropertyColor.primary,
         controller: scrollController,
         status: state.$2,

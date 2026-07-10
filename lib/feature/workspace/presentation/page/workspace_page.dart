@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/feature/shared_component/widget/base_layout/base_layout.dart';
-import 'package:task_manager/feature/shared_component/widget/floating_button_add/floating_button_add.dart';
+import 'package:task_manager/feature/shared_component/helper/widget/base_layout/shared_base_layout.dart';
+import 'package:task_manager/feature/shared_component/helper/widget/floating_button_add/shared_floating_button_add.dart';
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_bloc.dart';
 import 'package:task_manager/feature/workspace/presentation/widget/workspace_background.dart';
 import 'package:task_manager/feature/workspace/presentation/widget/workspace_botshet_content.dart';
@@ -19,9 +19,9 @@ class WorkspacePage extends StatefulWidget {
 class _WorkspacePageState extends State<WorkspacePage> {
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(
+    return SharedBaseLayout(
       uiPage: uiPage(),
-      fab: FloatingButtonAdd<WorkspaceBloc>(
+      fab: SharedFloatingButtonAdd<WorkspaceBloc>(
         content: (scrollController) =>
             WorkspaceBotshetContent(scrollController: scrollController),
       ),

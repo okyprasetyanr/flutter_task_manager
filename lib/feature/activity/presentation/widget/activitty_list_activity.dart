@@ -4,11 +4,11 @@ import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/activity/domain/enum/enum.dart';
 import 'package:task_manager/feature/activity/presentation/bloc/activity_bloc.dart';
 import 'package:task_manager/feature/activity/presentation/bloc/activity_state.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_handler_list_v.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/feature/activity/domain/model/model_activity.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
-import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
 class ActivittyListActivity extends StatelessWidget {
@@ -29,7 +29,7 @@ class ActivittyListActivity extends StatelessWidget {
                 ? (state.dataActivity, state.status)
                 : (const {}, EnumStatusState.loading),
             builder: (context, state) {
-              return CustomListViewBuilderV<ModelActivity>(
+              return CustomHandlerList<ModelActivity>(
                 status: state.$2,
                 data: state.$1.toList(),
                 content: (data, _) {

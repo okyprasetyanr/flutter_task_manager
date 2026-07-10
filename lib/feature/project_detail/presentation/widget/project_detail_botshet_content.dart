@@ -9,7 +9,7 @@ import 'package:task_manager/feature/project_detail/presentation/bloc/project_de
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_event.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
-import 'package:task_manager/feature/shared_component/widget/drop_down/widget_drop_down.dart';
+import 'package:task_manager/feature/shared_component/helper/widget/drop_down/shared_widget_drop_down.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart';
 import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
@@ -280,7 +280,7 @@ class _ProjectDetailBotshetContentState
                       child: ValueListenableBuilder<EnumTaskStatus>(
                         valueListenable: taskStatus,
                         builder: (context, value, child) =>
-                            WidgetDropDown<EnumTaskStatus>(
+                            SharedWidgetDropDown<EnumTaskStatus>(
                               extension: (extension) => extension.text,
                               initialValue: value,
                               filters: EnumTaskStatus.values,
@@ -295,7 +295,7 @@ class _ProjectDetailBotshetContentState
                       child: ValueListenableBuilder<EnumTaskPriority>(
                         valueListenable: taskPriority,
                         builder: (context, value, child) =>
-                            WidgetDropDown<EnumTaskPriority>(
+                            SharedWidgetDropDown<EnumTaskPriority>(
                               extension: (extension) => extension.text,
                               initialValue: value,
                               filters: EnumTaskPriority.values,
@@ -324,17 +324,12 @@ class _ProjectDetailBotshetContentState
                         child: Column(
                           children: [
                             Text("List Label", style: lv2TextStyle),
+                            const SizedBox(height: 5),
                             Expanded(
                               child: Obx(() {
-                                return GridView.builder(
+                                return ListView.builder(
                                   itemCount: listLabel.length,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        mainAxisSpacing: 5,
-                                        crossAxisSpacing: 5,
-                                        childAspectRatio: 3,
-                                      ),
+
                                   itemBuilder: (context, index) {
                                     final data = listLabel.elementAt(index);
                                     return Row(
@@ -391,6 +386,7 @@ class _ProjectDetailBotshetContentState
                                           ),
                                         ),
                                   ),
+                                  const SizedBox(height: 5),
                                   Expanded(
                                     child: ListView.builder(
                                       controller: widget.scrollController,

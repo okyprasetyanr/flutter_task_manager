@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/app_properties/app_properties.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_handler_list_v.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/feature/project_detail/domain/model/model_sub_task.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 
 class ProjectDetailListSubTask extends StatelessWidget {
   final Set<ModelSubTask> data;
@@ -16,7 +16,7 @@ class ProjectDetailListSubTask extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomListViewBuilderV<ModelSubTask>(
+    return CustomHandlerList<ModelSubTask>(
       allowScroll: false,
       changeColor: AppPropertyColor.primary,
       smallSpace: true,

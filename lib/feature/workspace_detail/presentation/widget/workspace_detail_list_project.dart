@@ -3,18 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/routes/routes_navigator.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
-import 'package:task_manager/feature/shared_component/widget/member_list/widget_member_list.dart';
+import 'package:task_manager/feature/shared_component/helper/widget/member_list/shared_member_list.dart';
 import 'package:task_manager/feature/workspace_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_event.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/widget/botshet_content/workspace_detail_botshet_content.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_handler_list_v.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 import 'package:task_manager/shared/common_widget/text/custom_text_empty.dart';
 
@@ -36,7 +36,7 @@ class WorkspaceDetailListProject extends StatelessWidget {
               state.dataAccount,
             )
           : (const {}, EnumStatusState.loading, const {}, null),
-      builder: (context, state) => CustomListViewBuilderV<ModelProjectMerge>(
+      builder: (context, state) => CustomHandlerList<ModelProjectMerge>(
         status: state.$2,
         data: state.$1.toList(),
         content: (data, status) => [
@@ -90,7 +90,7 @@ class WorkspaceDetailListProject extends StatelessWidget {
                 ? const CustomLoadingLinear()
                 : data.dataMember.isEmpty && status == EnumStatusState.none
                 ? const CustomTextEmpty()
-                : SharedWidgetMemberList(
+                : SharedMemberList(
                     hightlightUser: state.$4,
                     data: state.$3
                         .where(

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
-class WidgetDropDown<T extends Enum> extends StatelessWidget {
+class SharedWidgetDropDown<T extends Enum> extends StatelessWidget {
   final T? initialValue;
   final List<T> filters;
   final String text;
   final Function(T extension)? extension;
   final Function(T selectedEnum) selectedValue;
 
-  const WidgetDropDown({
+  const SharedWidgetDropDown({
     super.key,
     this.initialValue,
     required this.filters,

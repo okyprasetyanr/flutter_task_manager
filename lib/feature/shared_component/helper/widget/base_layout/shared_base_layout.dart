@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 import 'package:task_manager/core/app_properties/app_properties.dart';
 
-class BaseLayout extends StatelessWidget {
+class SharedBaseLayout extends StatelessWidget {
   final Widget uiPage;
   final Widget? widgetNavigation;
   final Widget? fab;
   final Widget? background;
   final bool isFill;
-  const BaseLayout({
+  const SharedBaseLayout({
     super.key,
     required this.uiPage,
     this.widgetNavigation,

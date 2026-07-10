@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/core/routes/routes_navigator.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
-import 'package:task_manager/feature/shared_component/widget/member_list/widget_member_list.dart';
+import 'package:task_manager/feature/shared_component/helper/widget/member_list/shared_member_list.dart';
 import 'package:task_manager/feature/workspace_detail/domain/enum/enum.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_merge.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_event.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
-import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_handler_list_v.dart';
 import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 import 'package:task_manager/shared/common_widget/text/custom_text_empty.dart';
 import 'package:task_manager/shared/common_widget/text_field/custom_text_field.dart';
@@ -69,7 +69,7 @@ class _WorkspaceDetailBotshetUserProjectState
                         )
                       : ({}, {}, null),
                   builder: (context, state) {
-                    return CustomListViewBuilderV<ModelProjectMerge>(
+                    return CustomHandlerList<ModelProjectMerge>(
                       controller: widget.scrollController,
                       status: EnumStatusState.none,
                       data: state.$1.toList(),
@@ -137,7 +137,7 @@ class _WorkspaceDetailBotshetUserProjectState
                               : data.dataMember.isEmpty &&
                                     status == EnumStatusState.none
                               ? const CustomTextEmpty()
-                              : SharedWidgetMemberList(
+                              : SharedMemberList(
                                   hightlightUser: state.$3,
                                   data: state.$2
                                       .where(

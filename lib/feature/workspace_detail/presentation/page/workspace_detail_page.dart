@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/feature/shared_component/widget/base_layout/base_layout.dart';
+import 'package:task_manager/feature/shared_component/helper/widget/base_layout/shared_base_layout.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/feature/workspace/domain/model/model_workspace_merge.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_bloc.dart';
@@ -36,7 +36,7 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(
+    return SharedBaseLayout(
       uiPage: uiPage(),
       widgetNavigation: navigationGesture(),
       background: Image.asset("assets/bg.png", fit: BoxFit.fill),

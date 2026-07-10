@@ -9,16 +9,15 @@ import 'package:task_manager/shared/common_widget/button/custom_button.dart';
 import 'package:task_manager/shared/common_widget/text_field/custom_text_field.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
-class TaskDetailButtonComment extends StatefulWidget {
+class TaskDetailComment extends StatefulWidget {
   final ScrollController scrollController;
-  const TaskDetailButtonComment({super.key, required this.scrollController});
+  const TaskDetailComment({super.key, required this.scrollController});
 
   @override
-  State<TaskDetailButtonComment> createState() =>
-      _TaskDetailButtonCommentState();
+  State<TaskDetailComment> createState() => _TaskDetailCommentState();
 }
 
-class _TaskDetailButtonCommentState extends State<TaskDetailButtonComment> {
+class _TaskDetailCommentState extends State<TaskDetailComment> {
   final contentController = TextEditingController();
   final keyForm = GlobalKey<FormState>();
 

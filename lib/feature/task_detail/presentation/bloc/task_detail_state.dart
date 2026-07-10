@@ -40,14 +40,14 @@ class TaskDetailStateLoaded extends TaskDetailState with EquatableMixin {
     EnumStatusState? status,
     Set<ModelComment>? dataComment,
     Set<ModelUser>? dataUser,
-    Set<ModelLabel>? dataLabel,
+    Set<ModelLabel>? dataTaskLabel,
     String? failed,
     String? error,
     String? noconnection,
     ModelSubTask? selectedSubtask,
   }) {
     return TaskDetailStateLoaded(
-      dataTaskLabel: dataLabel ?? this.dataTaskLabel,
+      dataTaskLabel: dataTaskLabel ?? this.dataTaskLabel,
       task: task ?? this.task,
       status: status ?? this.status,
       dataComment: dataComment ?? this.dataComment,

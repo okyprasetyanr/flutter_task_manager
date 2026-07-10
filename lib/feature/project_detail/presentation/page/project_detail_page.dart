@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_botshet_content.dart';
-import 'package:task_manager/feature/shared_component/widget/base_layout/base_layout.dart';
+import 'package:task_manager/feature/shared_component/helper/widget/base_layout/shared_base_layout.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_header.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_member_progress.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_list_task.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_project.dart';
-import 'package:task_manager/feature/shared_component/widget/floating_button_add/floating_button_add.dart';
+import 'package:task_manager/feature/shared_component/helper/widget/floating_button_add/shared_floating_button_add.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
 class ProjectDetailPage extends StatefulWidget {
@@ -19,9 +19,9 @@ class ProjectDetailPage extends StatefulWidget {
 class _ProjectDetailPageState extends State<ProjectDetailPage> {
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(
+    return SharedBaseLayout(
       uiPage: uiPage(),
-      fab: FloatingButtonAdd<ProjectDetailBloc>(
+      fab: SharedFloatingButtonAdd<ProjectDetailBloc>(
         content: (scrollController) {
           return ProjectDetailBotshetContent(
             scrollController: scrollController,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/feature/project_detail/domain/enum/enum.dart';
+import 'package:task_manager/feature/shared_component/helper/widget/remaining_days/shared_remaining_days.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_bloc.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_state.dart';
+import 'package:task_manager/feature/task_detail/presentation/widget/task_detail_list_label.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/feature/project_detail/domain/model/model_task.dart';
@@ -33,6 +35,7 @@ class TaskDetailTask extends StatelessWidget {
         } else {
           final data = state.$1!;
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -72,6 +75,10 @@ class TaskDetailTask extends StatelessWidget {
                   Text(data.status.text, style: lv05TextStyle),
                 ],
               ),
+              const SizedBox(height: 5),
+              TaskDetailListLabel(),
+              const SizedBox(height: 5),
+              Center(child: SharedRemainingDays(dueDate: state.$1!.dueDate)),
             ],
           );
         }

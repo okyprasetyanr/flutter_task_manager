@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/app_properties/app_properties.dart';
-import 'package:task_manager/feature/shared_component/widget/base_layout/base_layout.dart';
+import 'package:task_manager/feature/shared_component/helper/widget/base_layout/shared_base_layout.dart';
 import 'package:task_manager/core/routes/routes_enum.dart';
 import 'package:task_manager/feature/activity/presentation/bloc/activity_bloc.dart';
 import 'package:task_manager/feature/activity/presentation/bloc/activity_state.dart';
@@ -31,7 +31,7 @@ class _ActivityPageState extends State<ActivityPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(
+    return SharedBaseLayout(
       uiPage: uiPage(),
       widgetNavigation: navigationGesture(),
       fab: FloatingActionButton(

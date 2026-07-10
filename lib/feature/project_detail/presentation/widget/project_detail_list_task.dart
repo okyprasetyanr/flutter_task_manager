@@ -11,13 +11,13 @@ import 'package:task_manager/feature/project_detail/presentation/bloc/project_de
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_botshet_content.dart';
 import 'package:task_manager/feature/project_detail/presentation/widget/project_detail_list_sub_task.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_handler_list_v.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_h.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/feature/project_detail/domain/model/model_label.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 
 class ProjectDetailListTask extends StatefulWidget {
   const ProjectDetailListTask({super.key});
@@ -42,7 +42,7 @@ class _ProjectDetailListTaskState extends State<ProjectDetailListTask> {
                 ? (state.dataTask, state.dataLabel, state.status)
                 : (const {}, const {}, EnumStatusState.loading),
             builder: (context, state) {
-              return CustomListViewBuilderV(
+              return CustomHandlerList(
                 onOption: (data) {
                   context.read<ProjectDetailBloc>().add(
                     ProjectDetailEventSelectedData(selectedDate: data),

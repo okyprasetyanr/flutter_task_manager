@@ -4,11 +4,11 @@ import 'package:task_manager/feature/shared_component/user/domain/model/model_us
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 
-class SharedWidgetMemberList extends StatelessWidget {
+class SharedMemberList extends StatelessWidget {
   final Set<ModelUser> data;
   final EnumStatusState status;
   final ModelUser? hightlightUser;
-  const SharedWidgetMemberList({
+  const SharedMemberList({
     super.key,
     required this.data,
     required this.status,

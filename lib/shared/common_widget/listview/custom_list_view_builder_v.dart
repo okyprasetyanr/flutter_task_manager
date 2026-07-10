@@ -21,22 +21,24 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
   final String? dataName;
   final Color? changeColor;
   final bool allowScroll;
+  final bool reverse;
 
   const CustomListViewBuilderV({
     super.key,
     this.smallSpace = false,
     required this.status,
-    this.controller,
+    required this.controller,
     required this.data,
     required this.content,
-    this.limit,
-    this.onPressed,
-    this.onOption,
-    this.specificOption,
-    this.changeOptionIcon,
-    this.dataName,
-    this.changeColor,
+    required this.limit,
+    required this.onPressed,
+    required this.onOption,
+    required this.specificOption,
+    required this.changeOptionIcon,
+    required this.dataName,
+    required this.changeColor,
     this.allowScroll = true,
+    this.reverse = false,
   });
 
   @override
@@ -46,10 +48,12 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
     } else if (status != EnumStatusState.loading && data.isEmpty) {
       return CustomTextEmpty(text: dataName);
     } else {
-      final bool hasOverflow = limit != null && data.length > limit!;
-      final int displayCount = hasOverflow ? limit! + 1 : data.length;
+      final dataSorted = reverse ? data.reversed.toList() : data;
+      final bool hasOverflow = limit != null && dataSorted.length > limit!;
+      final int displayCount = hasOverflow ? limit! + 1 : dataSorted.length;
 
       return ListView.builder(
+        reverse: reverse,
         physics: allowScroll
             ? AlwaysScrollableScrollPhysics()
             : NeverScrollableScrollPhysics(),
@@ -59,7 +63,7 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
         itemCount: displayCount,
         itemBuilder: (context, index) {
           if (hasOverflow && index == limit) {
-            final int remainingData = data.length - limit!;
+            final int remainingData = dataSorted.length - limit!;
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Center(
@@ -74,7 +78,7 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
             );
           }
 
-          final finalData = data[index];
+          final finalData = dataSorted[index];
 
           final bool showOptionButton =
               onOption != null &&

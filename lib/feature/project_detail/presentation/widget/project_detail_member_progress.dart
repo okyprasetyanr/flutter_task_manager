@@ -7,11 +7,11 @@ import 'package:task_manager/feature/project_detail/domain/model/model_task_merg
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_bloc.dart';
 import 'package:task_manager/feature/project_detail/presentation/bloc/project_detail_state.dart';
 import 'package:task_manager/feature/workspace_detail/domain/model/model_project_member.dart';
+import 'package:task_manager/shared/common_widget/listview/custom_handler_list_v.dart';
 import 'package:task_manager/shared/enum.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
 
 class ProjectDetailListMember extends StatefulWidget {
   const ProjectDetailListMember({super.key});
@@ -62,9 +62,7 @@ class _ProjectDetailListMemberState extends State<ProjectDetailListMember> {
                       children: [
                         Expanded(
                           child:
-                              CustomListViewBuilderV<
-                                (ModelUser, EnumProjectRole)
-                              >(
+                              CustomHandlerList<(ModelUser, EnumProjectRole)>(
                                 smallSpace: true,
                                 status: state.$2,
                                 data: dataUser.toList(),
@@ -117,7 +115,7 @@ class _ProjectDetailListMemberState extends State<ProjectDetailListMember> {
                                   padding: EdgeInsets.all(10),
                                   children: [
                                     Text("List Member", style: titleTextStyle),
-                                    CustomListViewBuilderV<
+                                    CustomHandlerList<
                                       (ModelUser, EnumProjectRole)
                                     >(
                                       smallSpace: true,
@@ -283,14 +281,9 @@ class _ProjectDetailListMemberState extends State<ProjectDetailListMember> {
                             ],
                           ),
                           const Spacer(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                "$remainingDays days left",
-                                style: lv05TextStyle,
-                              ),
-                            ],
+                          Text(
+                            "$remainingDays days left",
+                            style: lv05TextStyle,
                           ),
                         ],
                       );
