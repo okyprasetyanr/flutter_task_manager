@@ -232,7 +232,6 @@ class _ProjectDetailListMemberState extends State<ProjectDetailListMember> {
                           ? 0.0
                           : completedTask / totalTask;
                       return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -261,12 +260,25 @@ class _ProjectDetailListMemberState extends State<ProjectDetailListMember> {
                           ),
                           const SizedBox(height: 10),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Icon(Icons.check_circle_outline, size: 18),
                               const SizedBox(width: 8),
-                              Text(
-                                "$completedTask from $totalTask task is Done",
-                                style: lv05TextStyle,
+                              Text.rich(
+                                TextSpan(
+                                  style: lv05TextStyle,
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          "$completedTask from $totalTask task is",
+                                      style: lv05TextStyle,
+                                    ),
+                                    TextSpan(
+                                      text: "\nDone",
+                                      style: lv05TextStyleBoldPrimary,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),

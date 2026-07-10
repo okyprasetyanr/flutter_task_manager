@@ -27,8 +27,8 @@ class WorkspaceNotification extends StatelessWidget {
               if (state.isNotEmpty && state.any((element) => !element.isRead)) {
                 return Column(
                   children: [
-                    RichText(
-                      text: TextSpan(
+                    Text.rich(
+                      TextSpan(
                         children: [
                           TextSpan(text: "You have ", style: lv1TextStyleWhite),
                           TextSpan(
@@ -42,9 +42,8 @@ class WorkspaceNotification extends StatelessWidget {
                         ],
                       ),
                     ),
-                    RichText(
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
+                    Text.rich(
+                      TextSpan(
                         text: "Your latest notification is about: ",
                         style: lv1TextStyleWhite,
                         children: [
