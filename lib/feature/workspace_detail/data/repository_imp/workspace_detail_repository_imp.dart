@@ -198,7 +198,13 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
 
   @override
   Stream<
-    (Set<ModelUser>, Set<ModelProjectMerge>, Set<String>, CollectorMessage)
+    (
+      Set<ModelUser>,
+      Set<ModelProjectMerge>,
+      Set<String>,
+      CollectorMessage,
+      ModelUser,
+    )
   >
   watchDashboard({required ModelWorkspaceMerge workspace}) {
     return Rx.combineLatest3(
@@ -233,7 +239,7 @@ class WorkspaceDetailRepositoryImp implements WorkspaceDetailRepository {
 
         final dataType = {"All", ...EnumProjectType.values.map((e) => e.text)};
 
-        return (a, dataProject.toSet(), dataType, b.$2);
+        return (a, dataProject.toSet(), dataType, b.$2, userSession.getUser());
       },
     );
   }

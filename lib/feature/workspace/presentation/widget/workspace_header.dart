@@ -4,7 +4,7 @@ import 'package:task_manager/feature/workspace/presentation/bloc/workspace_bloc.
 import 'package:task_manager/feature/workspace/presentation/bloc/workspace_state.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/header/custom_row_header.dart';
-import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 
 class WorkspaceHeader extends StatelessWidget {
   const WorkspaceHeader({super.key});
@@ -23,7 +23,11 @@ class WorkspaceHeader extends StatelessWidget {
                 style: lv1TextStyleWhiteBold,
                 textAlign: TextAlign.end,
               )
-            : SizedBox(height: 20, width: 20, child: const CustomLoading()),
+            : SizedBox(
+                height: 20,
+                width: 20,
+                child: const CustomLoadingLinear(),
+              ),
       ),
     );
   }

@@ -14,7 +14,7 @@ import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/style/icon_size.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart';
-import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 import 'package:task_manager/shared/common_widget/text_field/custom_text_field.dart';
 
 class WorkspaceBotshetContent extends StatefulWidget {
@@ -477,7 +477,7 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                       : EnumStatusState.none,
                   builder: (context, state) =>
                       state == EnumStatusState.synchronize
-                      ? const CustomLoading()
+                      ? const CustomLoadingLinear()
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

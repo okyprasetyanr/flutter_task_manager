@@ -9,6 +9,7 @@ import 'package:task_manager/feature/workspace_detail/domain/repository/workspac
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_event.dart';
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
+import 'package:task_manager/shared/helper/debounce/debounce_event_bloc.dart';
 import 'package:task_manager/shared/helper/helper_common/helper_common.dart';
 
 class WorkspaceDetailBloc
@@ -23,8 +24,19 @@ class WorkspaceDetailBloc
     on<WorkspaceDetailEventDeleteProject>(_onDeleteProject);
     on<WorkspaceDetailEventSelectedProject>(_onSelectedProject);
     on<WorkspaceDetailEventResetSelected>(_onResetSelected);
-    on<WorkspaceDetailEventSearchMember>(_onSearchMember);
+    on<WorkspaceDetailEventSearchMember>(
+      _onSearchMember,
+      transformer: debounceRestartable(),
+    );
     on<WorkspaceDetailEventSelectedFilterType>(_onSelectedFilterType);
+    on<WorkspaceDetailEventSearchUserProject>(
+      _onSearchUserProject,
+      transformer: debounceRestartable(),
+    );
+    on<WorkspaceDetailEventSearchProject>(
+      _onSearchProject,
+      transformer: debounceRestartable(),
+    );
   }
 
   FutureOr<void> _onChangeStatus(
@@ -51,7 +63,13 @@ class WorkspaceDetailBloc
     await repo.initProjectRealtime(workspaceId: event.data!.dataWorkspace.id);
     await repo.initMemberRealtime(workspaceId: event.data!.dataWorkspace.id);
     await emit.forEach<
-      (Set<ModelUser>, Set<ModelProjectMerge>, Set<String>, CollectorMessage)
+      (
+        Set<ModelUser>,
+        Set<ModelProjectMerge>,
+        Set<String>,
+        CollectorMessage,
+        ModelUser,
+      )
     >(
       repo.watchDashboard(workspace: workspace),
       onData: (data) {
@@ -84,7 +102,19 @@ class WorkspaceDetailBloc
               .map((e) => e.text)
               .toSet(),
         };
+
+        final getAssignedProject = data.$2
+            .expand((element) => element.dataMember)
+            .where((element) => element.userId.contains(data.$5.id))
+            .map((e) => e.projectId)
+            .toSet();
+        final userAssignedProject = data.$2
+            .where(
+              (element) => getAssignedProject.contains(element.dataProject.id),
+            )
+            .toSet();
         return currentState.copyWith(
+          userAssignedProject: userAssignedProject,
           dataType: dataType,
           workspace: workspace,
           dataUser: data.$1,
@@ -94,6 +124,8 @@ class WorkspaceDetailBloc
           filteredProject: filteredProject,
           selectedType: selectedType,
           selectedProject: currentState.selectedProject,
+          filteredUserAssignedProject: userAssignedProject,
+          dataAccount: data.$5,
           error: data.$4.error,
           failed: data.$4.failed,
         );
@@ -224,14 +256,16 @@ class WorkspaceDetailBloc
     Emitter<WorkspaceDetailState> emit,
   ) {
     final currentState = state as WorkspaceDetailStateLoaded;
-    final data = currentState.dataUser
-        .where((element) => element.name.contains(event.search))
-        .toSet();
-    emit(
-      currentState.copyWith(
-        filteredUser: event.search.isEmpty ? currentState.dataUser : data,
-      ),
-    );
+    final data = event.search.isEmpty
+        ? currentState.dataUser
+        : currentState.dataUser
+              .where(
+                (element) => element.name.toLowerCase().contains(
+                  event.search.toLowerCase(),
+                ),
+              )
+              .toSet();
+    emit(currentState.copyWith(filteredUser: data));
   }
 
   FutureOr<void> _onSelectedFilterType(
@@ -263,5 +297,41 @@ class WorkspaceDetailBloc
         filteredProject: filteredProject,
       ),
     );
+  }
+
+  FutureOr<void> _onSearchUserProject(
+    WorkspaceDetailEventSearchUserProject event,
+    Emitter<WorkspaceDetailState> emit,
+  ) {
+    final currentState = state as WorkspaceDetailStateLoaded;
+    final filteredUserProject = event.search.isEmpty
+        ? currentState.userAssignedProject
+        : currentState.userAssignedProject
+              .where(
+                (element) => element.dataProject.name.toLowerCase().contains(
+                  event.search.toLowerCase(),
+                ),
+              )
+              .toSet();
+    emit(
+      currentState.copyWith(filteredUserAssignedProject: filteredUserProject),
+    );
+  }
+
+  FutureOr<void> _onSearchProject(
+    WorkspaceDetailEventSearchProject event,
+    Emitter<WorkspaceDetailState> emit,
+  ) {
+    final currentState = state as WorkspaceDetailStateLoaded;
+    final filteredProject = event.search.isEmpty
+        ? currentState.dataProject
+        : currentState.dataProject
+              .where(
+                (element) => element.dataProject.name.toLowerCase().contains(
+                  event.search.toLowerCase(),
+                ),
+              )
+              .toSet();
+    emit(currentState.copyWith(filteredProject: filteredProject));
   }
 }

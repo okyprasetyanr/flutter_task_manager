@@ -11,7 +11,7 @@ import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspac
 import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspace_detail_state.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart';
-import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 import 'package:task_manager/shared/common_widget/snackbar/custom_snackbar.dart';
 import 'package:task_manager/shared/common_widget/text_field/custom_text_field.dart';
 import 'package:task_manager/shared/enum.dart';
@@ -603,7 +603,7 @@ class _WorkspaceDetailBotshetContentState
                       builder: (context, status) => Padding(
                         padding: const EdgeInsets.all(10),
                         child: status == EnumStatusState.synchronize
-                            ? const CustomLoading()
+                            ? const CustomLoadingLinear()
                             : Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,

@@ -5,7 +5,7 @@ import 'package:task_manager/feature/workspace_detail/presentation/bloc/workspac
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/header/custom_row_header.dart';
-import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 
 class WorkspaceDetailHeader extends StatelessWidget {
   const WorkspaceDetailHeader({super.key});
@@ -24,7 +24,11 @@ class WorkspaceDetailHeader extends StatelessWidget {
                 ? (state.workspace?.dataWorkspace.name ?? "...", state.status)
                 : (null, EnumStatusState.loading),
             builder: (context, state) => state.$2 == EnumStatusState.loading
-                ? SizedBox(height: 20, width: 20, child: const CustomLoading())
+                ? SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: const CustomLoadingLinear(),
+                  )
                 : Text(
                     "${state.$1} Company",
                     style: lv1TextStyleWhite,

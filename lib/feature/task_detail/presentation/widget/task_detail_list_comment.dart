@@ -4,7 +4,7 @@ import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_bloc.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_event.dart';
 import 'package:task_manager/feature/task_detail/presentation/bloc/task_detail_state.dart';
-import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/feature/task_detail/domain/model/model_comment.dart';
@@ -45,7 +45,11 @@ class TaskDetailListComment extends StatelessWidget {
         changeOptionIcon: (data) => ValueListenableBuilder(
           valueListenable: dataId,
           builder: (context, value, child) => value == data.id
-              ? const SizedBox(height: 20, width: 20, child: CustomLoading())
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CustomLoadingLinear(),
+                )
               : Icon(Icons.delete_rounded, color: AppPropertyColor.red),
         ),
         content: (data, _) => [

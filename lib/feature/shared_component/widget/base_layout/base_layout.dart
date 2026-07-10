@@ -8,12 +8,14 @@ class BaseLayout extends StatelessWidget {
   final Widget? widgetNavigation;
   final Widget? fab;
   final Widget? background;
+  final bool isFill;
   const BaseLayout({
     super.key,
     required this.uiPage,
     this.widgetNavigation,
     this.fab,
     this.background,
+    this.isFill = false,
   });
 
   @override
@@ -27,7 +29,13 @@ class BaseLayout extends StatelessWidget {
         body: Stack(
           children: [
             if (background != null)
-              Positioned(top: 0, left: 0, right: 0, child: background!),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: isFill ? 0 : null,
+                child: background!,
+              ),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Positioned(

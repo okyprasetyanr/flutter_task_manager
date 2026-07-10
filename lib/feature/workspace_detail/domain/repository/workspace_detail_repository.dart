@@ -7,7 +7,13 @@ import 'package:task_manager/shared/enum.dart';
 
 abstract class WorkspaceDetailRepository {
   Stream<
-    (Set<ModelUser>, Set<ModelProjectMerge>, Set<String>, CollectorMessage)
+    (
+      Set<ModelUser>,
+      Set<ModelProjectMerge>,
+      Set<String>,
+      CollectorMessage,
+      ModelUser,
+    )
   >
   watchDashboard({required ModelWorkspaceMerge workspace});
 

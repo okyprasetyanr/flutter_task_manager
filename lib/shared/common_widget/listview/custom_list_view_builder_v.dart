@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button.dart';
-import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading_circular.dart';
 import 'package:task_manager/shared/common_widget/text/custom_text_empty.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 
@@ -42,7 +42,7 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (status == EnumStatusState.loading && data.isEmpty) {
-      return const CustomLoading();
+      return const CustomLoadingCircular();
     } else if (status != EnumStatusState.loading && data.isEmpty) {
       return CustomTextEmpty(text: dataName);
     } else {

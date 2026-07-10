@@ -7,7 +7,7 @@ import 'package:task_manager/feature/shared_component/notification_and_logout/pr
 import 'package:task_manager/feature/shared_component/notification_and_logout/presentation/bloc/not_log_event.dart';
 import 'package:task_manager/feature/shared_component/notification_and_logout/presentation/bloc/not_log_state.dart';
 import 'package:task_manager/feature/shared_component/notification_and_logout/presentation/widget/not_log_list_notification.dart';
-import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:task_manager/feature/shared_component/notification_and_logout/domain/model/model_notification.dart';
@@ -160,7 +160,7 @@ class _NotLogWidgetState extends State<NotLogWidget> {
                             : EnumStatusState.none,
                         builder: (context, state) =>
                             state == EnumStatusState.logout
-                            ? CustomLoading()
+                            ? CustomLoadingLinear()
                             : AlertDialog(
                                 title: Text("Logout", style: titleTextStyle),
                                 content: Text(

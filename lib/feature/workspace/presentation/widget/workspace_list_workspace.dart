@@ -13,7 +13,7 @@ import 'package:task_manager/shared/enum/enum_status_state.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
-import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 import 'package:task_manager/shared/common_widget/text/custom_text_empty.dart';
 
 class WorkspaceListWorkspace extends StatelessWidget {
@@ -42,7 +42,7 @@ class WorkspaceListWorkspace extends StatelessWidget {
               child:
                   data.dataMember.isEmpty &&
                       status == EnumStatusState.synchronize
-                  ? const CustomLoading()
+                  ? const CustomLoadingLinear()
                   : data.dataMember.isEmpty && status == EnumStatusState.none
                   ? CustomTextEmpty()
                   : SharedWidgetMemberList(

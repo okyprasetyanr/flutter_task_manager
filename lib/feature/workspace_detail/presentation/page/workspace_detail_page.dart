@@ -11,6 +11,7 @@ import 'package:task_manager/feature/workspace_detail/presentation/widget/worksp
 import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_list_project.dart';
 import 'package:task_manager/feature/shared_component/user/domain/model/model_user.dart';
 import 'package:task_manager/feature/shared_component/navigator_content/navigator_content.dart';
+import 'package:task_manager/feature/workspace_detail/presentation/widget/workspace_detail_search_project.dart';
 import 'package:task_manager/shared/common_widget/multi_fab/custom_multi_fab.dart';
 import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart';
 import 'package:task_manager/shared/model/model_fab.dart';
@@ -38,6 +39,8 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
     return BaseLayout(
       uiPage: uiPage(),
       widgetNavigation: navigationGesture(),
+      background: Image.asset("assets/bg.png", fit: BoxFit.fill),
+      isFill: true,
       fab: CustomMultiFab(
         items: [
           CustomFabItem(
@@ -72,6 +75,7 @@ class _WorkspaceDetailPageState extends State<WorkspaceDetailPage> {
       children: [
         WorkspaceDetailHeader(),
         WorkspaceDetailFilterType(),
+        WorkspaceDetailSearchProject(),
         Expanded(child: WorkspaceDetailListProject()),
       ],
     );

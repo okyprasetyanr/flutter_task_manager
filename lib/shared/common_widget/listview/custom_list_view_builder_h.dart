@@ -4,7 +4,7 @@ import 'package:task_manager/core/app_properties/app_properties.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
 
 import 'package:task_manager/shared/style/text_size.dart';
-import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 import 'package:task_manager/shared/common_widget/text/custom_text_empty.dart';
 
 class CustomListViewBuilderH<T> extends StatelessWidget {
@@ -27,7 +27,7 @@ class CustomListViewBuilderH<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (status == EnumStatusState.loading && data.isEmpty) {
-      return const CustomLoading();
+      return const CustomLoadingLinear();
     } else if (status != EnumStatusState.loading && data.isEmpty) {
       return const CustomTextEmpty();
     } else {
@@ -59,7 +59,7 @@ class CustomListViewBuilderH<T> extends StatelessWidget {
                       color: condition != null
                           ? condition!(e)
                                 ? AppPropertyColor.primary
-                                : AppPropertyColor.greyLight
+                                : AppPropertyColor.white.withValues(alpha: 0.9)
                           : AppPropertyColor.primary,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(8),

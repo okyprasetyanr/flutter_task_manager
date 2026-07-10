@@ -15,7 +15,7 @@ import 'package:task_manager/shared/helper/bottom_sheet/custom_bottom_sheet.dart
 import 'package:task_manager/shared/helper/helper_date/helper_date_convert/helper_date_convert.dart';
 import 'package:task_manager/shared/style/text_size.dart';
 import 'package:task_manager/shared/common_widget/listview/custom_list_view_builder_v.dart';
-import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 import 'package:task_manager/shared/common_widget/text/custom_text_empty.dart';
 
 class WorkspaceDetailListProject extends StatelessWidget {
@@ -26,11 +26,16 @@ class WorkspaceDetailListProject extends StatelessWidget {
     return BlocSelector<
       WorkspaceDetailBloc,
       WorkspaceDetailState,
-      (Set<ModelProjectMerge>, EnumStatusState, Set<ModelUser>)
+      (Set<ModelProjectMerge>, EnumStatusState, Set<ModelUser>, ModelUser?)
     >(
       selector: (state) => state is WorkspaceDetailStateLoaded
-          ? (state.filteredProject, state.status, state.dataUser)
-          : (const {}, EnumStatusState.loading, const {}),
+          ? (
+              state.filteredProject,
+              state.status,
+              state.dataUser,
+              state.dataAccount,
+            )
+          : (const {}, EnumStatusState.loading, const {}, null),
       builder: (context, state) => CustomListViewBuilderV<ModelProjectMerge>(
         status: state.$2,
         data: state.$1.toList(),
@@ -82,10 +87,11 @@ class WorkspaceDetailListProject extends StatelessWidget {
             height: 40,
             child:
                 data.dataMember.isEmpty && status == EnumStatusState.synchronize
-                ? const CustomLoading()
+                ? const CustomLoadingLinear()
                 : data.dataMember.isEmpty && status == EnumStatusState.none
                 ? const CustomTextEmpty()
                 : SharedWidgetMemberList(
+                    hightlightUser: state.$4,
                     data: state.$3
                         .where(
                           (element) => data.dataMember

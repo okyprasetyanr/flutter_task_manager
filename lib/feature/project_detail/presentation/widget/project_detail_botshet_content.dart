@@ -12,7 +12,7 @@ import 'package:task_manager/feature/shared_component/user/domain/model/model_us
 import 'package:task_manager/feature/shared_component/widget/drop_down/widget_drop_down.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button.dart';
 import 'package:task_manager/shared/common_widget/button/custom_button_icon.dart';
-import 'package:task_manager/shared/common_widget/loading/custom_loading.dart';
+import 'package:task_manager/shared/common_widget/loading/custom_loading_linear.dart';
 import 'package:task_manager/shared/common_widget/snackbar/custom_snackbar.dart';
 import 'package:task_manager/shared/common_widget/text_field/custom_text_field.dart';
 import 'package:task_manager/shared/enum/enum_status_state.dart';
@@ -463,7 +463,7 @@ class _ProjectDetailBotshetContentState
                   builder: (context, state) => Padding(
                     padding: const EdgeInsets.all(10),
                     child: state == EnumStatusState.synchronize
-                        ? const CustomLoading()
+                        ? const CustomLoadingLinear()
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
