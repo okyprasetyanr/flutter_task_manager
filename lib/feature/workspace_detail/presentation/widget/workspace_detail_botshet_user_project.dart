@@ -54,100 +54,113 @@ class _WorkspaceDetailBotshetUserProjectState
               WorkspaceDetailEventSearchUserProject(search: value),
             ),
           ),
-          BlocSelector<
-            WorkspaceDetailBloc,
-            WorkspaceDetailState,
-            (Set<ModelProjectMerge>, Set<ModelUser>, ModelUser?)
-          >(
-            selector: (state) => state is WorkspaceDetailStateLoaded
-                ? (
-                    state.filteredUserAssignedProject,
-                    state.dataUser,
-                    state.dataAccount,
-                  )
-                : ({}, {}, null),
-            builder: (context, state) {
-              return CustomListViewBuilderV<ModelProjectMerge>(
-                controller: widget.scrollController,
-                status: EnumStatusState.none,
-                data: state.$1.toList(),
-                content: (data, status) => [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(data.dataProject.name, style: lv1TextStyleBold),
-                      Text(data.dataProject.type.text, style: lv1TextStyleBold),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Start: ${HelperDateConvert.toDisplayUI(date: data.dataProject.start)}",
-                        style: lv05TextStyleBold,
-                      ),
-                      Text(
-                        "Due: ${HelperDateConvert.toDisplayUI(date: data.dataProject.end)}",
-                        style: lv05TextStyleBoldRed,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(data.dataProject.status.text, style: lv05TextStyle),
-                      Text(
-                        state.$2
-                            .firstWhere(
-                              (element) =>
-                                  element.id == data.dataProject.createdBy,
-                            )
-                            .name,
-                        style: lv05TextStyle,
-                      ),
-                    ],
-                  ),
+          Expanded(
+            child:
+                BlocSelector<
+                  WorkspaceDetailBloc,
+                  WorkspaceDetailState,
+                  (Set<ModelProjectMerge>, Set<ModelUser>, ModelUser?)
+                >(
+                  selector: (state) => state is WorkspaceDetailStateLoaded
+                      ? (
+                          state.filteredUserAssignedProject,
+                          state.dataUser,
+                          state.dataAccount,
+                        )
+                      : ({}, {}, null),
+                  builder: (context, state) {
+                    return CustomListViewBuilderV<ModelProjectMerge>(
+                      controller: widget.scrollController,
+                      status: EnumStatusState.none,
+                      data: state.$1.toList(),
+                      content: (data, status) => [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              data.dataProject.name,
+                              style: lv1TextStyleBold,
+                            ),
+                            Text(
+                              data.dataProject.type.text,
+                              style: lv1TextStyleBold,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Start: ${HelperDateConvert.toDisplayUI(date: data.dataProject.start)}",
+                              style: lv05TextStyleBold,
+                            ),
+                            Text(
+                              "Due: ${HelperDateConvert.toDisplayUI(date: data.dataProject.end)}",
+                              style: lv05TextStyleBoldRed,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              data.dataProject.status.text,
+                              style: lv05TextStyle,
+                            ),
+                            Text(
+                              state.$2
+                                  .firstWhere(
+                                    (element) =>
+                                        element.id ==
+                                        data.dataProject.createdBy,
+                                  )
+                                  .name,
+                              style: lv05TextStyle,
+                            ),
+                          ],
+                        ),
 
-                  const SizedBox(height: 4),
-                  Text(
-                    "Contributor: ${data.dataProject.totalContribut.toString()}",
-                    style: lv05TextStyle,
-                  ),
-                  const SizedBox(height: 4),
-                  SizedBox(
-                    height: 40,
-                    child:
-                        data.dataMember.isEmpty &&
-                            status == EnumStatusState.synchronize
-                        ? const CustomLoadingLinear()
-                        : data.dataMember.isEmpty &&
-                              status == EnumStatusState.none
-                        ? const CustomTextEmpty()
-                        : SharedWidgetMemberList(
-                            hightlightUser: state.$3,
-                            data: state.$2
-                                .where(
-                                  (element) => data.dataMember
-                                      .map((e) => e.userId)
-                                      .contains(element.id),
-                                )
-                                .toSet(),
-                            status: status,
-                          ),
-                  ),
-                ],
-                onPressed: (data) => {
-                  RoutesNavigator(
-                    context: context,
-                    routeName: RoutesEnum.projectDetail,
-                    replace: false,
-                    arguments: {'dataTransfered': data},
-                  ).navigate(),
-                },
-              );
-            },
+                        const SizedBox(height: 4),
+                        Text(
+                          "Contributor: ${data.dataProject.totalContribut.toString()}",
+                          style: lv05TextStyle,
+                        ),
+                        const SizedBox(height: 4),
+                        SizedBox(
+                          height: 40,
+                          child:
+                              data.dataMember.isEmpty &&
+                                  status == EnumStatusState.synchronize
+                              ? const CustomLoadingLinear()
+                              : data.dataMember.isEmpty &&
+                                    status == EnumStatusState.none
+                              ? const CustomTextEmpty()
+                              : SharedWidgetMemberList(
+                                  hightlightUser: state.$3,
+                                  data: state.$2
+                                      .where(
+                                        (element) => data.dataMember
+                                            .map((e) => e.userId)
+                                            .contains(element.id),
+                                      )
+                                      .toSet(),
+                                  status: status,
+                                ),
+                        ),
+                      ],
+                      onPressed: (data) => {
+                        RoutesNavigator(
+                          context: context,
+                          routeName: RoutesEnum.projectDetail,
+                          replace: false,
+                          arguments: {'dataTransfered': data},
+                        ).navigate(),
+                      },
+                    );
+                  },
+                ),
           ),
         ],
       ),
