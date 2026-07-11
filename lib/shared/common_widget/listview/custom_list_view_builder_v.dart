@@ -90,6 +90,7 @@ class CustomListViewBuilderV<T> extends StatelessWidget {
               color: AppPropertyColor.white,
               elevation: 3,
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Material(

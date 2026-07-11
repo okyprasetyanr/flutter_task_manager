@@ -196,16 +196,16 @@ class _ProjectDetailListMemberState extends State<ProjectDetailListMember> {
                   BlocSelector<
                     ProjectDetailBloc,
                     ProjectDetailState,
-                    Set<ModelTaskMerge>?
+                    (Set<ModelTaskMerge>?, DateTime?)
                   >(
                     selector: (state) => state is ProjectDetailStateLoaded
-                        ? state.dataTask
-                        : null,
+                        ? (state.dataTask, state.dataProject?.dataProject.end)
+                        : (null, null),
                     builder: (context, state) {
                       int totalTask = 0;
                       int completedTask = 0;
-                      if (state != null) {
-                        for (final task in state) {
+                      if (state.$1 != null) {
+                        for (final task in state.$1!) {
                           if (task.dataSubTask.isNotEmpty) {
                             totalTask += task.dataSubTask.length;
                             for (final subtask in task.dataSubTask) {
@@ -222,9 +222,8 @@ class _ProjectDetailListMemberState extends State<ProjectDetailListMember> {
                         }
                       }
 
-                      final dueDate = DateTime(2026, 7, 10);
                       final today = DateTime.now();
-
+                      final dueDate = state.$2 ?? today;
                       final remainingDays = dueDate.difference(today).inDays;
                       final progress = totalTask == 0
                           ? 0.0

@@ -459,41 +459,41 @@ class _WorkspaceDetailBotshetContentState
                                                                     const SizedBox(
                                                                       height: 5,
                                                                     ),
-                                                                    Expanded(
-                                                                      child: ListView.builder(
-                                                                        shrinkWrap:
-                                                                            true,
-                                                                        itemCount: EnumProjectRole
-                                                                            .values
-                                                                            .length,
-                                                                        itemBuilder:
-                                                                            (
-                                                                              context,
-                                                                              index,
-                                                                            ) => CustomButtonIcon(
-                                                                              left: true,
-                                                                              icon: Icon(
-                                                                                Icons.admin_panel_settings_rounded,
-                                                                                color: AppPropertyColor.black,
-                                                                              ),
-                                                                              backgroundColor: AppPropertyColor.white,
-                                                                              label: Text(
-                                                                                EnumProjectRole.values[index].text,
-                                                                                style: lv1TextStyle,
-                                                                              ),
-                                                                              onPressed: () {
-                                                                                listUser.add(
-                                                                                  (
-                                                                                    data,
-                                                                                    EnumProjectRole.values[index],
-                                                                                  ),
-                                                                                );
-                                                                                Navigator.pop(
-                                                                                  context,
-                                                                                );
-                                                                              },
+                                                                    ListView.builder(
+                                                                      shrinkWrap:
+                                                                          true,
+                                                                      itemCount: EnumProjectRole
+                                                                          .values
+                                                                          .length,
+                                                                      itemBuilder:
+                                                                          (
+                                                                            context,
+                                                                            index,
+                                                                          ) => CustomButtonIcon(
+                                                                            left:
+                                                                                true,
+                                                                            icon: Icon(
+                                                                              Icons.admin_panel_settings_rounded,
+                                                                              color: AppPropertyColor.black,
                                                                             ),
-                                                                      ),
+                                                                            backgroundColor:
+                                                                                AppPropertyColor.white,
+                                                                            label: Text(
+                                                                              EnumProjectRole.values[index].text,
+                                                                              style: lv1TextStyle,
+                                                                            ),
+                                                                            onPressed: () {
+                                                                              listUser.add(
+                                                                                (
+                                                                                  data,
+                                                                                  EnumProjectRole.values[index],
+                                                                                ),
+                                                                              );
+                                                                              Navigator.pop(
+                                                                                context,
+                                                                              );
+                                                                            },
+                                                                          ),
                                                                     ),
                                                                   ],
                                                                 ),

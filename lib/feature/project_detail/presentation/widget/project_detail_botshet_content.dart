@@ -329,7 +329,7 @@ class _ProjectDetailBotshetContentState
                               child: Obx(() {
                                 return ListView.builder(
                                   itemCount: listLabel.length,
-
+                                  controller: widget.scrollController,
                                   itemBuilder: (context, index) {
                                     final data = listLabel.elementAt(index);
                                     return Row(

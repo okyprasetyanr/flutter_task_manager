@@ -16,9 +16,9 @@ void customBottomSheet({
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
         child: DraggableScrollableSheet(
-          initialChildSize: 0.6,
-          minChildSize: 0.3,
-          maxChildSize: 0.8,
+          initialChildSize: 0.8,
+          minChildSize: 0.5,
+          maxChildSize: 0.9,
           expand: true,
           builder: (context, scrollController) {
             return Container(

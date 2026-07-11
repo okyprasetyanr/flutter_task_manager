@@ -93,7 +93,7 @@ class TaskDetailListSubTask extends StatelessWidget {
                 ),
           ),
         ),
-
+        const SizedBox(height: 10),
         BlocSelector<TaskDetailBloc, TaskDetailState, Set<ModelSubTask>?>(
           selector: (state) =>
               state is TaskDetailStateLoaded ? state.task?.dataSubTask : null,
@@ -113,20 +113,16 @@ class TaskDetailListSubTask extends StatelessWidget {
               }
             }
 
-            final dueDate = DateTime(2026, 7, 10);
-            final today = DateTime.now();
-
-            final remainingDays = dueDate.difference(today).inDays;
             final progress = totalTask == 0 ? 0.0 : completedTask / totalTask;
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Project Progress", style: lv05TextStyleBold),
+                Text("Task Progress: ", style: lv05TextStyle),
                 Text(
                   "${(progress * 100).toStringAsFixed(0)}%",
                   style: lv05TextStyleBold,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
@@ -140,32 +136,21 @@ class TaskDetailListSubTask extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(width: 10),
+                const Icon(Icons.check_circle_outline, size: 18),
+                const SizedBox(width: 5),
+                Text.rich(
+                  TextSpan(
+                    style: lv05TextStyle,
                     children: [
-                      const Icon(Icons.check_circle_outline, size: 18),
-                      const SizedBox(width: 8),
-                      Text.rich(
-                        TextSpan(
-                          style: lv05TextStyle,
-                          children: [
-                            TextSpan(
-                              text: "$completedTask from $totalTask task is",
-                              style: lv05TextStyle,
-                            ),
-                            TextSpan(
-                              text: "\nDone",
-                              style: lv05TextStyleBoldPrimary,
-                            ),
-                          ],
-                        ),
+                      TextSpan(
+                        text: "$completedTask from $totalTask task is",
+                        style: lv05TextStyle,
                       ),
+                      TextSpan(text: "Done", style: lv05TextStyleBoldPrimary),
                     ],
                   ),
                 ),
-                Text("$remainingDays days left", style: lv05TextStyle),
               ],
             );
           },

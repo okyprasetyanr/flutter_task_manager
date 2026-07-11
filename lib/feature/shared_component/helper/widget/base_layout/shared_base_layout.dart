@@ -36,15 +36,12 @@ class SharedBaseLayout extends StatelessWidget {
                 bottom: isFill ? 0 : null,
                 child: background!,
               ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Positioned(
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: uiPage,
-              ),
+            Positioned(
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Padding(padding: const EdgeInsets.all(10), child: uiPage),
             ),
             if (widgetNavigation != null) widgetNavigation!,
           ],

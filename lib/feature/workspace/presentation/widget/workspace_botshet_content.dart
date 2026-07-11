@@ -123,179 +123,197 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                                     final data = listUser.elementAt(
                                       listMemberIndex,
                                     );
-                                    return Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Material(
-                                            elevation: 2,
-                                            color: AppPropertyColor.white,
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                            child: InkWell(
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 5,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Material(
+                                              elevation: 2,
+                                              color: AppPropertyColor.white,
                                               borderRadius:
                                                   BorderRadius.circular(8),
-                                              onTap: () => showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return Dialog(
-                                                    backgroundColor:
-                                                        AppPropertyColor.white,
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            10,
-                                                          ),
-                                                    ),
+                                              child: InkWell(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                onTap: () => showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return Dialog(
+                                                      backgroundColor:
+                                                          AppPropertyColor
+                                                              .white,
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              10,
+                                                            ),
+                                                      ),
 
-                                                    child: ListView(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                            16,
-                                                          ),
-                                                      shrinkWrap: true,
-                                                      children: [
-                                                        Text(
-                                                          "Member Role",
-                                                          style: titleTextStyle,
-                                                        ),
-                                                        ListView.builder(
-                                                          shrinkWrap: true,
-                                                          itemCount:
-                                                              EnumWorkspaceRole
-                                                                  .values
-                                                                  .length,
-                                                          itemBuilder: (context, index) => CustomButtonIcon(
-                                                            left: true,
-                                                            icon: Icon(
-                                                              Icons
-                                                                  .admin_panel_settings_rounded,
+                                                      child: ListView(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                              16,
                                                             ),
-                                                            backgroundColor:
-                                                                AppPropertyColor
-                                                                    .white,
-                                                            label: Text(
-                                                              EnumWorkspaceRole
-                                                                  .values[index]
-                                                                  .text,
-                                                            ),
-                                                            onPressed: () {
-                                                              listUser[listMemberIndex] = (
-                                                                data.$1,
-                                                                EnumWorkspaceRole
-                                                                    .values[index],
-                                                              );
-                                                              Navigator.pop(
-                                                                context,
-                                                              );
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 6,
-                                                  top: 6,
-                                                  bottom: 6,
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        shrinkWrap: true,
                                                         children: [
-                                                          Row(
-                                                            children: [
-                                                              Icon(
-                                                                Icons.person,
+                                                          Text(
+                                                            "Member Role",
+                                                            style:
+                                                                titleTextStyle,
+                                                          ),
+                                                          ListView.builder(
+                                                            shrinkWrap: true,
+                                                            itemCount:
+                                                                EnumWorkspaceRole
+                                                                    .values
+                                                                    .length,
+                                                            itemBuilder: (context, index) => CustomButtonIcon(
+                                                              left: true,
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .admin_panel_settings_rounded,
                                                                 color:
                                                                     AppPropertyColor
                                                                         .black,
-                                                                size:
-                                                                    lv1IconSize,
                                                               ),
-                                                              Text(
-                                                                data.$1.name,
+                                                              backgroundColor:
+                                                                  AppPropertyColor
+                                                                      .white,
+                                                              label: Text(
+                                                                EnumWorkspaceRole
+                                                                    .values[index]
+                                                                    .text,
                                                                 style:
-                                                                    lv05TextStyle,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
+                                                                    lv1TextStyle,
                                                               ),
-                                                            ],
-                                                          ),
-                                                          Material(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  6,
-                                                                ),
-                                                            elevation: 3,
-                                                            color:
-                                                                AppPropertyColor
-                                                                    .white,
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets.all(
-                                                                    5,
-                                                                  ),
-                                                              child: Row(
-                                                                children: [
-                                                                  Icon(
-                                                                    Icons
-                                                                        .admin_panel_settings_rounded,
-                                                                    color: AppPropertyColor
-                                                                        .black,
-                                                                    size:
-                                                                        lv1IconSize,
-                                                                  ),
-                                                                  Text(
-                                                                    data
-                                                                        .$2
-                                                                        .text,
-                                                                    style:
-                                                                        lv05TextStyle,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                  ),
-                                                                ],
-                                                              ),
+                                                              onPressed: () {
+                                                                listUser[listMemberIndex] = (
+                                                                  data.$1,
+                                                                  EnumWorkspaceRole
+                                                                      .values[index],
+                                                                );
+                                                                Navigator.pop(
+                                                                  context,
+                                                                );
+                                                              },
                                                             ),
                                                           ),
                                                         ],
                                                       ),
-                                                    ),
-                                                    CustomButton(
-                                                      backgroundColor:
-                                                          AppPropertyColor
-                                                              .white,
-                                                      onPressed: () =>
-                                                          listUser.removeWhere(
-                                                            (element) =>
-                                                                element.$1.id ==
-                                                                data.$1.id,
-                                                          ),
-                                                      child: Icon(
-                                                        Icons.close_rounded,
-                                                        color: AppPropertyColor
-                                                            .red,
+                                                    );
+                                                  },
+                                                ),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        left: 6,
+                                                        top: 6,
+                                                        bottom: 6,
                                                       ),
-                                                    ),
-                                                  ],
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                Icon(
+                                                                  Icons.person,
+                                                                  color:
+                                                                      AppPropertyColor
+                                                                          .black,
+                                                                  size:
+                                                                      lv1IconSize,
+                                                                ),
+                                                                Text(
+                                                                  data.$1.name,
+                                                                  style:
+                                                                      lv05TextStyle,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Material(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    6,
+                                                                  ),
+                                                              elevation: 3,
+                                                              color:
+                                                                  AppPropertyColor
+                                                                      .white,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets.all(
+                                                                      5,
+                                                                    ),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Icon(
+                                                                      Icons
+                                                                          .admin_panel_settings_rounded,
+                                                                      color: AppPropertyColor
+                                                                          .black,
+                                                                      size:
+                                                                          lv1IconSize,
+                                                                    ),
+                                                                    Text(
+                                                                      data
+                                                                          .$2
+                                                                          .text,
+                                                                      style:
+                                                                          lv05TextStyle,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      CustomButton(
+                                                        backgroundColor:
+                                                            AppPropertyColor
+                                                                .white,
+                                                        onPressed: () =>
+                                                            listUser
+                                                                .removeWhere(
+                                                                  (element) =>
+                                                                      element
+                                                                          .$1
+                                                                          .id ==
+                                                                      data
+                                                                          .$1
+                                                                          .id,
+                                                                ),
+                                                        child: Icon(
+                                                          Icons.close_rounded,
+                                                          color:
+                                                              AppPropertyColor
+                                                                  .red,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     );
                                   },
                                 );
@@ -379,39 +397,41 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                                                             const SizedBox(
                                                               height: 5,
                                                             ),
-                                                            Expanded(
-                                                              child: ListView.builder(
-                                                                shrinkWrap:
-                                                                    true,
-                                                                itemCount:
-                                                                    EnumWorkspaceRole
-                                                                        .values
-                                                                        .length,
-                                                                itemBuilder: (context, index) => CustomButtonIcon(
-                                                                  left: true,
-                                                                  icon: Icon(
-                                                                    Icons
-                                                                        .admin_panel_settings_rounded,
-                                                                  ),
-                                                                  backgroundColor:
+                                                            ListView.builder(
+                                                              shrinkWrap: true,
+                                                              itemCount:
+                                                                  EnumWorkspaceRole
+                                                                      .values
+                                                                      .length,
+                                                              itemBuilder: (context, index) => CustomButtonIcon(
+                                                                left: true,
+                                                                icon: Icon(
+                                                                  Icons
+                                                                      .admin_panel_settings_rounded,
+                                                                  color:
                                                                       AppPropertyColor
-                                                                          .white,
-                                                                  label: Text(
-                                                                    EnumWorkspaceRole
-                                                                        .values[index]
-                                                                        .text,
-                                                                  ),
-                                                                  onPressed: () {
-                                                                    listUser.add((
-                                                                      data,
-                                                                      EnumWorkspaceRole
-                                                                          .values[index],
-                                                                    ));
-                                                                    Navigator.pop(
-                                                                      context,
-                                                                    );
-                                                                  },
+                                                                          .black,
                                                                 ),
+                                                                backgroundColor:
+                                                                    AppPropertyColor
+                                                                        .white,
+                                                                label: Text(
+                                                                  EnumWorkspaceRole
+                                                                      .values[index]
+                                                                      .text,
+                                                                  style:
+                                                                      lv1TextStyle,
+                                                                ),
+                                                                onPressed: () {
+                                                                  listUser.add((
+                                                                    data,
+                                                                    EnumWorkspaceRole
+                                                                        .values[index],
+                                                                  ));
+                                                                  Navigator.pop(
+                                                                    context,
+                                                                  );
+                                                                },
                                                               ),
                                                             ),
                                                           ],
@@ -470,6 +490,7 @@ class _WorkspaceBotshetContentState extends State<WorkspaceBotshetContent> {
                     ],
                   ),
                 ),
+
                 const SizedBox(height: 10),
                 BlocSelector<WorkspaceBloc, WorkspaceState, EnumStatusState>(
                   selector: (state) => state is WorkspaceStateLoaded

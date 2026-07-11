@@ -258,6 +258,7 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   @override
   void initState() {
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       RoutesNavigator(
         context: context,
@@ -266,7 +267,6 @@ class _MainAppState extends State<MainApp> {
         arguments: null,
       ).navigate();
     });
-    super.initState();
   }
 
   @override
